@@ -26,14 +26,15 @@
 
                 <form class="register-form">
                     <label>Email</label>
-                    <input type="email" placeholder="johndoe@email.com">
+                    <input type="email" placeholder="donaldduck@email.com">
 
                     <label>Username</label>
-                    <input type="username" placeholder="john-doe">
+                    <input type="username" placeholder="donald-duck">
 
                     <label>Password</label>
                     <div class="password-wrap">
-                        <input type="password" placeholder="••••••••">
+                        <input type="password" placeholder="••••••••••••" id="password">
+                        <img src="../../assets/images/eye-close.png" id="eyeicon">
                         <!-- make sure to add onclick(); later to toggle password viewing-->
                     </div>
 
@@ -41,25 +42,29 @@
                         <label class="remember">
                             <input type="checkbox">
                             <!-- make sure to add onclick(); remember me functionality(optional)-->
-                            Remember me
+                            Remember me (not working)
                         </label>
                         <a href="#">Forgot password?</a>
                     </div>
 
+
+                    <button type="submit" class="register-btn">Create account</button>
                 </form>
+                <a class="loginredirect" href="login.html">Already have an account?</a>
 
             </div>
 
         </section>
 
         <section class="image-panel">
-            <div class="quote-area">
-                Have you talked to your rubber duck yet?
+            <img src="../../assets/images/rubber-duck.png" <div class="quote-area">
+            Have you talked to your rubber duck yet?
             </div>
 
         </section>
     </main>
 
+    <script src="../../assets/js/registerscript.js" defer></script>
 </body>
 
 </html>
