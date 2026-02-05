@@ -32,6 +32,24 @@ h1 {
     background-color: hsl(0, 0%, 10%);
 }
 
+.navbar a.active {
+    background-color: #2196F3;
+    color: white;
+}
+
+.navbar input {
+    margin-right: 50px;
+}
+
+.navbar input[type=text] {
+    float: right;
+    padding: 6px;
+    border: none;
+    margin-top: 8px;
+    margin-right: 16px;
+    font-size: 17px;
+}
+
 .navbar li {
     float: left;
 }
