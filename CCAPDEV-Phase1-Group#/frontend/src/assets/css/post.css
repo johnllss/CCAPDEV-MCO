@@ -1,0 +1,84 @@
+.create-post-content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #a8743e;
+    padding: 20px;
+    margin: 20px;
+    margin-left: 20%;
+    margin-right: 20%;
+    border-radius: 10px;
+    border: 10px solid #fccb6e;
+}
+
+.create-post-header {
+    color: white;
+    margin-bottom: 10px;
+}
+
+.create-post-actions-container {
+    display: flex;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+.create-post-title-container, .create-post-body-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.create-post-title {
+    border-radius: 10px;
+    border: 2px solid #fccb6e;
+    height: 50px;
+    padding: 10px;
+    font-size: medium;
+    font-weight: bold;
+    color: white;
+    background-color: transparent;
+}
+
+.char-limit {
+    align-self: flex-end;
+    color: #fccb6e;
+    font-style: italic;
+}
+
+.create-post-body {
+    border-radius: 10px;
+    border: 2px solid #fccb6e;
+    min-height: 200px;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: large;
+    color: white;
+    background-color: transparent;
+    resize: none;
+}
+
+.create-post-file-upload input {
+    color: white;
+}
+
+.create-post-actions-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.create-post-cancel-button, .create-post-publish-button {
+    padding: 10px 20px;
+    border-radius: 20px;
+    border-width: 0px;
+    background-color: #a8743e;
+    color: white;
+    cursor: pointer
+}
+
+.create-post-publish-button {
+    width: 200px;
+    font-weight: bold;
+}
