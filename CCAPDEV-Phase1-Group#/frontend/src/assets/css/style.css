@@ -1,3 +1,8 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0px;
+}
+
 body {
     margin: 0px;
     padding: 0px;
@@ -12,9 +17,16 @@ h1 {
     text-align: center;
 }
 
+.navbar {
+    display: flex;
+    height: 100px;
+    background-color: #fccb6e;
+    justify-content: center;
+    align-items: center;
+}
+
 .navbar ul {
     list-style-type: none;
-    background-color: hsl(0, 0%, 35%);
     padding: 0px;
     margin: 0px;
     overflow: hidden;
@@ -52,4 +64,17 @@ h1 {
 
 .navbar li {
     float: left;
+}
+
+.website-name {
+    margin-right: 150px;
+}
+
+.footer {
+    place-items: center;
+}
+
+.important-btns img {
+    width: 300px;
+    height: auto;
 }
