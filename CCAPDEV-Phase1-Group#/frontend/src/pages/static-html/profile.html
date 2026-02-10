@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="/assets/css/profile.css">
+</head>
+
+<body>
+    <header class="site-header">
+
+        <div class="header-inner">
+
+            <!-- Name and Logo area -->
+            <div class="logo">
+                <a href="/index.html">RubberDuckCollective</a>
+            </div>
+
+            <!-- Allows for site navigation -->
+            <nav class="main-nav">
+                <a href="/index.html">Home</a>
+                <a href="/trending.html">Trending</a>
+            </nav>
+
+            <!-- The Search bar -->
+            <form class="search-form" action="/search.html" method="get">
+                <input type="search" name="q" placeholder="Search discussions…" aria-label="Search forum">
+                <button type="submit">Search</button>
+            </form>
+
+            <!--Buttons -->
+            <div class="user-actions">
+                <a href="/create-post.html" class="btn create-post">+ New Post</a>
+                <a href="/profile.html" class="btn profile-btn">Profile</a>
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <div class="profile-container">
+
+        <div class="profile-header"> <!-- CONTAINS THE TOP PART OF THE PROFILE-->
+            <div class="left-side">
+                <img src="/assets/images/sample.jpg" alt="srcnotfnd">
+                <span class="username">Username</span>
+                <span class="rank">Ranks</span>
+            </div>
+
+            <span class="date-joined">Date-Joined</span>
+        </div>
+
+        <div class="stats-container"> <!-- WHERE THE USER STATS ARE-->
+            <div class="profile-stats">
+                <div class="stat">
+                    <span class="stat-value" id="posts">0</span>
+                    <span class="stat-label">Posts</span>
+                </div>
+
+                <div class="stat">
+                    <span class="stat-value" id="reputation">0</span>
+                    <span class="stat-label">Reputation</span>
+                </div>
+
+                <div class="stat">
+                    <span class="stat-value" id="threads">0</span>
+                    <span class="stat-label">Threads</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
