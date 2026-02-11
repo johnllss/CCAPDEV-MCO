@@ -1,19 +1,25 @@
-.create-post-content-container {
+body {
+    background-color: #fff8eb;
+}
+
+.create-post-box {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    background-color: #a8743e;
+    align-items: stretch;
+    background-color: white;
     padding: 20px;
-    margin: 20px;
+    margin-top: 100px;
+    margin-bottom: 20px;
     margin-left: 20%;
     margin-right: 20%;
     border-radius: 10px;
-    border: 10px solid #fccb6e;
+    border: 2px solid #fccb6e;
+    font-family: sans-serif;
 }
 
 .create-post-header {
-    color: white;
-    margin-bottom: 10px;
+    color: black;
+    margin-bottom: 20px;
 }
 
 .create-post-actions-container {
@@ -31,35 +37,42 @@
 
 .create-post-title {
     border-radius: 10px;
-    border: 2px solid #fccb6e;
+    border: 1px solid lightgray;
     height: 50px;
     padding: 10px;
-    font-size: medium;
+    font-size: large;
     font-weight: bold;
-    color: white;
-    background-color: transparent;
+    color: black;
+    background-color: white;
 }
 
 .char-limit {
     align-self: flex-end;
-    color: #fccb6e;
+    color: lightgray;
     font-style: italic;
 }
 
 .create-post-body {
     border-radius: 10px;
-    border: 2px solid #fccb6e;
+    border: 1px solid lightgray;
     min-height: 200px;
     padding: 10px;
     margin-top: 10px;
-    font-size: large;
-    color: white;
-    background-color: transparent;
+    /* font-size: large; */
+    font-family: sans-serif;
+    color: black;
+    background-color: white;
     resize: none;
 }
 
-.create-post-file-upload input {
-    color: white;
+.create-post-title:focus, textarea:focus {
+    border: 2px solid #fccb6e;
+    outline: none;
+}
+
+.create-post-file-upload label img {
+    width: 32px;
+    cursor: pointer;
 }
 
 .create-post-actions-container {
@@ -71,14 +84,34 @@
 
 .create-post-cancel-button, .create-post-publish-button {
     padding: 10px 20px;
-    border-radius: 20px;
-    border-width: 0px;
-    background-color: #a8743e;
-    color: white;
-    cursor: pointer
+    height: 50px;
+    border-radius: 10px;
+    font-size: large;
+    cursor: pointer;
+}
+
+.create-post-cancel-button {
+    width: 100px;
+    background-color: white;
+    border-color: #fccb6e;
+    border-style: solid;
+    color: black;
+}
+
+.create-post-cancel-button:hover {
+    background-color: #ececec;
 }
 
 .create-post-publish-button {
     width: 200px;
+    background-color: #fccb6e;
+    border-color: #fccb6e;
+    border-style: solid;
     font-weight: bold;
+    color: black;
+}
+
+.create-post-publish-button:hover {
+    background-color: #febe47;
+    border-color: #febe47;
 }
