@@ -2,7 +2,7 @@ const form = document.getElementById("editProfileForm");
 const user = JSON.parse(localStorage.getItem("loggedUser"));
 
 if (!user) {
-    window.location.href = "/pages/static-html/login.html";
+    window.location.href = "../../pages/static-html/login.html";
 }
 
 //fills the empty fields

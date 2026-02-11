@@ -28,7 +28,7 @@ const users = [
             posts: 999,
             replies: 67,
             dday: "1-1-1000",
-            photo: "/assets/images/donald_profilepic.jpg",
+            photo: "../../assets/images/donald_profilepic.jpg",
             activity: [
                 "Why is my duck meowing?",
                 "Why does my duck have cat ears?",
@@ -49,7 +49,7 @@ const users = [
             posts: 120,
             replies: 55,
             dday: "2024-01-01",
-            photo: "/assets/images/luffypfp.jpg",
+            photo: "../../assets/images/luffypfp.jpg",
             activity: [
                 "What is the Gum-Gum Fruit",
                 "How many grams of meat is in one kilogram of meat",
@@ -69,7 +69,7 @@ const users = [
             posts: 78,
             replies: 22,
             dday: "2024-02-02",
-            photo: "/assets/images/kananpfp.jpg",
+            photo: "../../assets/images/kananpfp.jpg",
             activity: [
                 "Where are some Morning free-dive practices near Uchiura Bay",
                 "How can teach someone to dive in water?",
@@ -89,7 +89,7 @@ const users = [
             posts: 12,
             replies: 5,
             dday: "2024-03-03",
-            photo: "/assets/images/kanekikenpfp.png",
+            photo: "../../assets/images/kanekikenpfp.png",
             activity: [
                 "Are ghouls actually bad?",
                 "How to hide kagune from surgery",
@@ -109,7 +109,7 @@ const users = [
             posts: 3,
             replies: 1,
             dday: "2024-04-04",
-            photo: "/assets/images/zoidbergpfp.png",
+            photo: "../../assets/images/zoidbergpfp.png",
             activity: [
                 "mhhmmhmmm food",
                 "Google can you eat cement",
@@ -146,6 +146,6 @@ form.addEventListener("submit", function (e) {
 
     localStorage.setItem("loggedUser", JSON.stringify(foundUser.profile));
 
-    window.location.href = "/pages/static-html/index.html";
+    window.location.href = "../../pages/static-html/index.html";
 });
 
