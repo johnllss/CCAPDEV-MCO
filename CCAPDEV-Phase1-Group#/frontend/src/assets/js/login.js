@@ -29,7 +29,12 @@ const users = [
             replies: 67,
             dday: "1-1-1000",
             photo: "/assets/images/donald_profilepic.jpg",
-            activity: []
+            activity: [
+                "Why is my duck meowing?",
+                "Why does my duck have cat ears?",
+                "Help my duck got cursed by a witch"
+            ]
+
         }
     },
 
@@ -45,7 +50,11 @@ const users = [
             replies: 55,
             dday: "2024-01-01",
             photo: "/assets/images/luffypfp.jpg",
-            activity: []
+            activity: [
+                "What is the Gum-Gum Fruit",
+                "How many grams of meat is in one kilogram of meat",
+                "WHY I DONT WANT TO KNOW WHERE THE ONE PIECE IS"
+            ]
         }
     },
 
@@ -61,7 +70,11 @@ const users = [
             replies: 22,
             dday: "2024-02-02",
             photo: "/assets/images/kananpfp.jpg",
-            activity: []
+            activity: [
+                "Where are some Morning free-dive practices near Uchiura Bay",
+                "How can teach someone to dive in water?",
+                "Stretching routines for better breath control",
+            ]
         }
     },
 
@@ -77,7 +90,11 @@ const users = [
             replies: 5,
             dday: "2024-03-03",
             photo: "/assets/images/kanekikenpfp.png",
-            activity: []
+            activity: [
+                "Are ghouls actually bad?",
+                "How to hide kagune from surgery",
+                "Arima Kishou is a fraud. Prove me wrong"
+            ]
         }
     },
 
@@ -93,7 +110,11 @@ const users = [
             replies: 1,
             dday: "2024-04-04",
             photo: "/assets/images/zoidbergpfp.png",
-            activity: []
+            activity: [
+                "mhhmmhmmm food",
+                "Google can you eat cement",
+                "How to perform heart transpant?"
+            ]
         }
     }
 ];
@@ -106,7 +127,7 @@ const form = document.getElementById("login-form");
 form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const identifier = document.getElementById("loginIdentifier").value.trim();
+    const identifier = document.getElementById("loginName").value.trim();
     const password = document.getElementById("password").value.trim();
 
     if (!identifier || !password) {

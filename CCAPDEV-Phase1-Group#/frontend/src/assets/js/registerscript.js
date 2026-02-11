@@ -9,4 +9,11 @@ eyeicon.onclick = function () {
         password.type = "password";
         eyeicon.src = "../../assets/images/eye-close.png";
     }
-} 
+}
+
+const form = document.getElementById("register-form");
+
+form.addEventListener("submit", function (e) {
+
+    alert("Registered new user (implemented in MC02)");
+});
