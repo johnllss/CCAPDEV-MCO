@@ -1,3 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
+@font-face {
+    font-family: 'RoxboroughCF';
+    src: url('../fonts/Roxborough\ CF.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 .create-post-content-container {
     display: flex;
     flex-direction: column;
@@ -14,6 +23,7 @@
 .create-post-header {
     color: white;
     margin-bottom: 10px;
+    font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
 }
 
 .create-post-actions-container {
@@ -27,6 +37,11 @@
     flex-direction: column;
     width: 100%;
     margin-bottom: 10px;
+}
+
+.create-post-title::placeholder, .create-post-body::placeholder {
+    color: #fccb6e;
+    font-family: 'DM Sans', sans-serif;
 }
 
 .create-post-title {
@@ -75,7 +90,8 @@
     border-width: 0px;
     background-color: #a8743e;
     color: white;
-    cursor: pointer
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
 }
 
 .create-post-publish-button {
