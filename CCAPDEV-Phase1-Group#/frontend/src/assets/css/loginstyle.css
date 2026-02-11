@@ -1,10 +1,17 @@
-* {
-  box-sizing: border-box;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  margin: 0;
-  padding: 0;
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
 }
 
+@font-face {
+    font-family: 'RoxboroughCF';
+    src: url('../fonts/Roxborough\ CF.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 .container {
   display: grid;
   grid-template-columns: minmax(420px, 1fr) minmax(0, 1.4fr);
