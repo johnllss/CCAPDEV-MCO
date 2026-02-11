@@ -1,6 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0px;
+}
+
+@font-face {
+    font-family: 'RoxboroughCF';
+    src: url('../fonts/Roxborough\ CF.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
 
 body {
@@ -13,7 +22,7 @@ main {
     margin-right: 20px;
 }
 
-h1 {
+.website-name h1 {
     text-align: center;
 }
 
@@ -23,6 +32,7 @@ h1 {
     background-color: #fccb6e;
     justify-content: center;
     align-items: center;
+    font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
 }
 
 .navbar ul {
