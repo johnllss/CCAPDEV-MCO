@@ -18,11 +18,6 @@ body {
     background-color: #FFF9E3;
 }
 
-main {
-    margin-left: 20px;
-    margin-right: 20px;
-}
-
 .navbar {
     display: flex;
     background-color: #fccb6e;
@@ -31,27 +26,11 @@ main {
     padding: 15px 40px;
 }
 
-.navbar ul {
-    list-style-type: none;
-    padding: 0px;
-    margin: 0px;
-    overflow: hidden;
-}
-
 .navbar a {
-    color: white;
     text-decoration: none;
     padding: 15px;
     display: block;
     text-align: center;
-}
-
-.navbar a:hover {
-    background-color: hsl(0, 0%, 10%);
-}
-
-.navbar li {
-    float: left;
 }
 
 .nav-left {
@@ -61,10 +40,14 @@ main {
     margin-right: 150px;
 }
 
-.nav-left h1 {
+.nav-left h1, .nav-left a {
     font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
-    color: #8b5e1f;
+    color: #a8743e;
     font-size: 1.75rem;
+}
+
+.duck-logo {
+    width: 50px;
 }
 
 .nav-center input {
@@ -74,8 +57,121 @@ main {
     width: 250px;
 }
 
-.duck-logo {
-    width: 50px;
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-right ul {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+    overflow: hidden;
+}
+
+.nav-right li {
+    float: left;
+}
+
+.nav-right a {
+    color: #a8743e;
+    font-weight: 500;
+}
+
+.nav-right a:hover {
+    background-color: hsl(0, 0%, 10%);
+}
+
+.nav-profile-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.logout-btn {
+    border: 2px solid #a8743e;
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+main {
+    padding: 40px 80px;
+}
+
+.post-card {
+    background-color: #fccb6e;
+    padding: 25px;
+    border-radius: 20px;
+    margin-bottom: 40px;
+}
+
+.post-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #a8743e;
+    font-weight: 500;
+}
+
+.profile-icon {
+    width: 35px;
+    height: 35px;
+    background-color: #e2a83a;
+    border-radius: 50%;
+}
+
+.view-btn {
+    background-color: #a8743e;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.post-title {
+    text-align: center;
+    font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
+    margin: 20px 0;
+    color: #a8743e;
+}
+
+.post-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.votes {
+    margin-top: 15px;
+    display: flex;
+    gap: 20px;
+    color: #a8743e;
+    font-weight: bold;
+}
+
+.floating-add-btn {
+    position: fixed;
+    right: 40px;
+    bottom: 40px;
+    width: 60px;
+    height: 60px;
+    background-color: #b67b27;
+    color: white;
+    font-size: 1.875rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 }
 
 .footer {
