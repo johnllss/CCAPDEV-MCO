@@ -91,6 +91,17 @@ body {
     cursor: pointer;
 }
 
+.create-post-file-upload {
+    display: flex;
+    align-items: center;
+}
+
+.create-post-file-upload span {
+    margin-left: 15px;
+    font-style: italic;
+    color:#fccb6e;
+}
+
 .create-post-actions-container {
     display: flex;
     flex-direction: row;
@@ -231,12 +242,8 @@ body {
     transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-.post-actions button:hover, .create-post-file-upload button:hover {
+.post-actions button:hover {
     transform: scale(1.2);
-}
-
-button:hover .image-icon {
-    content: url("../../assets/images/image-fill.png");
 }
 
 button:hover .upvote-icon {

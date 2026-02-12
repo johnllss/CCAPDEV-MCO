@@ -41,8 +41,8 @@
                 <div class="create-post-content-container">
                     <h2 class="create-post-header">Create a Post</h2>
                     <div class="create-post-title-container">
-                        <input class="create-post-title" type="text" placeholder="Title (required)" maxlength="300">
-                        <div class="char-limit">#/300</div> <!-- PLACEHOLDER -->
+                        <input id="title-input" class="create-post-title" type="text" placeholder="Title (required)" maxlength="150">
+                        <div id="char-ctr" class="char-limit">0/150</div>
                     </div>
                     <div class="create-post-body-container">
                         <textarea class="create-post-body" placeholder="Body"></textarea>
@@ -51,16 +51,15 @@
                 <div class="create-post-file-upload">
                     <label>
                         <input id="file-upload" type="file" accept="image/png, image/jpeg" hidden>
-                        <button>
-                            <img class="image-icon" src="../../assets/images/image-outline.png">
-                        </button>
+                        <img class="image-icon" src="../../assets/images/image-outline.png">
                     </label>
+                    <span id="file-upload-name"></span>
                 </div>
             </div>
         </div>
         <div class="create-post-actions-container">
-            <button class="create-post-cancel-button">Cancel</button>
-            <button class="create-post-publish-button">Publish</button>
+            <button id="cancel-button" class="create-post-cancel-button">Cancel</button>
+            <button id="publish-button" class="create-post-publish-button">Publish</button>
         </div>
     </main>
     
@@ -80,5 +79,8 @@
 
         <p>© 2026 by The Rubber Duck Collective</p>
     </footer>
+
+    <script src="../../assets/js/post.js"></script>
+
 </body>
 </html>
