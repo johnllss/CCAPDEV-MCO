@@ -140,6 +140,9 @@ main {
 
 .footer {
     place-items: center;
+    margin-bottom: 10px;
+    color: #a8743e;
+    font-size: 0.8rem;
 }
 
 .important-btns img {
