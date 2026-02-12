@@ -11,7 +11,7 @@ body {
     background-color: #fff8eb;
 }
 
-.create-post-box, .post-box {
+.create-post-box {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -133,9 +133,27 @@ body {
     border-color: #febe47;
 }
 
-.post-metadata {
+.post-card {
+    background-color: white;
+    padding: 25px;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    border-radius: 10px;
+    border: 2px solid #fccb6e;
+}
+
+.post-top {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+
+.post-metadata {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #a8743e;
+    font-weight: 500;
 }
 
 .post-owner-name {
@@ -157,8 +175,10 @@ body {
 }
 
 .post-header {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    text-align: center;
+    font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
+    margin: 20px 0;
+    color: #a8743e;
 }
 
 .post-body {
@@ -195,6 +215,11 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.post-vote-actions span {
+    color: #a8743e;
+    font-weight: bold;
 }
 
 .post-actions button, .create-post-file-upload button {
