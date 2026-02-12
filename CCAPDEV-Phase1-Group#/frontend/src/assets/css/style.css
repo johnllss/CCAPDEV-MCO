@@ -143,9 +143,20 @@ main {
     margin-bottom: 10px;
     color: #a8743e;
     font-size: 0.8rem;
+    align-items: center;
 }
 
 .important-btns img {
     width: 40px;
     height: auto;
+}
+
+.attributions {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.attributions a {
+    text-decoration: none;
+    color: #a8743e;
 }
