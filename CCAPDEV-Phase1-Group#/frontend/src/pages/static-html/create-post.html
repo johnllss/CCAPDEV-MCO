@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Post - The Rubber Duck Forums</title>
+    <title>Create a Post - The Rubber Duck Forums</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,18 +16,20 @@
 <body>
     <header>
         <nav class="navbar">
-            <div class="website-name">
+            <div class="nav-left">
+                <a href="index.html"><img src="../../assets/images/rubber-duck.png" alt="A colorless duck inside a black circle." class="duck-logo" /></a>
                 <h1><a href="index.html">The Rubber Duck Forums</a></h1>
             </div>
 
-            <div class="nav-btns">
+            <div class="nav-center">
+                <input type="text" placeholder="Search...">
+            </div>
+
+            <div class="nav-right">
                 <ul>
-                    <li><input type="text" placeholder="Search..."></li>
-                    <li><a href="index.html">Home</a></li> <!-- ideally, logo part -->
-                    <li><a href="login.html">Login</a></li>
-                    <li><a href="register.html">Register</a></li>
-                    <li><a href="profile.html">Profile</a></li> <!-- ideally, just an icon for profile -->
-                    <li><a href="logout.html">Logout</a></li>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="profile.html"><img src="../../assets/images/unknownperson.jpg" alt="An unknown person icon." class="nav-profile-icon"></a></li>
+                    <li><a href="logout.html" class="logout-btn">Logout</a></li>
                 </ul>
             </div>
         </nav>
@@ -61,10 +63,24 @@
         </div>
     </main>
     
-    <footer>
+    <footer class="footer">
+        <div class="important-btns">
+            <a href=""><img src="../../assets/images/facebook.png" alt="A placeholder image with a giant X mark."/></a>
+            <a href=""><img src="../../assets/images/youtube.png" alt="A placeholder image with a giant X mark."/></a>
+            <a href=""><img src="../../assets/images/instagram.png" alt="A placeholder image with a giant X mark."/></a>
+        </div>
+
+        <div class="attributions">
+            <br>
+            <a href="https://www.flaticon.com/free-icons/facebook" title="facebook icons">Facebook icons created by Freepik - Flaticon</a><br>
+            <a href="https://www.flaticon.com/free-icons/instagram-logo" title="instagram logo icons">Instagram logo icons created by Laisa Islam Ani - Flaticon</a><br>
+            <a href="https://www.flaticon.com/free-icons/youtube" title="youtube icons">Youtube icons created by Md Tanvirul Haque - Flaticon</a>
+        </div>
+
+        <p>© 2026 by The Rubber Duck Collective</p>
     </footer>
 
-    <script src="../../assets/js/post.js"></script>
+    <script src="../../assets/js/create-post.js"></script>
 
 </body>
 </html>

@@ -1,17 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
 *, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0px;
-    padding: 0px;
+  box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
 }
 
 @font-face {
-    font-family: 'RoxboroughCF';
-    src: url('../fonts/Roxborough\ CF.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'RoxboroughCF';
+  src: url('../fonts/Roxborough\ CF.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+}
+
 .container {
   display: grid;
   grid-template-columns: minmax(420px, 1fr) minmax(0, 1.4fr);
@@ -30,12 +35,23 @@
   max-width: 360px;
 }
 
+.auth-content h1 {
+  font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
+}
+
 .logo {
   display: flex;
   justify-content: center;
   font-weight: 600;
   color: #3a2a00;
   text-align: center;
+}
+
+.logo a {
+  text-decoration: none;
+  font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
+  font-size: 3rem;
+  color: #a8743e;
 }
 
 h1 {
