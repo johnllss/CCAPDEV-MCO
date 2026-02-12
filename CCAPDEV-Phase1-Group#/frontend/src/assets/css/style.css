@@ -3,6 +3,7 @@
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0px;
+    padding: 0px;
 }
 
 @font-face {
@@ -13,8 +14,8 @@
 }
 
 body {
-    margin: 0px;
-    padding: 0px;
+    font-family: 'DM Sans', sans-serif;
+    background-color: #FFF9E3;
 }
 
 main {
@@ -22,17 +23,12 @@ main {
     margin-right: 20px;
 }
 
-.website-name h1 {
-    text-align: center;
-}
-
 .navbar {
     display: flex;
-    height: 100px;
     background-color: #fccb6e;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
+    padding: 15px 40px;
 }
 
 .navbar ul {
@@ -54,30 +50,32 @@ main {
     background-color: hsl(0, 0%, 10%);
 }
 
-.navbar a.active {
-    background-color: #2196F3;
-    color: white;
-}
-
-.navbar input {
-    margin-right: 50px;
-}
-
-.navbar input[type=text] {
-    float: right;
-    padding: 6px;
-    border: none;
-    margin-top: 8px;
-    margin-right: 16px;
-    font-size: 17px;
-}
-
 .navbar li {
     float: left;
 }
 
-.website-name {
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
     margin-right: 150px;
+}
+
+.nav-left h1 {
+    font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
+    color: #8b5e1f;
+    font-size: 1.75rem;
+}
+
+.nav-center input {
+    padding: 10px 20px;
+    border-radius: 25px;
+    border: none;
+    width: 250px;
+}
+
+.duck-logo {
+    width: 50px;
 }
 
 .footer {

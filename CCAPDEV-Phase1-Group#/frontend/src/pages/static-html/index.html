@@ -10,17 +10,19 @@
     
     <header>
         <nav class="navbar">
-            <div class="website-name">
+            <div class="nav-left">
+                <img src="../../assets/images/rubber-duck.png" class="duck-logo" />
                 <h1><a href="index.html">The Rubber Duck Forums</a></h1>
             </div>
 
-            <div class="nav-btns">
+            <div class="nav-center">
+                <input type="text" placeholder="Search...">
+            </div>
+
+            <div class="nav-right">
                 <ul>
-                    <li><input type="text" placeholder="Search..."></li>
-                    <li><a href="index.html">Home</a></li> <!-- ideally, logo part -->
-                    <li><a href="login.html">Login</a></li>
-                    <li><a href="register.html">Register</a></li>
-                    <li><a href="profile.html">Profile</a></li> <!-- ideally, just an icon for profile -->
+                    <li><a href="index.html">Home</a></li>
+                    <!-- <li><a href="profile.html"><img src="../../assets/images/unknownperson.jpg"></a></li> -->
                     <li><a href="logout.html">Logout</a></li>
                 </ul>
             </div>
@@ -28,9 +30,29 @@
     </header>
 
     <main>
-        <h3>Text</h3>
-        <p>Description</p>
+        <div class="post-card">
+            <div class="post-top">
+                <div class="author">
+                    <div class="profile-icon"></div>
+                    <span>jlsjlssungsung   1 hour ago</span>
+                </div>
+                <button class="view-btn">VIEW</button>
+            </div>
+
+            <h2 class="post-title">POST TITLE</h2>
+
+            <!-- <img src="" alt=""/> img post -->
+
+            <p class="post-desc">Post description.....</p>
+
+            <div class="votes">
+                <span>upvote 67</span>
+                <span>downvote 67</span>
+            </div>
+        </div>
     </main>
+
+    <div class="floating-add-btn">+</div>
     
     <footer>
         <footer class="footer">
