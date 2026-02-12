@@ -80,7 +80,9 @@ body {
 }
 
 .nav-right a:hover {
-    background-color: hsl(0, 0%, 10%);
+    background-color: #a8743e;
+    color: white;
+    border-radius: 30%;
 }
 
 .nav-profile-icon {
@@ -99,11 +101,13 @@ main {
     padding: 40px 80px;
 }
 
-.post-card {
-    background-color: #fccb6e;
+.post-box {
+    background-color: white;
     padding: 25px;
     border-radius: 20px;
     margin-bottom: 40px;
+    border-radius: 10px;
+    border: 2px solid #fccb6e;
 }
 
 .post-top {
@@ -174,11 +178,16 @@ main {
     cursor: pointer;
 }
 
+.floating-add-btn a {
+    text-decoration: none;
+    color: #fccb6e;
+}
+
 .footer {
     place-items: center;
 }
 
 .important-btns img {
-    width: 100px;
+    width: 40px;
     height: auto;
 }
