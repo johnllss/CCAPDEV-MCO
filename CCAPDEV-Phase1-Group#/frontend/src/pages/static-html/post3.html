@@ -16,18 +16,20 @@
 <body>
     <header>
         <nav class="navbar">
-            <div class="website-name">
+            <div class="nav-left">
+                <a href="index.html"><img src="../../assets/images/rubber-duck.png" alt="A colorless duck inside a black circle." class="duck-logo" /></a>
                 <h1><a href="index.html">The Rubber Duck Forums</a></h1>
             </div>
 
-            <div class="nav-btns">
+            <div class="nav-center">
+                <input type="text" placeholder="Search...">
+            </div>
+
+            <div class="nav-right">
                 <ul>
-                    <li><input type="text" placeholder="Search..."></li>
-                    <li><a href="index.html">Home</a></li> <!-- ideally, logo part -->
-                    <li><a href="login.html">Login</a></li>
-                    <li><a href="register.html">Register</a></li>
-                    <li><a href="profile.html">Profile</a></li> <!-- ideally, just an icon for profile -->
-                    <li><a href="logout.html">Logout</a></li>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="profile.html"><img src="../../assets/images/unknownperson.jpg" alt="An unknown person icon." class="nav-profile-icon"></a></li>
+                    <li><a href="logout.html" class="logout-btn">Logout</a></li>
                 </ul>
             </div>
         </nav>
@@ -35,19 +37,25 @@
 
     <main>
         <div class="post-container">
-            <div class="post-box">
+            <div class="post-card">
                 <div class="post-content-container">
-                    <div class="post-metadata">
-                        <a class="post-owner-name" href="">@Username1</a>
-                        <div class="post-timestamp">2w ago<span class="post-edit-timestamp"></span></div>
-                        
+                    <div class="post-top">
+                        <div class="post-metadata">
+                            <div class="profile-icon"></div>
+                            <a class="post-owner-name" href="">@Username1</a>
+                            <div class="post-timestamp">2w ago<span class="post-edit-timestamp"></span></div>
+                        </div>
                     </div>
+
                     <h2 class="post-header">my 1yo and her dad put 100 rubber duckies on my computer.</h2>
+
                     <div class="post-body-container">
-                        <div class="post-body">(from a real post: https://www.reddit.com/r/duck/comments/1iedw5b)</div>
                         <div class="post-image"><img src="https://i.redd.it/37vh4y9hrbge1.jpeg" alt=""></div>
+
+                        <div class="post-body"><p>(from a real post: https://www.reddit.com/r/duck/comments/1iedw5b)</p></div>
                     </div>
                 </div>
+
                 <div class="post-actions">
                     <div class="post-vote-actions">
                         <button>
@@ -57,6 +65,7 @@
                         <button>
                             <img class="downvote-icon" src="../../assets/images/downvote-outline.png">
                         </button>
+                        <span class="vote-count">0</span>
                     </div>
                     <div class="post-owner-actions">
                         <button>
@@ -69,9 +78,25 @@
                 </div>
             </div>
         </div>
+
+        // TODO: infinitely nesting comments under the post card
     </main>
     
-    <footer>
+    <footer class="footer">
+        <div class="important-btns">
+            <a href=""><img src="../../assets/images/facebook.png" alt="A placeholder image with a giant X mark."/></a>
+            <a href=""><img src="../../assets/images/youtube.png" alt="A placeholder image with a giant X mark."/></a>
+            <a href=""><img src="../../assets/images/instagram.png" alt="A placeholder image with a giant X mark."/></a>
+        </div>
+
+        <div class="attributions">
+            <br>
+            <a href="https://www.flaticon.com/free-icons/facebook" title="facebook icons">Facebook icons created by Freepik - Flaticon</a><br>
+            <a href="https://www.flaticon.com/free-icons/instagram-logo" title="instagram logo icons">Instagram logo icons created by Laisa Islam Ani - Flaticon</a><br>
+            <a href="https://www.flaticon.com/free-icons/youtube" title="youtube icons">Youtube icons created by Md Tanvirul Haque - Flaticon</a>
+        </div>
+
+        <p>© 2026 by The Rubber Duck Collective</p>
     </footer>
 </body>
 </html>
