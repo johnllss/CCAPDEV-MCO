@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register New User</title>
+    <link rel="stylesheet" href="../../assets/css/registerstyle.css">
+</head>
+
+
+<body>
+    <main class="container">
+
+        <!-- For the left side -->
+        <section class="auth-panel">
+
+            <div class="auth-content">
+
+                <div class="logo">
+                    <a href="../../pages/static-html/index.html">Rubber Duck Forums</a>
+                </div>
+
+
+                <h1>Create an account</h1>
+                <p class="subtext">Enter your details to get started.</p>
+
+                <form class="register-form" id="register-form">
+                    <label>Email</label>
+                    <input type="email" placeholder="donaldduck@email.com">
+
+                    <label>Username</label>
+                    <input type="username" placeholder="donald-duck">
+
+                    <label>Password</label>
+                    <div class="password-wrap">
+                        <input type="password" placeholder="••••••••••••" id="password">
+                        <img src="../../assets/images/eye-close.png" id="eyeicon">
+                        <!-- make sure to add onclick(); later to toggle password viewing-->
+                    </div>
+
+                    <div class="remember-forgot-container">
+                        <label class="remember">
+                            <input type="checkbox">
+                            <!-- make sure to add onclick(); remember me functionality(optional)-->
+                            Remember me (not working)
+                        </label>
+                        <a href="#">Forgot password?</a>
+                    </div>
+
+
+                    <button type="submit" class="register-btn">Create account</button>
+                </form>
+                <a class="loginredirect" href="../../pages/static-html/login.html">Already have an account?</a>
+
+            </div>
+
+        </section>
+
+        <section class="image-panel">
+            <img src="../../assets/images/rubber-duck.png" <div class="quote-area">
+            Have you talked to your rubber duck yet?
+            </div>
+
+        </section>
+    </main>
+
+    <script src="../../assets/js/registerscript.js" defer></script>
+</body>
+
+</html>

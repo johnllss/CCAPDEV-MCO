@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="../../assets/css/profile.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="website-name">
+                <h1 class="webnameheader"><a href="index.html">The Rubber Duck Forums</a></h1>
+            </div>
+
+            <div class="nav-btns">
+                <ul>
+                    <li><input type="text" placeholder="Search..."></li>
+                    <li><a href="index.html">Home</a></li> <!-- ideally, logo part -->
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="register.html">Register</a></li>
+                    <li><a href="profile.html">Profile</a></li> <!-- ideally, just an icon for profile -->
+                    <li><a href="logout.html">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+
+    <main>
+        <div class="profile-container">
+
+            <h1>My Profile</h1>
+
+            <!-- Profile Header -->
+            <div class="profile-header-container">
+
+                <div class="profile-left">
+
+                    <img id="profilepic" src="../../assets/images/sample.jpg" alt="display picture">
+                    <p class="user-quote" id="userquote"></p>
+
+                </div>
+
+                <div class="profile-right">
+
+                    <h2 class="username" id="username">Username</h2>
+                    <h3 class="fullname" id="fullname">FullName</h3>
+
+                </div>
+            </div>
+
+            <!-- Profile Statistics -->
+            <div class="profile-stats">
+                <div class="stat">
+                    <span class="stat-label">Total Posts:</span>
+                    <span class="stat-value" id="total-posts">-</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">D-Day: </span>
+                    <span class="stat-value" id="join-date">-</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Total Replies</span>
+                    <span class="stat-value" id="total-replies">-</span>
+                </div>
+            </div>
+
+            <!-- About Profile Section -->
+            <section class="profile-section">
+                <h2>About Me</h2>
+                <div class="aboutme-container">
+                    <p class="aboutme" id="aboutMe">
+                    </p>
+                </div>
+            </section>
+
+            <!-- Profile Activity -->
+            <section class="profile-section">
+                <h2>Recent Activity</h2>
+
+
+                <!-- fix this being hard coded -->
+                <ul class="activity-list" id="activitylist">
+
+                    <li>
+                        <strong>Posted:</strong> Why is my duck meowing?
+                        <span class="activity-date">1m ago</span>
+                    </li>
+                    <li>
+                        <strong>Posted:</strong> Why does my duck have cat ears?
+                        <span class="activity-date">5m ago</span>
+                    </li>
+                    <li>
+                        <strong>Posted:</strong> Help my duck got cursed by a witch
+                        <span class="activity-date">2 days ago</span>
+                    </li>
+
+                </ul>
+            </section>
+
+            <a href="../../pages/static-html/edit-profile.html" class="editbtn">Edit Profile</a>
+
+        </div>
+    </main>
+
+
+    <script src="../../assets/js/profile.js"></script>
+</body>
+
+</html>
