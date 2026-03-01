@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create a Post - The Rubber Duck Forums</title>
+    <title>Out of context. - The Rubber Duck Forums</title> <!-- replace with post title -->
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,7 +11,7 @@
 
     <link rel="stylesheet" href="../../assets/css/style.css">
     <link rel="stylesheet" href="../../assets/css/post.css">
-    
+    <link rel="stylesheet" href="../../assets/css/comments.css">
 </head>
 <body>
     <header>
@@ -36,31 +36,50 @@
     </header>
 
     <main>
-        <div class="create-post-container">
-            <div class="create-post-box">
-                <div class="create-post-content-container">
-                    <h2 class="create-post-header">Create a Post</h2>
-                    <div class="create-post-title-container">
-                        <input id="title-input" class="create-post-title" type="text" placeholder="Title (required)" maxlength="150">
-                        <div id="char-ctr" class="char-limit">0/150</div>
+        <div class="post-container">
+            <div class="post-card">
+                <div class="post-content-container">
+                    <div class="post-top">
+                        <div class="post-metadata">
+                            <div class="profile-icon"></div>
+                            <a class="post-owner-name" href="">@DanielD</a>
+                            <div class="post-timestamp">22h ago<span class="post-edit-timestamp"></span></div>
+                        </div>
                     </div>
-                    <div class="create-post-body-container">
-                        <textarea class="create-post-body" placeholder="Body"></textarea>
+
+                    <h2 class="post-header">Out of context.</h2>
+
+                    <div class="post-body-container">
+                        <div class="post-image"><img src="https://i.redd.it/f4oez08du9de1.jpeg" alt=""></div>
+
+                        <div class="post-body"><p>(from a real post: https://www.reddit.com/r/duck/comments/1i2fc3f)</p></div>
                     </div>
                 </div>
-                <div class="create-post-file-upload">
-                    <label>
-                        <input id="file-upload" type="file" accept="image/png, image/jpeg" hidden>
-                        <img class="image-icon" src="../../assets/images/image-outline.png">
-                    </label>
-                    <span id="file-upload-name"></span>
+
+                <div class="post-actions">
+                    <div class="post-vote-actions">
+                        <button>
+                            <img class="upvote-icon" src="../../assets/images/upvote-outline.png">
+                        </button>
+                        <span class="vote-count">239</span>
+                        <button>
+                            <img class="downvote-icon" src="../../assets/images/downvote-outline.png">
+                        </button>
+                        <span class="vote-count">23</span>
+                    </div>
+                    <div class="post-owner-actions">
+                        <button>
+                            <img class="edit-post-icon" src="../../assets/images/edit-outline.png">
+                        </button>
+                        <button id="delete-button">
+                            <img class="delete-post-icon" src="../../assets/images/delete-outline.png">
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="create-post-actions-container">
-            <button id="cancel-button" class="create-post-cancel-button">Cancel</button>
-            <button id="publish-button" class="create-post-publish-button">Publish</button>
-        </div>
+
+        <div id="comments-section"></div>
     </main>
     
     <footer class="footer">
@@ -79,8 +98,8 @@
 
         <p>© 2026 by The Rubber Duck Collective</p>
     </footer>
-
-    <script src="../../assets/js/create-post.js"></script>
-
+    <script src="../../assets/js/sample-data.js"></script>
+    <script src="../../assets/js/Comment.js"></script>
+    <script src="../../assets/js/view-post.js"></script>
 </body>
 </html>

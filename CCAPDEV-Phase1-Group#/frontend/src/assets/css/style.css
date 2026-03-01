@@ -3,6 +3,7 @@
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0px;
+    padding: 0px;
 }
 
 @font-face {
@@ -13,78 +14,149 @@
 }
 
 body {
-    margin: 0px;
-    padding: 0px;
-}
-
-main {
-    margin-left: 20px;
-    margin-right: 20px;
-}
-
-.website-name h1 {
-    text-align: center;
+    font-family: 'DM Sans', sans-serif;
+    background-color: #FFF9E3;
 }
 
 .navbar {
     display: flex;
-    height: 100px;
     background-color: #fccb6e;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
-}
-
-.navbar ul {
-    list-style-type: none;
-    padding: 0px;
-    margin: 0px;
-    overflow: hidden;
+    padding: 15px 40px;
 }
 
 .navbar a {
-    color: white;
     text-decoration: none;
     padding: 15px;
     display: block;
     text-align: center;
 }
 
-.navbar a:hover {
-    background-color: hsl(0, 0%, 10%);
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-right: 150px;
 }
 
-.navbar a.active {
-    background-color: #2196F3;
-    color: white;
+.nav-left h1, .nav-left a {
+    font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
+    color: #a8743e;
+    font-size: 1.75rem;
 }
 
-.navbar input {
-    margin-right: 50px;
+.duck-logo {
+    width: 50px;
 }
 
-.navbar input[type=text] {
-    float: right;
-    padding: 6px;
+.nav-center input {
+    padding: 10px 20px;
+    border-radius: 25px;
     border: none;
-    margin-top: 8px;
-    margin-right: 16px;
-    font-size: 17px;
+    width: 250px;
 }
 
-.navbar li {
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-right ul {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+    overflow: hidden;
+}
+
+.nav-right li {
     float: left;
 }
 
-.website-name {
-    margin-right: 150px;
+.nav-right a {
+    color: #a8743e;
+    font-weight: 500;
+}
+
+.nav-right a:hover {
+    background-color: #a8743e;
+    color: white;
+    border-radius: 30%;
+}
+
+.nav-profile-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.logout-btn {
+    border: 2px solid #a8743e;
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+main {
+    padding: 40px 80px;
+}
+
+.profile-icon {
+    width: 35px;
+    height: 35px;
+    background-color: #e2a83a;
+    border-radius: 50%;
+}
+
+.view-btn {
+    background-color: #a8743e;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.floating-add-btn {
+    position: fixed;
+    right: 40px;
+    bottom: 40px;
+    width: 60px;
+    height: 60px;
+    background-color: #b67b27;
+    color: white;
+    font-size: 1.875rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.floating-add-btn a {
+    text-decoration: none;
+    color: #fccb6e;
 }
 
 .footer {
     place-items: center;
+    margin-bottom: 10px;
+    color: #a8743e;
+    font-size: 0.8rem;
+    align-items: center;
 }
 
 .important-btns img {
-    width: 300px;
+    width: 40px;
     height: auto;
+}
+
+.attributions {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.attributions a {
+    text-decoration: none;
+    color: #a8743e;
 }
