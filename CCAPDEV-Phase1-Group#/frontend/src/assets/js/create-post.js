@@ -10,25 +10,25 @@ titleInput.addEventListener("input", () => {
     const currentLength = titleInput.value.length;
     charCtr.textContent = `${currentLength}/150`;
 
-    if(currentLength > 150) {
+    if (currentLength > 150) {
         charCtr.style.color = "#fc6e6e";
     } else {
         charCtr.style.color = "lightgray";
-    }    
-});    
+    }
+});
 
 // Prompts the user to confirm cancelling a post
 cancelBtn.addEventListener("click", () => {
     const postCancel = confirm("Are you sure you want to go back?");
 
-    if(postCancel) {
+    if (postCancel) {
         window.location.href = "index.html";
     }
 })
 
 // Prompts the user to confirm and alerts when posted successfully
 publishBtn.addEventListener("click", () => {
-    if(titleInput.value.trim() === "") {
+    if (titleInput.value.trim() === "") {
         alert("Please add a title.");
         titleInput.focus();
         return;
@@ -36,16 +36,36 @@ publishBtn.addEventListener("click", () => {
 
     const postConfirmed = confirm("Are you sure you want to publish this post?");
 
-    if(postConfirmed) {
+    if (postConfirmed) {
         alert("[PLACEHOLDER] Post has been published successfully!");
         window.location.href = "post.html"; // TODO: link this to actual post page
     }
 });
 
 // Replaces blank span with the filename of uploaded image
-fileInput.addEventListener("change", function() {
-    if(this.files && this.files.length > 0) {
+fileInput.addEventListener("change", function () {
+    if (this.files && this.files.length > 0) {
         const name = this.files[0].name;
         fileName.textContent = name;
     }
 });
+
+
+// Login / Logout button detector
+
+const logBtn = document.getElementById("log-btn");
+const user = JSON.parse(localStorage.getItem("loggedUser"));
+
+if (!user) {
+    logBtn.textContent = "Join Us";
+    logBtn.href = "register.html";
+} else {
+    logBtn.textContent = "Logout";
+    logBtn.href = "logout.html";
+    logBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.removeItem("loggedUser");
+        window.location.href = "logout.html";
+    });
+}
+
