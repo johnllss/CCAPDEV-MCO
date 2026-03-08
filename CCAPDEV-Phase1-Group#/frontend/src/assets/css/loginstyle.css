@@ -15,6 +15,7 @@
 
 body {
   font-family: 'DM Sans', sans-serif;
+  line-height: 1.5;
 }
 
 .container {
@@ -28,11 +29,12 @@ body {
   justify-content: center;
   align-items: center;
   background: #fff8eb;
+  padding: 48px 32px;
 }
 
 .auth-content {
   width: 100%;
-  max-width: 360px;
+  max-width: 380px;
 }
 
 .auth-content h1 {
@@ -45,6 +47,7 @@ body {
   font-weight: 600;
   color: #3a2a00;
   text-align: center;
+  margin-bottom: 28px;
 }
 
 .logo a {
@@ -55,8 +58,8 @@ body {
 }
 
 h1 {
-  margin-top: 28px;
-  margin-bottom: 6px;
+  margin-top: 12px;
+  margin-bottom: 8px;
   font-size: 28px;
   font-weight: 600;
   color: #3a2a00;
@@ -65,26 +68,26 @@ h1 {
 .subtext {
   font-size: 14px;
   color: #6b4f00;
-  padding-bottom: 20px;
+  padding-bottom: 28px;
 }
 
 .login-form {
-  margin-top: 28px;
+  margin-top: 24px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 18px;
 }
 
 label {
   display: block;
   font-size: 13px;
   font-weight: 500;
-  padding: 5px;
+  margin-bottom: 6px;
   color: #3a2a00;
 }
 
 input {
-  padding: 12px 14px;
+  padding: 13px 14px;
   border-radius: 8px;
   border: 1px solid #fccb6e;
   font-size: 14px;
@@ -103,7 +106,7 @@ input[type="password"] {
 
 .password-wrap input {
   width: 100%;
-  padding: 12px 44px 12px 14px;
+  padding: 13px 44px 13px 14px;
   border-radius: 8px;
   border: 1px solid #fccb6e;
 }
@@ -131,7 +134,7 @@ input:focus {
   justify-content: space-between;
   align-items: center;
   font-size: 13px;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .remember {
@@ -156,9 +159,9 @@ input:focus {
 }
 
 .login-btn {
-  margin-top: 20px;
+  margin-top: 18px;
   width: 100%;
-  padding: 12px 16px;
+  padding: 14px 16px;
   border: none;
   border-radius: 8px;
   background: #fccb6e;
@@ -180,7 +183,7 @@ input:focus {
 
 .registerdirect {
   display: block;
-  margin-top: 14px;
+  margin-top: 20px;
   text-align: center;
   font-weight: 500;
   color: #3a2a00;
@@ -205,11 +208,12 @@ input:focus {
   justify-content: center;
   align-items: center;
   text-align: center;
-  gap: 16px;
+  gap: 24px;
+  padding: 40px;
 }
 
 .image-panel img {
-  width: 220px;
+  width: 240px;
   height: auto;
   max-width: 100%;
 }
@@ -218,4 +222,6 @@ input:focus {
   font-size: 16px;
   font-weight: 500;
   color: #3a2a00;
+  max-width: 340px;
+  line-height: 1.6;
 }

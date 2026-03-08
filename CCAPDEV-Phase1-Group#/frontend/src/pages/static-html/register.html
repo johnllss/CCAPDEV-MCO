@@ -27,28 +27,19 @@
 
                 <form class="register-form" id="register-form">
                     <label>Email</label>
-                    <input type="email" placeholder="donaldduck@email.com">
+                    <input type="email" id="email" placeholder="donaldduck@email.com">
 
                     <label>Username</label>
-                    <input type="username" placeholder="donald-duck">
+                    <input type="username" id="username" placeholder="donald-duck">
 
                     <label>Password</label>
                     <div class="password-wrap">
-                        <input type="password" placeholder="••••••••••••" id="password">
+                        <input type="password" id="password" placeholder="••••••••••••" id="password">
                         <img src="../../assets/images/eye-close.png" id="eyeicon">
-                        <!-- make sure to add onclick(); later to toggle password viewing-->
                     </div>
-
-                    <div class="remember-forgot-container">
-                        <label class="remember">
-                            <input type="checkbox">
-                            <!-- make sure to add onclick(); remember me functionality(optional)-->
-                            Remember me (not working)
-                        </label>
-                    </div>
-
 
                     <button type="submit" class="register-btn">Create account</button>
+                    <!-- Make it so that it redirects instead to the edit profile area -->
                 </form>
                 <a class="loginredirect" href="../../pages/static-html/login.html">Already have an account?</a>
 
