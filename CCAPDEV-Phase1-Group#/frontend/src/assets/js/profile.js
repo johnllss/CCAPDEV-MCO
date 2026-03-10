@@ -8,9 +8,14 @@ if (!user) {
 
 // call for the user id and compare to database
 // get the user id
+// include viewing other profiles
 const userId = user.userId;
 
+// Ensures that if its someone elses profile, wont let them edit it
+if (userId != user.userId) {
+    document.getElementById("editBtn").style.display = "none";
 
+}
 async function loadProfile() {
 
     const response = await fetch(`http://localhost:3000/users/${userId}`);
