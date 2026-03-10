@@ -48,7 +48,7 @@ form.addEventListener("submit", async function (e) {
     if (response.ok) {
         console.log("Success:", result.message);
         alert(result.message);
-        localStorage.setItem("user", JSON.stringify(result)); // Where user is saved for other pages
+        localStorage.setItem("loggedUser", JSON.stringify(result)); // Where user is saved for other pages
         window.location.href = "../../pages/static-html/index.html";
 
     } else {

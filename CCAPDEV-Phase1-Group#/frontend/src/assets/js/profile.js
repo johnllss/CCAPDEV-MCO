@@ -1,3 +1,4 @@
+// parse for the user in local storage
 const user = JSON.parse(localStorage.getItem("loggedUser"));
 
 if (!user) {
@@ -5,28 +6,47 @@ if (!user) {
     alert("Please Log In to view profile");
 }
 
-// get the user info
-document.getElementById("username").textContent = user.username;
-document.getElementById("fullname").textContent = user.fullname;
-document.getElementById("userquote").textContent = `"${user.quote}"`;
-document.getElementById("aboutMe").textContent = user.about;
+// call for the user id and compare to database
+// get the user id
+const userId = user.userId;
 
-// get the user's statistics
-document.getElementById("total-posts").textContent = user.posts;
-document.getElementById("total-replies").textContent = user.replies;
-document.getElementById("join-date").textContent = user.dday;
 
-// get dp
-document.getElementById("profilepic").src = user.photo;
+async function loadProfile() {
 
-// get their activity
+    const response = await fetch(`http://localhost:3000/users/${userId}`);
+    const userData = await response.json();
 
-//unsure of how to implement this
-const list = document.getElementById("activitylist");
-list.innerHTML = "";
+    console.log("User from database:", userData);
 
-user.activity.forEach(item => {
-    const li = document.createElement("li");
-    li.innerHTML = `<strong>Posted:</strong> ${item}`;
-    list.appendChild(li);
-});
+    // populate profile header
+    document.getElementById("username").textContent = userData.username;
+    document.getElementById("fullname").textContent = userData.profile.fullname;
+    document.getElementById("userquote").textContent = `"${userData.profile.quote}"`;
+
+    // profile picture
+    document.getElementById("profilepic").src = userData.profile.photo;
+
+    // stats
+    document.getElementById("total-posts").textContent = userData.posts;
+    document.getElementById("total-replies").textContent = userData.replies;
+
+    // join date
+    const joinDate = new Date(userData.createdAt);
+    document.getElementById("join-date").textContent = joinDate.toLocaleDateString();
+
+    // about me
+    document.getElementById("aboutMe").textContent = userData.profile.about;
+
+    // activity list
+    const list = document.getElementById("activitylist");
+    list.innerHTML = "";
+
+    userData.activity.forEach(item => {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>Posted:</strong> ${item}`;
+        list.appendChild(li);
+    });
+
+}
+
+loadProfile();
