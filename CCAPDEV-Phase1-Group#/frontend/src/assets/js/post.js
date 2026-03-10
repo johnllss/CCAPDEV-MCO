@@ -10,7 +10,7 @@ titleInput.addEventListener("input", () => {
     const currentLength = titleInput.value.length;
     charCtr.textContent = `${currentLength}/150`;
 
-    if(currentLength > 150) {
+    if(currentLength >= 150) {
         charCtr.style.color = "#fc6e6e";
     } else {
         charCtr.style.color = "lightgray";
@@ -37,7 +37,9 @@ publishBtn.addEventListener("click", () => {
     const postConfirmed = confirm("Are you sure you want to publish this post?");
 
     if(postConfirmed) {
-		alert("Post has been published successfully!");
+        // TODO: add post to database
+
+        alert("Post has been published successfully!");
         window.location.href = "index.html"; // TODO: link this to actual post page
     }
 });

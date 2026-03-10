@@ -10,7 +10,7 @@ titleInput.addEventListener("input", () => {
     const currentLength = titleInput.value.length;
     charCtr.textContent = `${currentLength}/150`;
 
-    if(currentLength > 150) {
+    if(currentLength >= 150) {
         charCtr.style.color = "#fc6e6e";
     } else {
         charCtr.style.color = "lightgray";
