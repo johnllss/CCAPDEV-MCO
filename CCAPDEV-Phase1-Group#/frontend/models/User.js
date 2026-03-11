@@ -15,11 +15,6 @@ const UserSchema = new Schema({
     posts: { type: Number, default: 0 },
     replies: { type: Number, default: 0 },
 
-    activity: {
-        type: Array,
-        default: []
-    }
-
 }, { timestamps: true });
 
 module.exports = model('User', UserSchema);
