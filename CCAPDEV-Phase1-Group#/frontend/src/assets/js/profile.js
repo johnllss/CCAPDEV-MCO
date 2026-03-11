@@ -46,9 +46,33 @@ async function loadProfile() {
     const list = document.getElementById("activitylist");
     list.innerHTML = "";
 
-    userData.activity.forEach(item => {
+    const activity = userData.activity && userData.activity.length > 0
+        ? userData.activity
+        : [
+            { text: "Why is my duck meowing?", time: "1m ago" },
+            { text: "Why does my duck have cat ears and is this something I should worry about as a duck owner?", time: "5m ago" },
+            { text: "Help my duck got cursed by a witch and now it only quacks backwards", time: "2 days ago" },
+            { text: "Is it normal for a duck to bark at midnight when the moon is full?", time: "1 week ago" },
+            { text: "Extra activity that should not appear", time: "2 weeks ago" }
+        ];
+
+    activity.slice(0, 4).forEach(item => {
+
+        const fullText = typeof item === "string" ? item : item.text;
+        const time = typeof item === "string" ? "" : item.time;
+
+        const shortText = fullText.length > 45
+            ? fullText.substring(0, 45) + "..."
+            : fullText;
+
         const li = document.createElement("li");
-        li.innerHTML = `<strong>Posted:</strong> ${item}`;
+
+        li.innerHTML = `
+        <strong>Posted:</strong> 
+        <span title="${fullText}">${shortText}</span>
+        <span class="activity-date">${time}</span>
+    `;
+
         list.appendChild(li);
     });
 

@@ -46,18 +46,18 @@ body {
 /* Profile Container */
 
 .profile-container {
-    max-width: 1000px;
-    margin: 50px auto;
-    background: white;
-    border-radius: 16px;
+    max-width: 1100px;
+    margin: 60px auto;
     padding: 40px;
-    box-shadow: 0 15px 35px rgba(0,0,0,.08);
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 20px 45px rgba(0,0,0,.08);
 }
 
 .profile-container h1 {
     text-align: center;
-    font-size: 32px;
-    margin-bottom: 30px;
+    font-size: 34px;
+    margin-bottom: 40px;
     font-family: 'RoxboroughCF', serif;
 }
 
@@ -65,10 +65,8 @@ body {
 
 .profile-header-container {
     display: flex;
-    align-items: center;
-    gap: 40px;
-    padding: 30px 0;
-    border-top: 2px solid #fccb6e;
+    gap: 50px;
+    padding-bottom: 30px;
     border-bottom: 2px solid #fccb6e;
 }
 
@@ -78,35 +76,36 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .profile-left img {
     width: 170px;
     height: 170px;
     border-radius: 50%;
-    object-fit: cover;
     border: 5px solid #fccb6e;
+    object-fit: cover;
 }
 
 .user-quote {
-    font-size: 14px;
     text-align: center;
-    max-width: 180px;
-    line-height: 1.4;
+    font-size: 14px;
     color: #6b4f00;
+    max-width: 200px;
+    line-height: 1.4;
 }
 
-/* Ride Profile */
+/* Right Profile */
 
 .profile-right {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 12px;
 }
 
 .username {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 700;
 }
 
@@ -115,53 +114,64 @@ body {
     color: #6b4f00;
 }
 
-/* Stats Area */
+/* Stats */
 
 .profile-stats {
-    margin-top: 30px;
     display: flex;
-    justify-content: center;
-    gap: 40px;
+    gap: 15px;
+    margin-top: 10px;
+    flex-wrap: wrap;
 }
 
 .stat {
-    background: #fffdf6;
+    background: #fff6db;
     border: 2px solid #fccb6e;
-    padding: 16px 26px;
-    border-radius: 12px;
+    border-radius: 999px;
+    padding: 8px 16px;
     text-align: center;
-    min-width: 150px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .stat-label {
-    display: block;
-    font-size: 13px;
     color: #6b4f00;
 }
 
 .stat-value {
-    font-size: 18px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
-/* profile sections area */
+/* Profile Content */
+
+.profile-content {
+    margin-top: 35px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+/* Sections */
 
 .profile-section {
-    margin-top: 40px;
+    background: #fffdf6;
+    border-radius: 14px;
+    padding: 25px;
+    border: 2px solid #fccb6e;
 }
 
 .profile-section h2 {
-    font-size: 22px;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
 }
 
 /* About Section */
 
 .aboutme-container {
-    background: #fffdf6;
-    border: 2px solid #fccb6e;
-    border-radius: 12px;
+    background: white;
+    border-radius: 10px;
     padding: 18px;
+    border: 1px solid #fccb6e;
 }
 
 .aboutme {
@@ -172,19 +182,24 @@ body {
 
 .activity-list {
     list-style: none;
-    border-radius: 12px;
+    border-radius: 10px;
     overflow: hidden;
-    border: 2px solid #fccb6e;
+    border: 1px solid #fccb6e;
 }
 
 .activity-list li {
-    padding: 14px 16px;
+    padding: 14px;
     border-bottom: 1px solid #fccb6e;
-    background: #fffdf6;
+    background: white;
+    transition: background .15s ease;
 }
 
 .activity-list li:last-child {
     border-bottom: none;
+}
+
+.activity-list li:hover {
+    background: #fff6db;
 }
 
 .activity-date {
@@ -193,28 +208,50 @@ body {
     color: #6b4f00;
 }
 
-/* btns */
+.activity-list span[title] {
+    cursor: pointer;
+}
+
+/* Edit Button */
 
 .editbtn {
-    display: block;
+    margin-top: 12px;
     width: 160px;
     text-align: center;
-    margin: 40px auto 0;
-    padding: 14px 0;
+    padding: 12px 0;
     background: #fccb6e;
-    color: #3a2a00;
-    border-radius: 12px;
-    font-weight: 600;
+    border-radius: 10px;
     text-decoration: none;
-    transition: .2s ease;
+    color: #3a2a00;
+    font-weight: 600;
+    transition: .15s ease;
 }
 
 .editbtn:hover {
     background: #e6b85d;
-    transform: translateY(-2px);
 }
 
-/* bottom footer area */
+/* Responsive */
+
+@media (max-width: 900px) {
+
+    .profile-header-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-content {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-stats {
+        justify-content: center;
+    }
+
+}
+
+/* Footer */
 
 .footer {
     text-align: center;
