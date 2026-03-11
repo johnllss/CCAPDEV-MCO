@@ -1,6 +1,7 @@
 // the routes i need
 const router = require('express').Router();
 const User = require('../models/User');
+const bcrypt = require("bcrypt");
 
 // Register Functions
 
@@ -14,10 +15,15 @@ router.post('/register', async (req, res) => {
             });
         }
 
+        // hashing AREA!!!
+        const salting = 10;
+        const hashedPassword = await bcrypt.hash(password, salting);
+
+
         const user = new User({ //used to create a User object
             username,
             email,
-            password
+            password: hashedPassword
         });
 
         await user.save();
@@ -63,7 +69,10 @@ router.post('/login', async (req, res) => {
             });
         }
 
-        if (user.password !== password) {
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
             return res.status(401).json({
                 message: "Invalid username/email or password"
             });
