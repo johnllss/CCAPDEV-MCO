@@ -5,7 +5,7 @@ const editBtn = document.getElementById("edit-button");
 deleteBtn.addEventListener("click", () => {
     const delConfirmed = confirm("Are you sure you want to delete this post?\nThis action cannot be undone.");
 
-    if(delConfirmed) {
+    if (delConfirmed) {
         alert("[PLACEHOLDER] Post has been deleted successfully!");
         window.location.href = "index.html";
     }
