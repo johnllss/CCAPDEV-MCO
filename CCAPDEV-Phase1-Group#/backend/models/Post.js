@@ -18,8 +18,7 @@ const PostSchema = new Schema({
     },
 
     body: {
-        type: String,
-        required: true
+        type: String
     },
 
     votes: {
