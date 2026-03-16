@@ -18,6 +18,7 @@ mongoose
 app.use('/users', require('./routes/users'));
 app.use('/auth', require('./routes/auth'));
 app.use('/activity', require('./routes/activity'));
+app.use('/posts', require('./routes/posts'));
 
 // start server
 const PORT = 3000;
