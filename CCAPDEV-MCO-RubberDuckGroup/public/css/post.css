@@ -1,0 +1,263 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
+@font-face {
+    font-family: 'RoxboroughCF';
+    src: url('../fonts/Roxborough\ CF.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    background-color: #fff8eb;
+}
+
+.create-post-box {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    background-color: white;
+    padding: 20px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    margin-left: 20%;
+    margin-right: 20%;
+    border-radius: 10px;
+    border: 2px solid #fccb6e;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.create-post-header {
+    color: black;
+    margin-bottom: 20px;
+}
+
+.create-post-actions-container {
+    display: flex;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+.create-post-title-container, .create-post-body-container,  .post-title-container, .post-body-container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.create-post-title::placeholder, .create-post-body::placeholder , .post-title::placeholder, .post-body::placeholder {
+    color: #fccb6e;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.create-post-title, .post-title {
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    height: 50px;
+    padding: 10px;
+    font-size: large;
+    font-family: 'DM Sans', sans-serif;
+    /* font-weight: bold; */
+    color: black;
+    background-color: white;
+}
+
+.char-limit {
+    align-self: flex-end;
+    color: lightgray;
+    font-style: italic;
+}
+
+.create-post-body {
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    min-height: 200px;
+    field-sizing: content;
+    padding: 10px;
+    margin-top: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: medium;
+    color: black;
+    background-color: white;
+    resize: none;
+}
+
+.create-post-title:focus, .post-title:focus, textarea:focus {
+    border: 2px solid #fccb6e;
+    outline: none;
+}
+
+.create-post-file-upload label img, .post-vote-actions button img, .post-owner-actions button img{
+    width: 32px;
+    cursor: pointer;
+}
+
+.create-post-file-upload {
+    display: flex;
+    align-items: center;
+}
+
+.create-post-file-upload span {
+    margin-left: 15px;
+    font-style: italic;
+    color:#fccb6e;
+}
+
+.create-post-actions-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.create-post-cancel-button, .create-post-publish-button {
+    padding: 10px 20px;
+    height: 50px;
+    border-radius: 10px;
+    font-size: large;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+}
+
+.create-post-cancel-button {
+    width: 100px;
+    background-color: white;
+    border-color: #fccb6e;
+    border-style: solid;
+    color: black;
+}
+
+.create-post-cancel-button:hover {
+    background-color: #fff4df;
+}
+
+.create-post-publish-button {
+    width: 200px;
+    background-color: #fccb6e;
+    border-color: #fccb6e;
+    border-style: solid;
+    font-weight: bold;
+    color: black;
+}
+
+.create-post-publish-button:hover {
+    background-color: #febe47;
+    border-color: #febe47;
+}
+
+.post-card {
+    background-color: white;
+    padding: 25px;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    border-radius: 10px;
+    border: 2px solid #fccb6e;
+}
+
+.post-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-metadata {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #a8743e;
+    font-weight: 500;
+}
+
+.post-owner-name {
+    text-decoration: none;
+    color: #fccb6e;
+    font-weight: bold;
+}
+
+.post-owner-name:hover {
+    text-decoration: underline;
+}
+
+.post-timestamp {
+    color: lightgray;
+}
+
+.post-edit-timestamp {
+    font-style: italic;
+}
+
+.post-header {
+    text-align: center;
+    font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
+    margin: 20px 0;
+    color: #a8743e;
+}
+
+.post-body {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    word-wrap: break-word;
+    resize: none;
+    outline: none;
+    padding: 0;
+    cursor: default;
+}
+
+.post-image img {
+    border-radius: 10px;
+    margin: 0px;
+    object-fit: contain;
+    max-height: 800px;
+    width: 100%;
+}
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vote-count {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.post-vote-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-vote-actions span {
+    color: #a8743e;
+    font-weight: bold;
+}
+
+.post-actions button, .create-post-file-upload button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.post-actions button:hover {
+    transform: scale(1.2);
+}
+
+button:hover .upvote-icon {
+    content: url("/images/upvote-fill.png");
+}
+
+button:hover .downvote-icon {
+    content: url("/images/downvote-fill.png");
+}
+
+button:hover .edit-post-icon {
+    content: url("/images/edit-fill.png");
+}
+
+button:hover .delete-post-icon {
+    content: url("/images/delete-fill.png");
+}

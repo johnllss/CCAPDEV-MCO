@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register New User</title>
+    <link rel="stylesheet" href="/css/registerstyle.css">
+</head>
+
+
+<body>
+    <main class="container">
+
+        <!-- For the left side -->
+        <section class="auth-panel">
+
+            <div class="auth-content">
+
+                <div class="logo">
+                    <a href="/index.html">The Rubber Duck Forums</a>
+                </div>
+
+
+                <h1>Create an account</h1>
+                <p class="subtext">Enter your details to get started.</p>
+
+                <form class="register-form" id="register-form">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="donaldduck@email.com">
+
+                    <label>Username</label>
+                    <input type="username" id="username" placeholder="donald-duck">
+
+                    <label>Password</label>
+                    <div class="password-wrap">
+                        <input type="password" placeholder="••••••••••••" id="password">
+                        <img src="/images/eye-close.png" id="eyeicon">
+                    </div>
+                    <div class="error-text" id="password-error"></div>
+
+                    <button type="submit" class="register-btn">Create account</button>
+                    <!-- Make it so that it redirects instead to the edit profile area -->
+                </form>
+                <a class="loginredirect" href="/login.html">Already have an account?</a>
+
+            </div>
+
+        </section>
+
+        <section class="image-panel">
+            <img src="/images/rubber-duck.png">
+            <div class="quote-area">
+                Have you talked to your rubber duck yet?
+            </div>
+
+        </section>
+    </main>
+
+    <script src="/js/registerscript.js" defer></script>
+</body>
+
+</html>

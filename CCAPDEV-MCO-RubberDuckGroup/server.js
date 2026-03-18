@@ -1,0 +1,31 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const path = require('path');
+
+const app = express();
+
+// middleware
+app.use(express.json());
+app.use(cors());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'views', 'pages')));
+
+// database connection
+mongoose
+    .connect("mongodb://127.0.0.1:27017/userDB")
+    .then(() => console.log('MongoDB connected'))
+    .catch(console.error);
+
+// routes
+app.use('/users', require('./routes/userRoute'));
+app.use('/auth', require('./routes/authRoute'));
+app.use('/activity', require('./routes/activityRoute'));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'pages', 'index.html'));
+});
+
+// start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, console.log(`Listening on port ${PORT}`));
