@@ -2,14 +2,19 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+const hbs = require('hbs');
+const fileUpload = require('express-fileupload');
 
 const app = express();
 
 // middleware
+app.set('view engine', 'hbs');
 app.use(express.json());
-app.use(cors());
+app.use(express.urlencoded( { extended: true} ));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'views', 'pages')));
+app.use(cors());
+app.use(fileUpload());
 
 // database connection
 mongoose
