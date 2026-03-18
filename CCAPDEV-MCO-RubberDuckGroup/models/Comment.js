@@ -12,11 +12,6 @@ const CommentSchema = new Schema({
     post: {
         type: String
     },
-
-    createdOn: {
-        type: Date,
-        default: Date.now
-    }
-});
+}, { timestamps: true });
 
 module.exports = model('Comment', CommentSchema);
