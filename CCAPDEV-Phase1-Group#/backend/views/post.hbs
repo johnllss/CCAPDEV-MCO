@@ -71,7 +71,7 @@
                         {{/if}}
 
                         <div class="post-body">
-                            <p>{{{post.body}}}</p>
+                            <p>{{post.body}}</p>
                         </div>
                     </div>
                 </div>
@@ -87,8 +87,7 @@
                         </button>
                     </div>
 
-                    {{#if isOwner}}
-                    <div class="post-owner-actions">
+                    <div class="post-owner-actions" id="owner-actions" style="display:none">
                         <button id="edit-button">
                             <img class="edit-post-icon" src="/assets/images/edit-outline.png">
                         </button>
@@ -96,7 +95,6 @@
                             <img class="delete-post-icon" src="/assets/images/delete-outline.png">
                         </button>
                     </div>
-                    {{/if}}
                 </div>
             </div>
         </div>
@@ -127,6 +125,19 @@
     <script src="/assets/js/sample-data.js"></script>
     <script src="/assets/js/Comment.js"></script>
     <script src="/assets/js/view-post.js"></script>
+    <script>
+        (function () {
+            try {
+                const logged = JSON.parse(window.localStorage.getItem('loggedUser'));
+                const currentUserId = logged?.userId;
+                const authorId = '{{post.authorId}}';
+                if (currentUserId && authorId && currentUserId === authorId) {
+                    const el = document.getElementById('owner-actions');
+                    if (el) el.style.display = '';
+                }
+            } catch (e) {}
+        })();
+    </script>
 </body>
 
 </html>
