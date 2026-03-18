@@ -24,6 +24,7 @@ mongoose
 
 // routes
 app.use('/users', require('./routes/userRoute'));
+app.use('/posts', require('./routes/postRoute'));
 app.use('/auth', require('./routes/authRoute'));
 app.use('/activity', require('./routes/activityRoute'));
 
