@@ -2,8 +2,8 @@
 const user = JSON.parse(localStorage.getItem("loggedUser"));
 
 if (!user) {
-    window.location.href = "../../pages/static-html/register.html";
     alert("Please Log In to view profile");
+    window.location.href = "/register.html";
 }
 
 // call for the user id and compare to database

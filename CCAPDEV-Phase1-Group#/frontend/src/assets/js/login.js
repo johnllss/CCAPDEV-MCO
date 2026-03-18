@@ -49,7 +49,7 @@ form.addEventListener("submit", async function (e) {
         console.log("Success:", result.message);
         alert(result.message);
         localStorage.setItem("loggedUser", JSON.stringify(result)); // Where user is saved for other pages
-        window.location.href = "../../pages/static-html/index.html";
+        window.location.href = "/index.html";
 
     } else {
         console.log("Error:", result.message);

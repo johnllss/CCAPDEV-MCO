@@ -6,6 +6,7 @@ const currBody = localStorage.getItem("editPostBody");
 // const fileName = document.getElementById("file-upload-name");
 const cancelBtn = document.getElementById("cancel-button");
 const publishBtn = document.getElementById("publish-button");
+const user = JSON.parse(localStorage.getItem("loggedUser"));
 
 // Fill text fields with current post info
 titleField.value = currTitle;
@@ -18,21 +19,62 @@ cancelBtn.addEventListener("click", () => {
     if(postCancel) {
         localStorage.removeItem("editPostTitle");
         localStorage.removeItem("editPostBody");
-        window.location.href = "index.html"; // TODO: Link this to the post being edited
+
+        const postId = localStorage.getItem("editPostId");
+        localStorage.removeItem("editPostId");
+        
+        if (postId) {
+            window.location.href = `/posts/${postId}/view`;
+        } else {
+            window.location.href = "/";
+        }
     }
 })
 
-// Prompts the user to confirm and alerts when edit successfully
-publishBtn.addEventListener("click", () => {
-    const postConfirmed = confirm("Are you sure you want to publish this edit?");
+// Updates post in database and alerts when edited successfully
+publishBtn.addEventListener("click", async () => {
+    
+    if (!user || !user.userId) {
+        alert("Please login to edit a post.");
+        window.location.href = "/login.html";
+        return;
+    }
 
-    if(postConfirmed) {
-        // TODO: update post in database
+    const editConfirmed = confirm("Are you sure you want to publish this edit?");
 
-        alert("[PLACEHOLDER] Post has been edited successfully!");
-        localStorage.removeItem("editPostTitle");
-        localStorage.removeItem("editPostBody");
-        window.location.href = "post.html"; // TODO: link this to actual post page
+    const postId = localStorage.getItem('editPostId') || new URLSearchParams(window.location.search).get('id');
+    if (!postId) {
+        alert('Post ID not found.');
+        return;
+    }
+
+    if(editConfirmed) {
+        try {
+            const payload = {
+                body: bodyField.value.trim()
+            };
+
+            const response = await fetch(`/posts/${postId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const result = await response.json().catch(() => ({}));
+                alert(result.message || "Failed to edit post.");
+                return;
+            }
+
+            alert("Post has been edited successfully!");
+            localStorage.removeItem("editPostTitle");
+            localStorage.removeItem("editPostBody");
+            localStorage.removeItem("editPostId");
+            window.location.href = `/posts/${postId}/view`;
+        } catch (err) {
+            console.error(err);
+            alert("Could not connect to server.");
+        }
     }
 });
 

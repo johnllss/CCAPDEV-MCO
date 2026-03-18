@@ -158,13 +158,13 @@ async function renderPost(req, res) {
                 image: post.image,
                 authorUsername: post.user.username,
                 authorPhoto: post.user.profile?.photo || '/assets/images/default-pfp.png',
+                authorId: post.user._id.toString(),
                 timestamp: relativeDate(post.createdAt),
                 editedAt: post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null,
                 votes: post.votes
             },
             isOwner: req.session?.userId === post.user._id.toString()
         });
-        console.log(req.session?.userId + post.user._id.toString());
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
