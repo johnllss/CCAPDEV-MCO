@@ -18,9 +18,9 @@ mongoose
     .catch(console.error);
 
 // routes
-app.use('/users', require('./routes/users'));
-app.use('/auth', require('./routes/auth'));
-app.use('/activity', require('./routes/activity'));
+app.use('/users', require('./routes/userRoute'));
+app.use('/auth', require('./routes/authRoute'));
+app.use('/activity', require('./routes/activityRoute'));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'pages', 'index.html'));
