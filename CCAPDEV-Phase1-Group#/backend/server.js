@@ -20,5 +20,5 @@ app.use('/auth', require('./routes/auth'));
 app.use('/activity', require('./routes/activity'));
 
 // start server
-const PORT = 3000;
-app.listen(PORT, () => console.log('Listening on port 3000'));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, console.log(`Listening on port ${PORT}`));
