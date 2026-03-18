@@ -1,6 +1,35 @@
 const mongoose = require('mongoose');
 const Post = require('../models/Post');
 
+function relativeDate(date) {
+    if (!date) 
+        return '';
+
+    const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+
+    if (seconds < 1) 
+        return 'just now';
+
+    const units = [
+        { label: 'y', s: 31536000 },
+        { label: 'mo', s: 2592000 },
+        { label: 'w', s: 604800 },
+        { label: 'd', s: 86400 },
+        { label: 'h', s: 3600 },
+        { label: 'm', s: 60 },
+        { label: 's', s: 1 }
+    ];
+
+    for (const u of units) {
+        const val = Math.floor(seconds / u.s);
+        if (val >= 1) return `${val}${u.label} ago`;
+    }
+
+    return 'just now';
+}
+
+
+
 async function createPost(req, res) {
     try {
         const { user, title, body, image } = req.body;
@@ -110,10 +139,43 @@ async function deletePost(req, res) {
     }
 }
 
+async function renderPost(req, res) {
+    try {
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).send('Invalid post ID');
+        }
+
+        const post = await Post.findById(id).populate('user', 'username profile.photo');
+
+        if (!post) return res.status(404).send('Post not found');
+
+        res.render('post', {
+            post: {
+                title: post.title,
+                body: post.body,
+                image: post.image,
+                authorUsername: post.user.username,
+                authorPhoto: post.user.profile?.photo || '/assets/images/default-pfp.png',
+                timestamp: relativeDate(post.createdAt),
+                editedAt: post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null,
+                votes: post.votes
+            },
+            isOwner: req.session?.userId === post.user._id.toString()
+        });
+        console.log(req.session?.userId + post.user._id.toString());
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+}
+
 module.exports = {
     createPost,
     getPosts,
     getPostById,
     editPost,
-    deletePost
+    deletePost,
+    renderPost
 };

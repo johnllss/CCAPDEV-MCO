@@ -30,7 +30,7 @@ cancelBtn.addEventListener("click", () => {
     }
 })
 
-// Prompts the user to confirm and alerts when posted successfully
+// Adds post to database and alerts when posted successfully
 publishBtn.addEventListener("click", async () => {
 
     if (!user || !user.userId) {
@@ -70,7 +70,7 @@ publishBtn.addEventListener("click", async () => {
             }
 
             alert("Post has been published successfully!");
-            window.location.href = `post.html?id=${result._id}`;
+            window.location.href = `/posts/${result._id}/view`;
         } catch (err) {
             alert("Could not connect to server.");
         }

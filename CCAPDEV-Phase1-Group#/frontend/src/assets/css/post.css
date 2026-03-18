@@ -56,7 +56,6 @@ body {
     padding: 10px;
     font-size: large;
     font-family: 'DM Sans', sans-serif;
-    /* font-weight: bold; */
     color: black;
     background-color: white;
 }
@@ -192,7 +191,7 @@ body {
 }
 
 .post-timestamp {
-    color: lightgray;
+    color: gray;
 }
 
 .post-edit-timestamp {
