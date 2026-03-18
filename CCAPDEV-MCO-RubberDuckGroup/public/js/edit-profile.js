@@ -16,7 +16,7 @@ if (!user) {
 }
 
 if (!user) {
-    window.location.href = "../../pages/static-html/login.html";
+    window.location.href = "/login.html";
 }
 
 
@@ -84,7 +84,7 @@ form.addEventListener("submit", async function (e) {
     if (response.ok) {
         console.log("Success:", result.message);
         alert("Successfully Saved Changes");
-        window.location.href = "../../pages/static-html/profile.html";
+        window.location.href = "/profile.html";
 
     } else {
         console.log("Error:", result.message);

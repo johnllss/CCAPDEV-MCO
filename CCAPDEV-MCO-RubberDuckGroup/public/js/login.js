@@ -8,10 +8,10 @@ let password = document.getElementById("password");
 eyeicon.onclick = function () {
     if (password.type == "password") {
         password.type = "text";
-        eyeicon.src = "../../assets/images/eye-open.png";
+        eyeicon.src = "/images/eye-open.png";
     } else {
         password.type = "password";
-        eyeicon.src = "../../assets/images/eye-close.png";
+        eyeicon.src = "/images/eye-close.png";
     }
 }
 
@@ -49,7 +49,7 @@ form.addEventListener("submit", async function (e) {
         console.log("Success:", result.message);
         alert(result.message);
         localStorage.setItem("loggedUser", JSON.stringify(result)); // Where user is saved for other pages
-        window.location.href = "../../pages/static-html/index.html";
+        window.location.href = "/index.html";
 
     } else {
         console.log("Error:", result.message);

@@ -1,12 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 
 // middleware
 app.use(express.json());
 app.use(cors());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'views', 'pages')));
 
 // database connection
 mongoose
@@ -18,6 +21,10 @@ mongoose
 app.use('/users', require('./routes/users'));
 app.use('/auth', require('./routes/auth'));
 app.use('/activity', require('./routes/activity'));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'pages', 'index.html'));
+});
 
 // start server
 const PORT = process.env.PORT || 3000;

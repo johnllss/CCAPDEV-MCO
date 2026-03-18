@@ -247,17 +247,17 @@ body {
 }
 
 button:hover .upvote-icon {
-    content: url("../../assets/images/upvote-fill.png");
+    content: url("/images/upvote-fill.png");
 }
 
 button:hover .downvote-icon {
-    content: url("../../assets/images/downvote-fill.png");
+    content: url("/images/downvote-fill.png");
 }
 
 button:hover .edit-post-icon {
-    content: url("../../assets/images/edit-fill.png");
+    content: url("/images/edit-fill.png");
 }
 
 button:hover .delete-post-icon {
-    content: url("../../assets/images/delete-fill.png");
+    content: url("/images/delete-fill.png");
 }

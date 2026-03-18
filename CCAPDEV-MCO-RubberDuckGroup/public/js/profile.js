@@ -2,7 +2,7 @@
 const user = JSON.parse(localStorage.getItem("loggedUser"));
 
 if (!user) {
-    window.location.href = "../../pages/static-html/register.html";
+    window.location.href = "/register.html";
     alert("Please Log In to view profile");
 }
 
