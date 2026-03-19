@@ -37,7 +37,7 @@ body {
     margin-right: 20%;
 }
 
-.create-post-title-container, .create-post-body-container,  .post-title-container, .post-body-container{
+.create-post-title-container, .create-post-body-container,  .post-title-container {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -205,9 +205,15 @@ body {
     color: #a8743e;
 }
 
+.post-body-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
 .post-body {
     margin-top: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     border: none;
     font-family: 'DM Sans', sans-serif;
     white-space: pre-line;
@@ -258,10 +264,6 @@ body {
     cursor: pointer;
     padding: 5px;
     transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.post-actions button:hover {
-    transform: scale(1.2);
 }
 
 button:hover .upvote-icon {
