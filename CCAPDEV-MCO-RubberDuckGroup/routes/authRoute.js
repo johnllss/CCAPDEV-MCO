@@ -1,7 +1,7 @@
 // the routes i need
 const router = require('express').Router();
 const User = require('../models/User');
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 
 // Register Functions
 

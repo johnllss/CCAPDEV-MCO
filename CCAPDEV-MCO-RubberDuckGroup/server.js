@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const { engine } = require('express-handlebars');
 const path = require('path');
 const hbs = require('hbs');
 const fileUpload = require('express-fileupload');
@@ -9,6 +10,8 @@ const app = express();
 
 // middleware
 app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views', 'pages'));
+hbs.registerPartials(path.join(__dirname, 'views', 'partials'));
 app.use(express.json());
 app.use(express.urlencoded( { extended: true} ));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -22,16 +25,16 @@ mongoose
     .then(() => console.log('MongoDB connected'))
     .catch(console.error);
 
-// routes
+app.use('/assets', express.static(path.join(__dirname, 'public')));
+
+// routes (use actual route filenames in this project)
+app.use('/', require('./routes/indexRoute'));
+app.use('/auth', require('./routes/authRoute'));
 app.use('/users', require('./routes/userRoute'));
 app.use('/posts', require('./routes/postRoute'));
-app.use('/auth', require('./routes/authRoute'));
 app.use('/activity', require('./routes/activityRoute'));
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'pages', 'index.html'));
-});
+app.use('/comments', require('./routes/commentRoute'));
 
 // start server
-const PORT = 3000;
-app.listen(PORT, console.log(`Listening on port ${PORT}`));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));

@@ -1,16 +1,20 @@
 const titleInput = document.getElementById("title-input");
+const bodyInput = document.querySelector(".create-post-body");
 const charCtr = document.getElementById("char-ctr");
 const fileInput = document.getElementById("file-upload");
 const fileName = document.getElementById("file-upload-name");
 const cancelBtn = document.getElementById("cancel-button");
 const publishBtn = document.getElementById("publish-button");
+const user = JSON.parse(localStorage.getItem("loggedUser"));
+
+let uploadedImageData = "";
 
 // Post title character counter
 titleInput.addEventListener("input", () => {
     const currentLength = titleInput.value.length;
     charCtr.textContent = `${currentLength}/150`;
 
-    if (currentLength > 150) {
+    if(currentLength >= 150) {
         charCtr.style.color = "#fc6e6e";
     } else {
         charCtr.style.color = "lightgray";
@@ -26,8 +30,15 @@ cancelBtn.addEventListener("click", () => {
     }
 })
 
-// Prompts the user to confirm and alerts when posted successfully
-publishBtn.addEventListener("click", () => {
+// Adds post to database and alerts when posted successfully
+publishBtn.addEventListener("click", async () => {
+
+    if (!user || !user.userId) {
+        alert("Please login to create a post.");
+        window.location.href = "login.html";
+        return;
+    }
+
     if (titleInput.value.trim() === "") {
         alert("Please add a title.");
         titleInput.focus();
@@ -37,8 +48,32 @@ publishBtn.addEventListener("click", () => {
     const postConfirmed = confirm("Are you sure you want to publish this post?");
 
     if (postConfirmed) {
-        alert("[PLACEHOLDER] Post has been published successfully!");
-        window.location.href = "post.html"; // TODO: link this to actual post page
+        try {
+            const payload = {
+                user: user.userId,
+                title: titleInput.value.trim(),
+                body: bodyInput.value.trim(),
+                image: uploadedImageData
+            };
+
+            const response = await fetch("http://localhost:3000/posts", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                alert(result.message || "Failed to publish post.");
+                return;
+            }
+
+            alert("Post has been published successfully!");
+            window.location.href = `/posts/${result._id}/view`;
+        } catch (err) {
+            alert("Could not connect to server.");
+        }
     }
 });
 
@@ -54,7 +89,6 @@ fileInput.addEventListener("change", function () {
 // Login / Logout button detector
 
 const logBtn = document.getElementById("log-btn");
-const user = JSON.parse(localStorage.getItem("loggedUser"));
 
 if (!user) {
     logBtn.textContent = "Join Us";
