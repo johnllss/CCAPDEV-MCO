@@ -4,13 +4,14 @@ const {
     getPosts,
     getPostById,
     editPost,
-    deletePost
+    deletePost,
+    renderPost
 } = require('../controllers/postController');
 
 router.post('/', createPost);
 router.get('/', getPosts);
 router.get('/:id', getPostById);
-router.get('/:id/view', require('../controllers/postController').renderPost);
+router.get('/:id/view', renderPost);
 router.put('/:id', editPost);
 router.delete('/:id', deletePost);
 
