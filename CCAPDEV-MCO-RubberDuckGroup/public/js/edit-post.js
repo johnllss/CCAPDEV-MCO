@@ -36,7 +36,7 @@ publishBtn.addEventListener("click", async () => {
     
     if (!user || !user.userId) {
         alert("Please login to edit a post.");
-        window.location.href = "/login.html";
+        window.location.href = "/login";
         return;
     }
 

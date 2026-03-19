@@ -39,7 +39,7 @@ publishBtn.addEventListener("click", () => {
 
     if (postConfirmed) {
         alert("Post has been published successfully!");
-        window.location.href = "index.html"; // TODO: link this to actual post page
+        window.location.href = "/"; // TODO: link this to actual post page
     }
 });
 
@@ -59,13 +59,13 @@ const logBtn = document.getElementById("log-btn");
 
 if (!user) {
     logBtn.textContent = "Join Us";
-    logBtn.href = "register.html";
+    logBtn.href = "/register";
 } else {
     logBtn.textContent = "Logout";
-    logBtn.href = "logout.html";
+    logBtn.href = "/logout";
     logBtn.addEventListener("click", (e) => {
         e.preventDefault();
         localStorage.removeItem("loggedUser");
-        window.location.href = "logout.html";
+        window.location.href = "/logout";
     });
 }

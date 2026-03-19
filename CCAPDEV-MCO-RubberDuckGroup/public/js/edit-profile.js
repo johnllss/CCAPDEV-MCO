@@ -4,19 +4,19 @@ const logBtn = document.getElementById("log-btn");
 
 if (!user) {
     logBtn.textContent = "Join Us";
-    logBtn.href = "register.html";
+    logBtn.href = "/register";
 } else {
     logBtn.textContent = "Logout";
-    logBtn.href = "logout.html";
+    logBtn.href = "/logout";
     logBtn.addEventListener("click", (e) => {
         e.preventDefault();
         localStorage.removeItem("loggedUser");
-        window.location.href = "logout.html";
+        window.location.href = "/logout";
     });
 }
 
 if (!user) {
-    window.location.href = "/login.html";
+    window.location.href = "/login";
 }
 
 
@@ -84,7 +84,7 @@ form.addEventListener("submit", async function (e) {
     if (response.ok) {
         console.log("Success:", result.message);
         alert("Successfully Saved Changes");
-        window.location.href = "/profile.html";
+        window.location.href = "/profile";
 
     } else {
         console.log("Error:", result.message);
