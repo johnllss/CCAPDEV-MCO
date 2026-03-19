@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{post.title}} - The Rubber Duck Forums</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/post.css">
+    <link rel="stylesheet" href="/assets/css/comments.css">
+
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-left">
+                <a href="/"><img src="../../assets/images/rubber-duck.png"
+                        alt="A colorless duck inside a black circle." class="duck-logo" /></a>
+                <h1><a href="/">The Rubber Duck Forums</a></h1>
+            </div>
+
+            <div class="nav-center">
+                <input type="text" placeholder="Search...">
+            </div>
+
+            <div class="nav-right">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/profile.html"><img src="../../assets/images/unknownperson.jpg"
+                                alt="An unknown person icon." class="nav-profile-icon"></a></li>
+                    <li><a href="/logout.html" class="logout-btn" id="log-btn">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="post-container">
+            <div class="post-card">
+                <div class="post-content-container">
+                    <div class="post-top">
+                        <div class="post-metadata">
+                            <div class="profile-icon">
+                                <a href="/profile">
+                                    <img src="{{post.authorPhoto}}" alt="Profile picture of {{post.authorUsername}}.">
+                                </a>
+                            </div>
+                            <a class="post-owner-name" href="/profile/{{post.authorUsername}}">@{{post.authorUsername}}</a>
+                            <div class="post-timestamp">
+                                · {{post.timestamp}}
+                                {{#if post.editedAt}}
+                                <span class="post-edit-timestamp"> (edited {{post.editedAt}})</span>
+                                {{/if}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="post-header">{{post.title}}</h2>
+
+                    <div class="post-body-container">
+                        {{#if post.image}}
+                        <div class="post-image"><img src="{{post.image}}" alt=""></div>
+                        {{/if}}
+
+                        <div class="post-body">
+                            <p>{{post.body}}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="post-actions">
+                    <div class="post-vote-actions">
+                        <button>
+                            <img class="upvote-icon" src="/assets/images/upvote-outline.png">
+                        </button>
+                        <span class="vote-count">{{post.votes}}</span>
+                        <button>
+                            <img class="downvote-icon" src="/assets/images/downvote-outline.png">
+                        </button>
+                    </div>
+
+                    <div class="post-owner-actions" id="owner-actions" style="display:none">
+                        <button id="edit-button">
+                            <img class="edit-post-icon" src="/assets/images/edit-outline.png">
+                        </button>
+                        <button id="delete-button">
+                            <img class="delete-post-icon" src="/assets/images/delete-outline.png">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="comments-section"></div>
+    </main>
+
+    <footer class="footer">
+        <div class="important-btns">
+            <a href=""><img src="/assets/images/facebook.png" alt="A placeholder image with a giant X mark." /></a>
+            <a href=""><img src="/assets/images/youtube.png" alt="A placeholder image with a giant X mark." /></a>
+            <a href=""><img src="/assets/images/instagram.png"
+                    alt="A placeholder image with a giant X mark." /></a>
+        </div>
+
+        <div class="attributions">
+            <br>
+            <a href="https://www.flaticon.com/free-icons/facebook" title="facebook icons">Facebook icons created by
+                Freepik - Flaticon</a><br>
+            <a href="https://www.flaticon.com/free-icons/instagram-logo" title="instagram logo icons">Instagram logo
+                icons created by Laisa Islam Ani - Flaticon</a><br>
+            <a href="https://www.flaticon.com/free-icons/youtube" title="youtube icons">Youtube icons created by Md
+                Tanvirul Haque - Flaticon</a>
+        </div>
+
+        <p>© 2026 by The Rubber Duck Collective</p>
+    </footer>
+    <script src="/assets/js/sample-data.js"></script>
+    <script src="/assets/js/Comment.js"></script>
+    <script src="/assets/js/view-post.js"></script>
+    <script>
+        (function () {
+            try {
+                const logged = JSON.parse(window.localStorage.getItem('loggedUser'));
+                const currentUserId = logged?.userId;
+                const authorId = '{{post.authorId}}';
+                if (currentUserId && authorId && currentUserId === authorId) {
+                    const el = document.getElementById('owner-actions');
+                    if (el) el.style.display = '';
+                }
+            } catch (e) {}
+        })();
+    </script>
+</body>
+
+</html>

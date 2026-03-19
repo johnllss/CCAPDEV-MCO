@@ -37,7 +37,7 @@ body {
     margin-right: 20%;
 }
 
-.create-post-title-container, .create-post-body-container,  .post-title-container, .post-body-container{
+.create-post-title-container, .create-post-body-container,  .post-title-container {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -49,16 +49,21 @@ body {
     font-family: 'DM Sans', sans-serif;
 }
 
-.create-post-title, .post-title {
+.create-post-title, .edit-post-title, .post-title {
     border-radius: 10px;
     border: 1px solid lightgray;
     height: 50px;
     padding: 10px;
     font-size: large;
     font-family: 'DM Sans', sans-serif;
-    /* font-weight: bold; */
     color: black;
     background-color: white;
+}
+
+.edit-post-title {
+    font-style: italic;
+    color: darkgray;
+    cursor: not-allowed;
 }
 
 .char-limit {
@@ -167,6 +172,14 @@ body {
     font-weight: 500;
 }
 
+.profile-icon img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fccb6e; 
+}
+
 .post-owner-name {
     text-decoration: none;
     color: #fccb6e;
@@ -178,7 +191,7 @@ body {
 }
 
 .post-timestamp {
-    color: lightgray;
+    color: gray;
 }
 
 .post-edit-timestamp {
@@ -192,11 +205,18 @@ body {
     color: #a8743e;
 }
 
+.post-body-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
 .post-body {
     margin-top: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     border: none;
     font-family: 'DM Sans', sans-serif;
+    white-space: pre-line;
     word-wrap: break-word;
     resize: none;
     outline: none;
@@ -205,11 +225,15 @@ body {
 }
 
 .post-image img {
+    display: block;
+    align-items: center;
     border-radius: 10px;
-    margin: 0px;
+    margin: 0 auto;
     object-fit: contain;
-    max-height: 800px;
-    width: 100%;
+    max-height: 600px;
+    max-width: 100%;
+    height: auto;
+    width: auto;
 }
 
 .post-actions {
@@ -242,22 +266,18 @@ body {
     transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-.post-actions button:hover {
-    transform: scale(1.2);
-}
-
 button:hover .upvote-icon {
-    content: url("/images/upvote-fill.png");
+    content: url("../../assets/images/upvote-fill.png");
 }
 
 button:hover .downvote-icon {
-    content: url("/images/downvote-fill.png");
+    content: url("../../assets/images/downvote-fill.png");
 }
 
 button:hover .edit-post-icon {
-    content: url("/images/edit-fill.png");
+    content: url("../../assets/images/edit-fill.png");
 }
 
 button:hover .delete-post-icon {
-    content: url("/images/delete-fill.png");
+    content: url("../../assets/images/delete-fill.png");
 }
