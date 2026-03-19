@@ -1,0 +1,18 @@
+So, here's a little walkthrough to guide you through ILW:
+
+1.) Front-end Developers
+
+You may want to take a look at how you can make use of other Front End APIs to improve your UI. Some that should be doable (from easiest to hardest) are: Bootstrap, Angular.js, React.js, Vue.js. Note that you'll need to install these libraries through NPM. There are OTHER libraries available, but these three are the "easiest" to get into, at least in my opinion. (I'm not really fond of Ember.js, but there are those who seem to like it over React.js. Either way, you're free to use Ember.js as well!)
+The main challenge will be to integrate / convert your .html files into handlebars. Coordinate with your back-end developers on which info will be rendered from the server side and replace them with proper {{}} marks accordingly
+ 
+
+2.) Back-end Developers
+
+You guys are the protagonists for MCO2! Make sure that you inform your front-end developers on which ones are your handlebars vs. pure HTML pages
+Ideally, at the end of the week, you should have your schema models all set.
+Consider reviewing MVC and taking a look at the REST API (according to your syllabus are the main coverage topics of ILW) to give you guys an edge in your routing in Node. Also, take a look at routing controllers.
+ 
+
+Advanced topics:
+
+You'd also want to take a look at Passport.js or Express sessions, the latter of which we've handled momentarily at the surface level to give you a good intro to how sessions work. 

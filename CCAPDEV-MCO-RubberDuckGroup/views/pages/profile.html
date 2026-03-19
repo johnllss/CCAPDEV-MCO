@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="/css/profile.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-left">
+                <a href="index.html"><img src="/images/rubber-duck.png"
+                        alt="A colorless duck inside a black circle." class="duck-logo" /></a>
+                <h1><a href="index.html">The Rubber Duck Forums</a></h1>
+            </div>
+
+            <div class="nav-center">
+                <input type="text" placeholder="Search...">
+            </div>
+
+            <div class="nav-right">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="profile.html"><img src="/images/unknownperson.jpg"
+                                alt="An unknown person icon." class="nav-profile-icon"></a></li>
+                    <li><a href="logout.html" class="logout-btn">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+
+    <main>
+        <div class="profile-container">
+
+            <div class="profile-header-container">
+
+                <div class="profile-left">
+                    <img id="profilepic" src="/images/sample.jpg" alt="display picture">
+                    <p class="user-quote" id="userquote"></p>
+                </div>
+
+                <div class="profile-right">
+                    <h2 class="username" id="username">Username</h2>
+                    <h3 class="fullname" id="fullname">FullName</h3>
+
+                    <div class="profile-stats">
+                        <div class="stat">
+                            <span class="stat-label">Total Posts</span>
+                            <span class="stat-value" id="total-posts">-</span>
+                        </div>
+
+                        <div class="stat">
+                            <span class="stat-label">D-Day</span>
+                            <span class="stat-value" id="join-date">-</span>
+                        </div>
+
+                        <div class="stat">
+                            <span class="stat-label">Total Replies</span>
+                            <span class="stat-value" id="total-replies">-</span>
+                        </div>
+                    </div>
+
+                    <a href="/edit-profile.html" class="editbtn" id="editBtn">Edit Profile</a>
+                </div>
+
+            </div>
+
+            <div class="profile-content">
+
+                <section class="profile-section">
+                    <h2>About Me</h2>
+                    <div class="aboutme-container">
+                        <p class="aboutme" id="aboutMe"></p>
+                    </div>
+                </section>
+
+                <section class="profile-section">
+                    <h2>Recent Activity</h2>
+
+                    <ul class="activity-list" id="activitylist">
+                        <li>
+                            <strong>Posted:</strong> Why is my duck meowing?
+                            <span class="activity-date">1m ago</span>
+                        </li>
+                        <li>
+                            <strong>Posted:</strong> Why does my duck have cat ears?
+                            <span class="activity-date">5m ago</span>
+                        </li>
+                        <li>
+                            <strong>Posted:</strong> Help my duck got cursed by a witch
+                            <span class="activity-date">2 days ago</span>
+                        </li>
+                    </ul>
+                </section>
+
+            </div>
+
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="important-btns">
+            <a href=""><img src="/images/facebook.png" alt="A placeholder image with a giant X mark." /></a>
+            <a href=""><img src="/images/youtube.png" alt="A placeholder image with a giant X mark." /></a>
+            <a href=""><img src="/images/instagram.png"
+                    alt="A placeholder image with a giant X mark." /></a>
+        </div>
+
+        <div class="attributions">
+            <br>
+            <a href="https://www.flaticon.com/free-icons/facebook" title="facebook icons">Facebook icons created by
+                Freepik - Flaticon</a><br>
+            <a href="https://www.flaticon.com/free-icons/instagram-logo" title="instagram logo icons">Instagram logo
+                icons created by Laisa Islam Ani - Flaticon</a><br>
+            <a href="https://www.flaticon.com/free-icons/youtube" title="youtube icons">Youtube icons created by Md
+                Tanvirul Haque - Flaticon</a>
+        </div>
+
+        <p>© 2026 by The Rubber Duck Collective</p>
+    </footer>
+
+    <script src="/js/profile.js"></script>
+</body>
+
+</html>
