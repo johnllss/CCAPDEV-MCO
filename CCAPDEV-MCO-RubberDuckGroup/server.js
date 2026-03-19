@@ -36,5 +36,5 @@ app.use('/activity', require('./routes/activityRoute'));
 app.use('/comments', require('./routes/commentRoute'));
 
 // start server
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
