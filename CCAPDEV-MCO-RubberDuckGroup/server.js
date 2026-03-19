@@ -31,7 +31,7 @@ app.use('/activity', require('./routes/activityRoute'));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'pages', 'index.html'));
 });
-
+    
 // start server
 const PORT = 3000;
 app.listen(PORT, console.log(`Listening on port ${PORT}`));
