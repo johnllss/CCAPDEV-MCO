@@ -28,6 +28,23 @@ function relativeDate(date) {
     return 'just now';
 }
 
+function compactVotes(number) {
+    const n = Number(number) || 0;
+
+    if (n < 1000) 
+        return String(n);
+
+    const votes = new Intl.NumberFormat('en', {
+        notation: 'compact',
+        compactDisplay: 'short',
+        roundingMode: 'floor',
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1
+    });
+
+    return votes.format(n).replace(/\s+/g, '').toLowerCase();
+}
+
 
 
 async function createPost(req, res) {
@@ -148,20 +165,22 @@ async function renderPost(req, res) {
         }
 
         const post = await Post.findById(id).populate('user', 'username profile.photo');
+        const rawBody = post.body || '';
+        const body = rawBody.replace(/^\s+|\s+$/g, '').replace(/\n{3,}/g, '\n\n');
 
         if (!post) return res.status(404).send('Post not found');
 
         res.render('post', {
             post: {
                 title: post.title,
-                body: post.body,
+                body: body,
                 image: post.image,
                 authorUsername: post.user.username,
                 authorPhoto: post.user.profile?.photo || '/assets/images/default-pfp.png',
                 authorId: post.user._id.toString(),
                 timestamp: relativeDate(post.createdAt),
                 editedAt: post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null,
-                votes: post.votes
+                votes: compactVotes(post.votes)
             },
             isOwner: req.session?.userId === post.user._id.toString()
         });
