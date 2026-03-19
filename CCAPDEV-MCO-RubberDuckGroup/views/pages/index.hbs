@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Rubber Duck Forums</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/post.css">
+</head>
+
+<body>
+    {{> header}}
+
+    <main>
+        {{#if posts.length}}
+            {{#each posts}}
+                <div class="post-container">
+
+                    <div class="post-card">
+
+                        <div class="post-top">
+
+                            <div class="post-metadata">
+
+                                <div class="profile-icon"></div>
+
+                                <a class="post-owner-name" href="">
+                                    {{#if author.username}}@{{author.username}}{{else}}@anonymous{{/if}}
+                                </a>
+
+                                <div class="post-timestamp">
+                                    {{#if createdAtLabel}} {{createdAtLabel}} {{else}} Just now {{/if}}
+                                    {{#if updatedAtLabel}} <span class="post-edit-timestamp"> (edited {{updatedAtLabel}})</span> {{/if}}
+                                </div>
+
+                            </div>
+
+                            <a href="/posts/{{_id}}/view"><button class="view-btn">VIEW</button></a>
+
+                        </div>
+
+                        <h2 class="post-header">{{#if title}} {{title}} {{else}} Untitled Post {{/if}}</h2>
+
+                        <div class="post-body-container">
+
+                            <div class="post-body">
+                                <p>{{#if content}} {{content}} {{else}} No content yet. {{/if}}</p>
+                            </div>
+
+                        </div>
+
+                        <div class="post-actions">
+
+                            <div class="post-vote-actions">
+
+                                <button type="button" aria-label="Upvote post">
+                                    <img class="upvote-icon" src="/images/upvote-outline.png" alt="Upvote">
+                                </button>
+
+                                <span class="vote-count">0</span>
+
+                                <button type="button" aria-label="Downvote post">
+                                    <img class="downvote-icon" src="/images/downvote-outline.png" alt="Downvote">
+                                </button>
+
+                                <span class="vote-count">0</span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {{/each}}
+
+        {{else}}
+
+            <div class="post-container">
+
+                <div class="post-card">
+
+                    <div class="post-top">
+
+                        <div class="post-metadata">
+
+                            <div class="profile-icon"></div>
+                            <a class="post-owner-name" href="">@RubberDuckForums</a>
+                            <div class="post-timestamp">just now</div>
+
+                        </div>
+
+                    </div>
+
+                    <h2 class="post-header">No recent posts yet.</h2>
+
+                    <div class="post-body-container">
+                        <div class="post-body">
+                            <p>Recent posts will appear here once the community starts posting.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            
+        {{/if}}
+    </main>
+
+    <div class="floating-add-btn"><a href="/login">+</a></div>
+
+    {{> footer}}
+
+    <script src="/js/index.js"></script>
+</body>
+
+</html>

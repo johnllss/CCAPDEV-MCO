@@ -87,6 +87,36 @@ async function getPosts(req, res) {
     }
 }
 
+async function renderIndex(req, res) {
+    try {
+        const posts = await Post.find()
+            .populate('user', 'username profile.photo')
+            .sort({ createdAt: -1 });
+
+        const formattedPosts = posts.map((post) => ({
+            _id: post._id.toString(),
+            title: post.title,
+            content: post.body,
+            image: post.image,
+            author: {
+                _id: post.user?._id?.toString(),
+                username: post.user?.username,
+                profile: {
+                    photo: post.user?.profile?.photo || '/images/default-pfp.png'
+                }
+            },
+            createdAtLabel: relativeDate(post.createdAt),
+            updatedAtLabel: post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null,
+            votes: compactVotes(post.votes)
+        }));
+
+        res.render('index', { posts: formattedPosts });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+}
+
 async function getPostById(req, res) {
     try {
         const { id } = req.params;
@@ -193,6 +223,7 @@ async function renderPost(req, res) {
 module.exports = {
     createPost,
     getPosts,
+    renderIndex,
     getPostById,
     editPost,
     deletePost,

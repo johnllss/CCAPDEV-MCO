@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Post - The Rubber Duck Forums</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/post.css">
+</head>
+
+<body>
+    {{> header}}
+
+    <main>
+        <div class="create-post-container">
+
+            <div class="create-post-box">
+
+                <div class="create-post-content-container">
+                    <h2 class="create-post-header">Edit Post</h2>
+
+                    <div class="post-title-container">
+                        <input id="title-input" class="post-title" type="text" placeholder="Title (required)"
+                            maxlength="150" value="{{post.title}}">
+                        <div id="char-ctr" class="char-limit">0/150</div>
+                    </div>
+
+                    <div class="post-body-container">
+                        <textarea id="post-body" class="create-post-body" placeholder="Body">{{post.content}}</textarea>
+                    </div>
+                </div>
+
+                <div class="create-post-file-upload">
+                    <label>
+                        <input id="file-upload" type="file" accept="image/png, image/jpeg" hidden>
+                        <img class="image-icon" src="/images/image-outline.png" alt="Upload an image">
+                    </label>
+
+                    <span id="file-upload-name">{{post.image}}</span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="create-post-actions-container">
+            <a href="/" class="create-post-cancel-button" style="text-align: center; text-decoration: none; line-height: 28px;">Cancel</a>
+            
+            <button id="save-button" class="create-post-publish-button">Save Changes</button>
+        </div>
+    </main>
+
+    {{> footer}}
+</body>
+
+</html>
