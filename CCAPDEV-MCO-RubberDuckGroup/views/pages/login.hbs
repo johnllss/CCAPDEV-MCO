@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Back</title>
+    <link rel="stylesheet" href="/css/loginstyle.css">
+</head>
+
+<body>
+    <main class="container">
+        <section class="auth-panel">
+            <div class="auth-content">
+                <div class="logo">
+                    <a href="/">The Rubber Duck Forums</a>
+                </div>
+
+                <h1>Login</h1>
+                <p class="subtext">Welcome Back!</p>
+
+                <form class="login-form" id="login-form" method="post">
+                    <label>Email/Username</label>
+                    <input type="text" id="loginName" placeholder="donaldduck@email.com">
+
+                    <label>Password</label>
+                    <div class="password-wrap">
+                        <input type="password" placeholder="............" id="password">
+                        <img src="/images/eye-close.png" id="eyeicon" alt="Toggle password visibility">
+                    </div>
+
+                    <div class="remember-forgot-container">
+                        <label class="remember">
+                            <input type="checkbox">
+                            Remember me (not working)
+                        </label>
+                        <a href="#">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="login-btn">Log in</button>
+                </form>
+                <a class="registerdirect" href="/register">Dont have an account?</a>
+            </div>
+        </section>
+
+        <section class="image-panel">
+            <img src="/images/rubber-duck.png" alt="Rubber Duck">
+            <div class="quote-area">
+                Your Rubber duck has been waiting!
+            </div>
+        </section>
+    </main>
+
+    <script src="/js/login.js" defer></script>
+</body>
+
+</html>

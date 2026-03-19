@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="/css/editprofile.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    {{> header}}
+
+    <main>
+        <div class="profile-container">
+            <h1>Edit Profile</h1>
+
+            <form id="editProfileForm">
+                <div class="profile-header-container">
+                    <div class="profile-left">
+                        <img id="profilepreview" src="/images/sample.jpg" alt="dp">
+
+                        <label class="uploadbtn">
+                            Change Photo
+                            <input type="file" id="profile-img" accept="image/*" hidden>
+                        </label>
+
+                        <input type="text" id="user-quote" placeholder="Quote" value="Quote">
+                    </div>
+
+                    <div class="profile-right">
+                        <input type="text" id="username" value="Username" disabled>
+                        <input type="text" id="fullname" value="Full Name" required>
+                    </div>
+                </div>
+
+                <section class="profile-section">
+                    <h2>About Me</h2>
+                    <textarea id="aboutme" rows="5" cols="100"></textarea>
+                </section>
+
+                <div class="form-buttons">
+                    <button type="submit" class="editbtn">Save Changes</button>
+                    <a href="/profile" class="cancelbtn">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    {{> footer}}
+
+    <script src="/js/edit-profile.js"></script>
+</body>
+
+</html>
