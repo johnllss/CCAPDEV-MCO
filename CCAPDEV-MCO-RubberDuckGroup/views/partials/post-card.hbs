@@ -5,36 +5,34 @@
         <div class="post-top">
 
             <div class="post-metadata">
-                {{#if post.author.profile.photo}}
-                    <img class="comment-avatar" src="{{post.author.profile.photo}}" alt="{{post.author.username}} profile picture"/>
-                {{else}}
-                    <div class="profile-icon"></div>
-                {{/if}}
+                <img class="comment-avatar" 
+                     src="{{#if post.authorPhoto}}{{post.authorPhoto}}{{else}}/images/default-pfp.png{{/if}}" 
+                     alt="{{#if post.authorUsername}}{{post.authorUsername}}{{else}}Anonymous{{/if}} profile picture"/>
 
-                <a class="post-owner-name" href="/profile{{#if post.author._id}}?id={{post.author._id}}{{/if}}">
-                    {{#if post.author.username}}
+                <a class="post-owner-name" href="/profile{{#if post.authorId}}?id={{post.authorId}}{{else if post.author._id}}?id={{post.author._id}}{{/if}}">
+                    {{#if post.authorUsername}}
+                        @{{post.authorUsername}}
+                    {{else if post.author.username}}
                         @{{post.author.username}}
                     {{else}}
-                        {{#if post.author}}
-                            @{{post.author}}
-                        {{else}}
-                            @anonymous
-                        {{/if}}
-                    {{/if}} 
+                        @anonymous
+                    {{/if}}
                 </a>
 
                 <div class="post-timestamp">
-                    {{#if post.createdAtLabel}}
+                    {{#if post.timestamp}}
+                        {{post.timestamp}}
+                    {{else if post.createdAtLabel}}
                         {{post.createdAtLabel}}
+                    {{else if post.createdAt}}
+                        {{post.createdAt}}
                     {{else}}
-                        {{#if post.createdAt}}
-                            {{post.createdAt}}
-                        {{else}}
-                            Just now
-                        {{/if}}
+                        Just now
                     {{/if}}
 
-                    {{#if post.updatedAtLabel}}
+                    {{#if post.editedAt}}
+                        <span class="post-edit-timestamp">(edited {{post.editedAt}})</span>
+                    {{else if post.updatedAtLabel}}
                         <span class="post-edit-timestamp">(edited {{post.updatedAtLabel}})</span>
                     {{/if}}
                 </div>
@@ -60,7 +58,9 @@
 
             <div class="post-body">
                 <p>
-                    {{#if post.content}}
+                    {{#if post.body}}
+                        {{post.body}}
+                    {{else if post.content}}
                         {{post.content}}
                     {{else}}
                         No content yet.

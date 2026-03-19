@@ -45,8 +45,6 @@ function compactVotes(number) {
     return votes.format(n).replace(/\s+/g, '').toLowerCase();
 }
 
-
-
 async function createPost(req, res) {
     try {
         const { user, title, body, image } = req.body;
@@ -97,14 +95,11 @@ async function renderIndex(req, res) {
             _id: post._id.toString(),
             title: post.title,
             content: post.body,
+            body: post.body,
             image: post.image,
-            author: {
-                _id: post.user?._id?.toString(),
-                username: post.user?.username,
-                profile: {
-                    photo: post.user?.profile?.photo || '/images/default-pfp.png'
-                }
-            },
+            authorUsername: post.user?.username,
+            authorPhoto: post.user?.profile?.photo || '/images/default-pfp.png',
+            authorId: post.user?._id?.toString(),
             createdAtLabel: relativeDate(post.createdAt),
             updatedAtLabel: post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null,
             votes: compactVotes(post.votes)
@@ -195,23 +190,58 @@ async function renderPost(req, res) {
         }
 
         const post = await Post.findById(id).populate('user', 'username profile.photo');
-        const rawBody = post.body || '';
-        const body = rawBody.replace(/^\s+|\s+$/g, '').replace(/\n{3,}/g, '\n\n');
 
         if (!post) return res.status(404).send('Post not found');
 
+        const rawBody = post.body || '';
+        const body = rawBody.replace(/^\s+|\s+$/g, '').replace(/\n{3,}/g, '\n\n');
+
+        const Comment = require('../models/Comment');
+        const allComments = await Comment.find({ post: id })
+            .populate('author', 'username profile photo')
+            .sort({ createdAt: 1 });
+
+        const buildReplies = (comments, parentId) => {
+            return comments
+                .filter(c => c.parentComment && c.parentComment.toString() === parentId.toString())
+                .map(c => ({
+                    _id: c._id.toString(),
+                    content: c.content,
+                    authorDisplay: c.author?.username || 'Anonymous',
+                    authorPhoto: c.author?.profile?.photo || '/images/default-pfp.png',
+                    createdAtLabel: relativeDate(c.createdAt),
+                    isEdited: c.isEdited,
+                    replies: buildReplies(comments, c._id)
+                }));
+        };
+
+        const comments = allComments
+            .filter(c => !c.parentComment)
+            .map(c => ({
+                _id: c._id.toString(),
+                content: c.content,
+                authorDisplay: c.author?.username || 'Anonymous',
+                authorPhoto: c.author?.profile?.photo || '/images/default-pfp.png',
+                createdAtLabel: relativeDate(c.createdAt),
+                isEdited: c.isEdited,
+                replies: buildReplies(allComments, c._id)
+            }));
+
         res.render('view-post', {
             post: {
+                _id: post._id.toString(),
                 title: post.title,
                 body: body,
                 image: post.image,
                 authorUsername: post.user.username,
-                authorPhoto: post.user.profile?.photo || '/assets/images/default-pfp.png',
+                authorPhoto: post.user.profile?.photo || '/images/default-pfp.png',
                 authorId: post.user._id.toString(),
                 timestamp: relativeDate(post.createdAt),
                 editedAt: post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null,
                 votes: compactVotes(post.votes)
             },
+            comments,
+            commentsCount: allComments.length,
             isOwner: req.session?.userId === post.user._id.toString()
         });
     } catch (err) {

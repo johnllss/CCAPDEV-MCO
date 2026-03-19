@@ -1,60 +1,133 @@
-const deleteBtn = document.getElementById("delete-button");
-const editBtn = document.getElementById("edit-button");
-const user = JSON.parse(localStorage.getItem("loggedUser"));
-const path = window.location.pathname.match(/\/posts\/([^\/]+)(?:\/view)?/);
-const postId = path ? path[1] : new URLSearchParams(window.location.search).get('id');
+document.addEventListener('DOMContentLoaded', () => {
+    const postId = window.location.pathname.split('/')[2];
+    const currentUserId = '6650a1b2c3d4e5f6a7b8c9d0';
 
-// Prompts the user to confirm deleting a post
-deleteBtn.addEventListener("click", async () => {
+    const postCommentBtn = document.querySelector('.add-comment-form .form-submit-btn');
+    const newCommentText = document.getElementById('new-comment-text');
 
-    if (!user || !user.userId) {
-        alert("Please login to delete a post.");
-        window.location.href = "/login";
-        return;
-    }
+    if (postCommentBtn) {
+        postCommentBtn.addEventListener('click', async () => {
+            const content = newCommentText.value.trim();
+            if (!content) return alert('Please write something first.');
 
-    const delConfirmed = confirm("Are you sure you want to delete this post?\nThis action cannot be undone.");
+            try {
+                const res = await fetch(`/api/comments/${postId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content, authorId: currentUserId })
+                });
 
-    if (!postId) {
-        alert('Post ID not found.');
-        return;
-    }
-
-    if (delConfirmed) {
-        try {
-            const response = await fetch(`/posts/${postId}`, {
-                method: "DELETE",
-            });
-
-            if (!response.ok) {
-                const err = await resp.json().catch(()=>({}));
-                alert(err.message || 'Failed to delete post.');
-                return;
+                if (res.ok) {
+                    newCommentText.value = '';
+                    location.reload();
+                } else {
+                    alert('Failed to post comment.');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error posting comment.');
             }
+        });
+    }
 
-            alert("Post has been deleted successfully!");
-            localStorage.removeItem("editPostTitle");
-            localStorage.removeItem("editPostBody");
-            localStorage.removeItem("editPostId");
-            window.location.href = `/`;
-        } catch (err) {
-            console.error(err);
-            alert("Could not connect to server.");
+    document.addEventListener('click', async (e) => {
+        if (e.target.classList.contains('reply-btn')) {
+            const commentId = e.target.dataset.commentId;
+            const existing = document.getElementById(`reply-box-${commentId}`);
+            if (existing) { existing.remove(); return; }
+
+            const box = document.createElement('div');
+            box.id = `reply-box-${commentId}`;
+            box.innerHTML = `
+                <textarea id="reply-text-${commentId}" placeholder="Write a reply..."></textarea>
+                <button class="cancel-reply-btn" data-comment-id="${commentId}">Cancel</button>
+                <button class="submit-reply-btn" data-comment-id="${commentId}">Reply</button>
+            `;
+            e.target.parentElement.after(box);
         }
 
-        alert("Post has been deleted successfully!");
-        window.location.href = "/";
-    }
-});
+        if (e.target.classList.contains('cancel-reply-btn')) {
+            const commentId = e.target.dataset.commentId;
+            document.getElementById(`reply-box-${commentId}`)?.remove();
+        }
 
-// Saves post content and redirects to edit post page
-editBtn.addEventListener("click", () => {
-    const postTitle = document.querySelector(".post-header").innerText;
-    const postBody = document.querySelector(".post-body p").innerText;
+        if (e.target.classList.contains('submit-reply-btn')) {
+            const parentCommentId = e.target.dataset.commentId;
+            const content = document.getElementById(`reply-text-${parentCommentId}`).value.trim();
+            if (!content) return alert('Please write something.');
 
-    localStorage.setItem("editPostId", postId);
-    localStorage.setItem("editPostTitle", postTitle);
-    localStorage.setItem("editPostBody", postBody);
+            try {
+                const res = await fetch(`/api/comments/${postId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content, authorId: currentUserId, parentCommentId })
+                });
 
-    window.location.href = "/edit-post";
+                if (res.ok) {
+                    location.reload();
+                } else {
+                    alert('Failed to post reply.');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        if (e.target.classList.contains('edit-comment-btn')) {
+            const commentId = e.target.dataset.commentId;
+            const commentBody = document.querySelector(`[data-comment-body="${commentId}"]`);
+            const currentText = commentBody.textContent;
+
+            commentBody.innerHTML = `
+                <textarea id="edit-text-${commentId}">${currentText}</textarea>
+                <button class="cancel-edit-btn" data-comment-id="${commentId}">Cancel</button>
+                <button class="save-edit-btn" data-comment-id="${commentId}">Save</button>
+            `;
+        }
+
+        if (e.target.classList.contains('cancel-edit-btn')) {
+            location.reload();
+        }
+
+        if (e.target.classList.contains('save-edit-btn')) {
+            const commentId = e.target.dataset.commentId;
+            const content = document.getElementById(`edit-text-${commentId}`).value.trim();
+            if (!content) return;
+
+            try {
+                const res = await fetch(`/api/comments/${postId}/${commentId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content })
+                });
+
+                if (res.ok) {
+                    location.reload();
+                } else {
+                    alert('Failed to update comment.');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        if (e.target.classList.contains('delete-comment-btn')) {
+            const commentId = e.target.dataset.commentId;
+            if (!confirm('Delete this comment?')) return;
+
+            try {
+                const res = await fetch(`/api/comments/${postId}/${commentId}`, {
+                    method: 'DELETE'
+                });
+
+                if (res.ok) {
+                    location.reload();
+                } else {
+                    alert('Failed to delete comment.');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    });
 });
