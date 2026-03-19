@@ -15,7 +15,6 @@ deleteBtn.addEventListener("click", async () => {
 
     const delConfirmed = confirm("Are you sure you want to delete this post?\nThis action cannot be undone.");
 
-    const postId = localStorage.getItem('editPostId') || new URLSearchParams(window.location.search).get('id');
     if (!postId) {
         alert('Post ID not found.');
         return;
