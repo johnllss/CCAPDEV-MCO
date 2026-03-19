@@ -69,7 +69,7 @@ form.addEventListener("submit", async function (e) {
     if (response.ok) {
         console.log("Success:", result.message);
         alert(result.message);
-        window.location.href = "/login.html";
+        window.location.href = "/login";
 
     } else {
         console.log("Error:", result.message);

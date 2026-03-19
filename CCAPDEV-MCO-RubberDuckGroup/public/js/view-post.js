@@ -9,7 +9,7 @@ deleteBtn.addEventListener("click", async () => {
 
     if (!user || !user.userId) {
         alert("Please login to delete a post.");
-        window.location.href = "/login.html";
+        window.location.href = "/login";
         return;
     }
 
@@ -36,14 +36,14 @@ deleteBtn.addEventListener("click", async () => {
             localStorage.removeItem("editPostTitle");
             localStorage.removeItem("editPostBody");
             localStorage.removeItem("editPostId");
-            window.location.href = `/index.html`;
+            window.location.href = `/`;
         } catch (err) {
             console.error(err);
             alert("Could not connect to server.");
         }
 
         alert("Post has been deleted successfully!");
-        window.location.href = "/index.html";
+        window.location.href = "/";
     }
 });
 
@@ -56,5 +56,5 @@ editBtn.addEventListener("click", () => {
     localStorage.setItem("editPostTitle", postTitle);
     localStorage.setItem("editPostBody", postBody);
 
-    window.location.href = "/edit-post.html";
+    window.location.href = "/edit-post";
 });

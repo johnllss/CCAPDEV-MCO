@@ -26,7 +26,7 @@ cancelBtn.addEventListener("click", () => {
     const postCancel = confirm("Are you sure you want to go back?");
 
     if (postCancel) {
-        window.location.href = "index.html";
+        window.location.href = "/";
     }
 })
 
@@ -35,7 +35,7 @@ publishBtn.addEventListener("click", async () => {
 
     if (!user || !user.userId) {
         alert("Please login to create a post.");
-        window.location.href = "login.html";
+        window.location.href = "/login";
         return;
     }
 
@@ -92,14 +92,14 @@ const logBtn = document.getElementById("log-btn");
 
 if (!user) {
     logBtn.textContent = "Join Us";
-    logBtn.href = "register.html";
+    logBtn.href = "/register";
 } else {
     logBtn.textContent = "Logout";
-    logBtn.href = "logout.html";
+    logBtn.href = "/logout";
     logBtn.addEventListener("click", (e) => {
         e.preventDefault();
         localStorage.removeItem("loggedUser");
-        window.location.href = "logout.html";
+        window.location.href = "/logout";
     });
 }
 

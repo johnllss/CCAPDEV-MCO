@@ -1,44 +1,55 @@
-<main class="container">
+<!DOCTYPE html>
+<html lang="en">
 
-    <!-- For the left side -->
-    <section class="auth-panel">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register New User</title>
+    <link rel="stylesheet" href="/css/registerstyle.css">
+</head>
 
-        <div class="auth-content">
-
-            <div class="logo">
-                <a href="/">The Rubber Duck Forums</a>
-            </div>
-
-            <h1>Create an account</h1>
-            <p class="subtext">Enter your details to get started.</p>
-
-            <form class="register-form" id="register-form">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="donaldduck@email.com">
-
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" placeholder="donald-duck">
-
-                <label for="password">Password</label>
-                <div class="password-wrap">
-                    <input type="password" id="password" name="password" placeholder="••••••••••••">
-                    <img src="/images/eye-close.png" id="eyeicon" alt="Toggle password visibility">
+<body>
+    <main class="container">
+        <section class="auth-panel">
+            <div class="auth-content">
+                <div class="logo">
+                    <a href="/">The Rubber Duck Forums</a>
                 </div>
 
-                <div class="error-text" id="password-error"></div>
+                <h1>Create an account</h1>
+                <p class="subtext">Enter your details to get started.</p>
 
-                <button type="submit" class="register-btn">Create account</button>
-                <!-- Make it so that it redirects instead to the edit profile area -->
-            </form>
+                <form class="register-form" id="register-form" method="post">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="donaldduck@email.com">
 
-            <a class="loginredirect" href="/login.html">Already have an account?</a>
-        </div>
-    </section>
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="donald-duck">
 
-    <section class="image-panel">
-        <img src="/images/rubber-duck.png" alt="Rubber duck illustration">
-        <div class="quote-area">
-            Have you talked to your rubber duck yet?
-        </div>
-    </section>
-</main>
+                    <label for="password">Password</label>
+                    <div class="password-wrap">
+                        <input type="password" id="password" name="password" placeholder="••••••••••••">
+                        <img src="/images/eye-close.png" id="eyeicon" alt="Toggle password visibility">
+                    </div>
+                    <div class="error-text" id="password-error"></div>
+
+                    <button type="submit" class="register-btn">Create account</button>
+                </form>
+
+                <a class="loginredirect" href="/login">Already have an account?</a>
+            </div>
+        </section>
+
+        <section class="image-panel">
+            <img src="/images/rubber-duck.png" alt="Rubber duck illustration">
+            
+            <div class="quote-area">
+                Have you talked to your rubber duck yet?
+            </div>
+        </section>
+    </main>
+
+    <script src="/js/registerscript.js" defer></script>
+</body>
+
+</html>

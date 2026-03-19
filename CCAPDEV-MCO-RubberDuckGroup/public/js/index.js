@@ -4,14 +4,14 @@ const logBtn = document.getElementById("log-btn");
 /* LOGIN BUTTON LOGIC */
 if (!user) {
     logBtn.textContent = "Join Us";
-    logBtn.href = "register.html";
+    logBtn.href = "/register";
 } else {
     logBtn.textContent = "Logout";
-    logBtn.href = "logout.html";
+    logBtn.href = "/logout";
     logBtn.addEventListener("click", (e) => {
         e.preventDefault();
         localStorage.removeItem("loggedUser");
-        window.location.href = "logout.html";
+        window.location.href = "/logout";
     });
 }
 

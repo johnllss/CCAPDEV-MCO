@@ -1,0 +1,99 @@
+<article class="post-card">
+
+    <div class="post-content-container">
+
+        <div class="post-top">
+
+            <div class="post-metadata">
+                {{#if post.author.profile.photo}}
+                    <img class="comment-avatar" src="{{post.author.profile.photo}}" alt="{{post.author.username}} profile picture"/>
+                {{else}}
+                    <div class="profile-icon"></div>
+                {{/if}}
+
+                <a class="post-owner-name" href="/profile{{#if post.author._id}}?id={{post.author._id}}{{/if}}">
+                    {{#if post.author.username}}
+                        @{{post.author.username}}
+                    {{else}}
+                        {{#if post.author}}
+                            @{{post.author}}
+                        {{else}}
+                            @anonymous
+                        {{/if}}
+                    {{/if}} 
+                </a>
+
+                <div class="post-timestamp">
+                    {{#if post.createdAtLabel}}
+                        {{post.createdAtLabel}}
+                    {{else}}
+                        {{#if post.createdAt}}
+                            {{post.createdAt}}
+                        {{else}}
+                            Just now
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if post.updatedAtLabel}}
+                        <span class="post-edit-timestamp">(edited {{post.updatedAtLabel}})</span>
+                    {{/if}}
+                </div>
+
+            </div>
+
+        </div>
+
+        <h2 class="post-header">
+            {{#if post.title}}
+                {{post.title}}
+            {{else}}
+                Untitled Post
+            {{/if}}
+        </h2>
+
+        <div class="post-body-container">
+            {{#if post.image}}
+                <div class="post-image">
+                    <img src="{{post.image}}" alt="{{post.title}}">
+                </div>
+            {{/if}}
+
+            <div class="post-body">
+                <p>
+                    {{#if post.content}}
+                        {{post.content}}
+                    {{else}}
+                        No content yet.
+                    {{/if}}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-actions">
+
+        <div class="post-vote-actions">
+            <button type="button">
+                <img class="upvote-icon" src="/images/upvote-outline.png" alt="Upvote">
+            </button>
+
+            <span class="vote-count">{{#if post.upvotes}} {{post.upvotes}} {{else}} 0 {{/if}}</span>
+
+            <button type="button">
+                <img class="downvote-icon" src="/images/downvote-outline.png" alt="Downvote">
+            </button>
+
+            <span class="vote-count">{{#if post.downvotes}} {{post.downvotes}} {{else}} 0 {{/if}}</span>
+        </div>
+
+        <div class="post-owner-actions">
+            <button type="button">
+                <img class="edit-post-icon" src="/images/edit-outline.png" alt="Edit post">
+            </button>
+
+            <button id="delete-button" type="button">
+                <img class="delete-post-icon" src="/images/delete-outline.png" alt="Delete post">
+            </button>
+        </div>
+    </div>
+</article>
