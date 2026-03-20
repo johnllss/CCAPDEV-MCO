@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const User = require('./models/User');
 const Post = require('./models/Post');
 const Comment = require('./models/Comment');
+const bcrypt = require('bcrypt');
 
 process.on('uncaughtException', err => {
     console.error('Uncaught Exception:', err.message);
@@ -21,45 +22,56 @@ async function seed() {
     await Post.deleteMany({});
     await Comment.deleteMany({});
 
-    const users = await User.insertMany([
-        { username: 'JohnDuck', email: 'johnduck@email.com', password: 'password123', profile: { photo: 'https://i.pravatar.cc/150?img=12' }},
-        { username: 'DanielD', email: 'danield@email.com', password: 'password123', profile: { photo: 'https://i.pravatar.cc/150?img=33' }},
-        { username: 'PeterQ', email: 'peterq@email.com', password: 'password123', profile: { photo: 'https://i.pravatar.cc/150?img=68' }},
-        { username: 'Username1', email: 'username1@email.com', password: 'password123', profile: { photo: 'https://i.pravatar.cc/150?img=47' }},
-        { username: 'AntonD', email: 'antond@email.com', password: 'password123', profile: { photo: 'https://i.pravatar.cc/150?img=52' }},
-        { username: 'MikeM', email: 'mikem@email.com', password: 'password123', profile: { photo: 'https://i.pravatar.cc/150?img=15' }},
-        { username: 'SarahJ', email: 'sarahj@email.com', password: 'password123', profile: { photo: 'https://i.pravatar.cc/150?img=20' }},
-        { username: 'TechLover99', email: 'techlover99@email.com', password: 'password123', profile: { photo: 'https://i.pravatar.cc/150?img=60' }}
-    ]);
+    const saltRounds = 10;
+
+    const rawUsers = [
+        { username: 'JohnDuck', email: 'johnduck@email.com', password: 'password123', profile: { photo: 'https://i.pravatar.cc/150?img=12' } },
+        { username: 'DanielD', email: 'danield@email.com', password: 'password123', profile: { photo: 'https://i.pravatar.cc/150?img=33' } },
+        { username: 'PeterQ', email: 'peterq@email.com', password: 'password123', profile: { photo: 'https://i.pravatar.cc/150?img=68' } },
+        { username: 'Username1', email: 'username1@email.com', password: 'password123', profile: { photo: 'https://i.pravatar.cc/150?img=47' } },
+        { username: 'AntonD', email: 'antond@email.com', password: 'password123', profile: { photo: 'https://i.pravatar.cc/150?img=52' } },
+        { username: 'MikeM', email: 'mikem@email.com', password: 'password123', profile: { photo: 'https://i.pravatar.cc/150?img=15' } },
+        { username: 'SarahJ', email: 'sarahj@email.com', password: 'password123', profile: { photo: 'https://i.pravatar.cc/150?img=20' } },
+        { username: 'TechLover99', email: 'techlover99@email.com', password: 'password123', profile: { photo: 'https://i.pravatar.cc/150?img=60' } }
+    ];
+
+    const hashedUsers = await Promise.all( // we needed this pala oopies >.<
+        rawUsers.map(async (user) => ({
+            ...user,
+            password: await bcrypt.hash(user.password, saltRounds)
+        }))
+    );
+
+    const users = await User.insertMany(hashedUsers); // HERE HERE!!!! THE HASHING !!!
 
     const posts = await Post.insertMany([
-        { 
-            title: 'Found ducklings in my pool. The mom never came back even hours later. Help identifying breed?', 
-            body: 'We found these 7 cute ducklings swimming in our pool yesterday afternoon...', 
+        {
+            title: 'Found ducklings in my pool. The mom never came back even hours later. Help identifying breed?',
+            body: 'We found these 7 cute ducklings swimming in our pool yesterday afternoon...',
             user: users[0]._id,
             image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Mallard-duck-and-ducklings.jpg/640px-Mallard-duck-and-ducklings.jpg'
         },
-        { 
-            title: 'Out of context.', 
-            body: '(from a real post: https://www.reddit.com/r/duck/comments/1i2fc3f)', 
+        {
+            title: 'Out of context.',
+            body: '(from a real post: https://www.reddit.com/r/duck/comments/1i2fc3f)',
             user: users[1]._id,
             image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Bucephala-albeola-010.jpg/640px-Bucephala-albeola-010.jpg'
         },
-        { 
-            title: 'I dressed my ducks up as bowling pins for halloween', 
-            body: 'Since runners come 90% bowling pin I added the other 10%... The stripe.', 
+        {
+            title: 'I dressed my ducks up as bowling pins for halloween',
+            body: 'Since runners come 90% bowling pin I added the other 10%... The stripe.',
             user: users[2]._id,
             image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Indian_runner_ducks.jpg/640px-Indian_runner_ducks.jpg'
         },
-        { 
-            title: 'my 1yo and her dad put 100 rubber duckies on my computer.', 
-            body: '(from a real post: https://www.reddit.com/r/duck/comments/1iedw5b)', 
+        {
+            title: 'my 1yo and her dad put 100 rubber duckies on my computer.',
+            body: '(from a real post: https://www.reddit.com/r/duck/comments/1iedw5b)',
             user: users[3]._id,
             image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Rubber_duckies_on_a_table.jpg/640px-Rubber_duckies_on_a_table.jpg'
         },
-        { 
-            title: 'I found this at walmart for like $4 It is now my bathroom nightlight.', 
-            body: '(from a real post: https://www.reddit.com/r/rubberducks/comments/1fgxow9)', 
+        {
+            title: 'I found this at walmart for like $4 It is now my bathroom nightlight.',
+            body: '(from a real post: https://www.reddit.com/r/rubberducks/comments/1fgxow9)',
             user: users[4]._id,
             image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Rubber_duck_assorted.jpg/640px-Rubber_duck_assorted.jpg'
         }
