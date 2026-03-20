@@ -1,11 +1,11 @@
 const titleField = document.getElementById("title-input");
-const bodyField = document.getElementById("body-input");
+const bodyField = document.getElementById("post-body");
 const currTitle = localStorage.getItem("editPostTitle");
 const currBody = localStorage.getItem("editPostBody");
 // const fileInput = document.getElementById("file-upload");
 // const fileName = document.getElementById("file-upload-name");
 const cancelBtn = document.getElementById("cancel-button");
-const publishBtn = document.getElementById("publish-button");
+const publishBtn = document.getElementById("save-button");
 const user = JSON.parse(localStorage.getItem("loggedUser"));
 
 // Fill text fields with current post info

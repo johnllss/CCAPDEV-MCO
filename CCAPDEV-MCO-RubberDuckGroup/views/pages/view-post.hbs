@@ -25,7 +25,7 @@
 
     <main>
         <div class="post-container">
-            {{> post-card post=post}}
+            {{> post-card post=post isOwner=isOwner}}
         </div>
 
         <section id="comments-section">
@@ -51,5 +51,6 @@
     {{> footer}}
 
     <script src="/js/view-post.js"></script>
+    <script src="/js/post.js"></script>
 </body>
 </html>
