@@ -37,7 +37,7 @@
                                 </a>
 
                                 <div class="post-timestamp">
-                                    {{#if createdAtLabel}} {{createdAtLabel}} {{else}} Just now {{/if}}
+                                    {{#if createdAtLabel}} {{createdAtLabel}} {{else}} just now {{/if}}
                                     {{#if updatedAtLabel}} <span class="post-edit-timestamp"> (edited {{updatedAtLabel}})</span> {{/if}}
                                 </div>
 
@@ -70,8 +70,6 @@
                                 <button type="button" aria-label="Downvote post">
                                     <img class="downvote-icon" src="/images/downvote-outline.png" alt="Downvote">
                                 </button>
-
-                                <span class="vote-count">0</span>
 
                             </div>
 
@@ -116,7 +114,7 @@
         {{/if}}
     </main>
 
-    <div class="floating-add-btn"><a href="/login">+</a></div>
+    <div class="floating-add-btn"><a href="/create-post">+</a></div>
 
     {{> footer}}
 
