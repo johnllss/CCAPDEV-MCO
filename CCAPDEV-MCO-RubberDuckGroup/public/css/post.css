@@ -41,7 +41,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 10px;
+    margin-bottom: 10px;
 }
 
 .create-post-title::placeholder, .create-post-body::placeholder , .post-title::placeholder, .post-body::placeholder {
