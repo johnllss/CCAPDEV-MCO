@@ -1,71 +1,66 @@
-const titleInput = document.getElementById("title-input");
-const charCtr = document.getElementById("char-ctr");
-const fileInput = document.getElementById("file-upload");
-const fileName = document.getElementById("file-upload-name");
-const cancelBtn = document.getElementById("cancel-button");
-const publishBtn = document.getElementById("publish-button");
+const deleteBtn = document.getElementById("delete-button");
+const editBtn = document.getElementById("edit-button");
+const user = JSON.parse(localStorage.getItem("loggedUser"));
+const path = window.location.pathname.match(/\/posts\/([^\/]+)(?:\/view)?/);
+const postId = path ? path[1] : new URLSearchParams(window.location.search).get('id');
 
+console.log(user);
 
-// Post title character counter
-titleInput.addEventListener("input", () => {
-    const currentLength = titleInput.value.length;
-    charCtr.textContent = `${currentLength}/150`;
+// Prompts the user to confirm deleting a post
+if (deleteBtn) {
+    deleteBtn.addEventListener("click", async () => {
 
-    if (currentLength > 150) {
-        charCtr.style.color = "#fc6e6e";
-    } else {
-        charCtr.style.color = "lightgray";
-    }
-});
-
-// Prompts the user to confirm cancelling a post
-cancelBtn.addEventListener("click", () => {
-    const postCancel = confirm("Are you sure you want to go back?");
-
-    if (postCancel) {
-        window.location.href = "javascript:history.back()";
-    }
-})
-
-// Prompts the user to confirm and alerts when posted successfully
-publishBtn.addEventListener("click", () => {
-    if (titleInput.value.trim() === "") {
-        alert("Please add a title.");
-        titleInput.focus();
+    if (!user || !user.userId) {
+        alert("Please login to delete a post.");
+        window.location.href = "/login";
         return;
     }
 
-    const postConfirmed = confirm("Are you sure you want to publish this post?");
+    const delConfirmed = confirm("Are you sure you want to delete this post?\nThis action cannot be undone.");
 
-    if (postConfirmed) {
-        alert("Post has been published successfully!");
-        window.location.href = "/"; // TODO: link this to actual post page
+    if (!postId) {
+        alert('Post ID not found.');
+        return;
     }
-});
 
-// Replaces blank span with the filename of uploaded image
-fileInput.addEventListener("change", function () {
-    if (this.files && this.files.length > 0) {
-        const name = this.files[0].name;
-        fileName.textContent = name;
+    if (delConfirmed) {
+        try {
+            const response = await fetch(`/posts/${postId}`, {
+                method: "DELETE",
+            });
+
+            if (!response.ok) {
+                const err = await resp.json().catch(()=>({}));
+                alert(err.message || 'Failed to delete post.');
+                return;
+            }
+
+            alert("Post has been deleted successfully!");
+            localStorage.removeItem("editPostTitle");
+            localStorage.removeItem("editPostBody");
+            localStorage.removeItem("editPostId");
+            window.location.href = `/`;
+        } catch (err) {
+            console.error(err);
+            alert("Could not connect to server.");
+        }
+
+        alert("Post has been deleted successfully!");
+        window.location.href = "/";
     }
-});
+    });
+}
 
-// Login / Logout Button
+// Saves post content and redirects to edit post page
+if (editBtn) {
+    editBtn.addEventListener("click", () => {
+    const postTitle = document.querySelector(".post-header").innerText;
+    const postBody = document.querySelector(".post-body p").innerText;
 
-const user = JSON.parse(localStorage.getItem("loggedUser"));
-const logBtn = document.getElementById("log-btn");
+    localStorage.setItem("editPostId", postId);
+    localStorage.setItem("editPostTitle", postTitle);
+    localStorage.setItem("editPostBody", postBody);
 
-
-if (!user) {
-    logBtn.textContent = "Join Us";
-    logBtn.href = "/register";
-} else {
-    logBtn.textContent = "Logout";
-    logBtn.href = "/logout";
-    logBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        localStorage.removeItem("loggedUser");
-        window.location.href = "/logout";
+    window.location.href = "/edit-post";
     });
 }

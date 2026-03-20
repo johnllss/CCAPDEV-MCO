@@ -3,97 +3,72 @@
     <div class="post-content-container">
 
         <div class="post-top">
-
             <div class="post-metadata">
-                <img class="comment-avatar" 
-                     src="{{#if post.authorPhoto}}{{post.authorPhoto}}{{else}}/images/default-pfp.png{{/if}}" 
-                     alt="{{#if post.authorUsername}}{{post.authorUsername}}{{else}}Anonymous{{/if}} profile picture"/>
-
-                <a class="post-owner-name" href="/profile{{#if post.authorId}}?id={{post.authorId}}{{else if post.author._id}}?id={{post.author._id}}{{/if}}">
-                    {{#if post.authorUsername}}
-                        @{{post.authorUsername}}
-                    {{else if post.author.username}}
-                        @{{post.author.username}}
-                    {{else}}
-                        @anonymous
-                    {{/if}}
-                </a>
-
+                <div class="profile-icon">
+                    <a href="/profile">
+                        <img src="{{post.authorPhoto}}" alt="Profile picture of {{post.authorUsername}}.">
+                    </a>
+                </div>
+                <a class="post-owner-name" href="/profile/{{#if post.authorId}}?id={{post.authorId}}{{else if post.author._id}}?id={{post.author._id}}{{/if}}">@{{post.authorUsername}}</a>
                 <div class="post-timestamp">
-                    {{#if post.timestamp}}
-                        {{post.timestamp}}
-                    {{else if post.createdAtLabel}}
-                        {{post.createdAtLabel}}
-                    {{else if post.createdAt}}
-                        {{post.createdAt}}
-                    {{else}}
-                        Just now
-                    {{/if}}
-
+                    {{post.timestamp}}
                     {{#if post.editedAt}}
-                        <span class="post-edit-timestamp">(edited {{post.editedAt}})</span>
-                    {{else if post.updatedAtLabel}}
-                        <span class="post-edit-timestamp">(edited {{post.updatedAtLabel}})</span>
+                    <span class="post-edit-timestamp"> (edited {{post.editedAt}})</span>
                     {{/if}}
                 </div>
-
             </div>
-
         </div>
 
-        <h2 class="post-header">
-            {{#if post.title}}
-                {{post.title}}
-            {{else}}
-                Untitled Post
-            {{/if}}
-        </h2>
+        <h2 class="post-header">{{post.title}}</h2>
 
         <div class="post-body-container">
+            {{!-- Image is optional; no placeholder required --}}
             {{#if post.image}}
-                <div class="post-image">
-                    <img src="{{post.image}}" alt="{{post.title}}">
-                </div>
+            <div class="post-image"><img src="{{post.image}}"></div>
             {{/if}}
 
-            <div class="post-body">
-                <p>
-                    {{#if post.body}}
-                        {{post.body}}
-                    {{else if post.content}}
-                        {{post.content}}
-                    {{else}}
-                        No content yet.
-                    {{/if}}
-                </p>
-            </div>
+            {{!-- Body is optional; no placeholder required --}}
+            {{#if post.body}}
+            <div class="post-body"><p>{{post.body}}</p></div>
+            {{/if}}
         </div>
     </div>
 
     <div class="post-actions">
-
         <div class="post-vote-actions">
-            <button type="button">
+            <button>
                 <img class="upvote-icon" src="/images/upvote-outline.png" alt="Upvote">
             </button>
-
-            <span class="vote-count">{{#if post.upvotes}} {{post.upvotes}} {{else}} 0 {{/if}}</span>
-
-            <button type="button">
+            <span class="vote-count">{{post.votes}}</span>
+            <button>
                 <img class="downvote-icon" src="/images/downvote-outline.png" alt="Downvote">
             </button>
-
-            <span class="vote-count">{{#if post.downvotes}} {{post.downvotes}} {{else}} 0 {{/if}}</span>
         </div>
 
-        <div class="post-owner-actions">
-            <button type="button">
+        <div class="post-owner-actions" id="owner-actions" style="display:none">
+            <button id="edit-button">
                 <img class="edit-post-icon" src="/images/edit-outline.png" alt="Edit post">
             </button>
-
-            <button id="delete-button" type="button">
+            <button id="delete-button">
                 <img class="delete-post-icon" src="/images/delete-outline.png" alt="Delete post">
             </button>
         </div>
+
     </div>
+
+    {{!-- Edit and delete button visibility --}}
+    <script>
+        (function () {
+            try {
+                const logged = JSON.parse(window.localStorage.getItem('loggedUser'));
+                const currentUserId = logged?.userId;
+                const authorId = '{{post.authorId}}';
+                if (currentUserId && authorId && currentUserId === authorId) {
+                    const el = document.getElementById('owner-actions');
+                    if (el) el.style.display = '';
+                }
+            } catch (e) {}
+        })();
+    </script>
+
 </article>

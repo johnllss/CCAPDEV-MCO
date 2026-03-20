@@ -30,14 +30,18 @@
 
                             <div class="post-metadata">
 
-                                <div class="profile-icon"></div>
+                                <div class="profile-icon">
+                                    <a href="/profile{{#if authorId}}?id={{authorId}}{{/if}}">
+                                        <img src="{{authorPhoto}}" alt="@{{authorUsername}}'s profile">
+                                    </a>
+                                </div>
 
                                 <a class="post-owner-name" href="">
-                                    {{#if author.username}}@{{author.username}}{{else}}@anonymous{{/if}}
+                                    {{#if authorUsername}}@{{authorUsername}}{{else}}@anonymous{{/if}}
                                 </a>
 
                                 <div class="post-timestamp">
-                                    {{#if createdAtLabel}} {{createdAtLabel}} {{else}} Just now {{/if}}
+                                    {{#if createdAtLabel}} {{createdAtLabel}} {{else}} just now {{/if}}
                                     {{#if updatedAtLabel}} <span class="post-edit-timestamp"> (edited {{updatedAtLabel}})</span> {{/if}}
                                 </div>
 
@@ -49,14 +53,16 @@
 
                         <h2 class="post-header">{{#if title}} {{title}} {{else}} Untitled Post {{/if}}</h2>
 
+                        {{#if content}} 
                         <div class="post-body-container">
 
-                            <div class="post-body">
-                                <p>{{#if content}} {{content}} {{else}} No content yet. {{/if}}</p>
-                            </div>
+                            <div class="post-image"><img src="{{image}}"></div>
+                            
+                            <div class="post-body"><p>{{content}}</p></div>
 
                         </div>
-
+                        {{/if}}
+                        
                         <div class="post-actions">
 
                             <div class="post-vote-actions">
@@ -65,13 +71,11 @@
                                     <img class="upvote-icon" src="/images/upvote-outline.png" alt="Upvote">
                                 </button>
 
-                                <span class="vote-count">0</span>
+                                <span class="vote-count">{{votes}}</span>
 
                                 <button type="button" aria-label="Downvote post">
                                     <img class="downvote-icon" src="/images/downvote-outline.png" alt="Downvote">
                                 </button>
-
-                                <span class="vote-count">0</span>
 
                             </div>
 
@@ -116,7 +120,7 @@
         {{/if}}
     </main>
 
-    <div class="floating-add-btn"><a href="/login">+</a></div>
+    <div class="floating-add-btn"><a href="/create-post">+</a></div>
 
     {{> footer}}
 

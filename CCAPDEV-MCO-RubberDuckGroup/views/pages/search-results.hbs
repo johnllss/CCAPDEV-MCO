@@ -67,11 +67,13 @@
 
                         <h2 class="post-header">{{#if title}}{{title}}{{else}}Untitled Post{{/if}}</h2>
 
+                        {{#if content}}
                         <div class="post-body-container">
                             <div class="post-body">
-                                <p>{{#if content}}{{content}}{{else}}No content yet.{{/if}}</p>
+                                <p>{{content}}</p>
                             </div>
                         </div>
+                        {{/if}}
 
                     </div>
 
