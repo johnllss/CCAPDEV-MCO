@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'views', 'pages')));
 app.use(cors());
-app.use(fileUpload());
+app.use(fileUpload({ createParentPath: true, limits: { fileSize: 10 * 1024 * 1024 } })); // 10MB upload limit
 
 // database connection
 mongoose

@@ -202,7 +202,7 @@ body {
 .post-header {
     text-align: center;
     font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
-    margin: 20px 10px 0 0;
+    margin: 10px 0 10px 0;
     color: #a8743e;
     word-wrap: break-word;
 }
@@ -221,11 +221,16 @@ body {
     cursor: default;
 }
 
+.post-image {
+    display: flex;
+    justify-content: center;
+}
+
 .post-image img {
     display: block;
     align-items: center;
     border-radius: 10px;
-    margin: 0 auto;
+    margin: 10px 0 10px 0;
     object-fit: contain;
     max-height: 600px;
     max-width: 100%;

@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const {
+    uploadImage,
     createPost,
     getPosts,
     getPostById,
@@ -8,6 +9,7 @@ const {
     renderPost
 } = require('../controllers/postController');
 
+router.post('/upload-image', uploadImage);
 router.post('/', createPost);
 router.get('/', getPosts);
 router.get('/:id', getPostById);
@@ -16,3 +18,4 @@ router.put('/:id', editPost);
 router.delete('/:id', deletePost);
 
 module.exports = router;
+ 

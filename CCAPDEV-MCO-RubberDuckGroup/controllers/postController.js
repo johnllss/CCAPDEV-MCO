@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const path = require('path');
+const fs = require('fs');
 const Post = require('../models/Post');
 
 function relativeDate(date) {
@@ -45,17 +47,40 @@ function compactVotes(number) {
     return votes.format(n).replace(/\s+/g, '').toLowerCase();
 }
 
+async function uploadImage(req, res) {
+    try {
+        if (!req.files || !req.files.image)
+            return res.status(400).json({ message: 'No file' });
+
+        const image = req.files.image;
+        if (!image.mimetype.startsWith('image/'))
+            return res.status(400).json({ message: 'Invalid file type' });
+
+        const ext = path.extname(image.name).toLowerCase();
+        const filename = Date.now() + ext;
+        const saveDir = path.join(__dirname, '..', 'public', 'uploads');
+        if (!fs.existsSync(saveDir))
+            fs.mkdirSync(saveDir, { recursive: true });
+
+        const savePath = path.join(saveDir, filename);
+
+        await image.mv(savePath);
+        res.json({ filename });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Upload error' });
+    }
+}
+
 async function createPost(req, res) {
     try {
         const { user, title, body, image } = req.body;
 
-        if (!user || !title) {
+        if (!user || !title)
             return res.status(400).json({ message: 'User and Title are required' });
-        }
 
-        if (!mongoose.Types.ObjectId.isValid(user)) {
+        if (!mongoose.Types.ObjectId.isValid(user))
             return res.status(400).json({ message: 'Invalid user ID' });
-        }
 
         const post = new Post({
             user,
@@ -69,6 +94,7 @@ async function createPost(req, res) {
         const populated = await Post.findById(post._id).populate('user', 'username profile.photo');
         res.status(201).json(populated);
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: 'Server error' });
     }
 }
@@ -81,6 +107,7 @@ async function getPosts(req, res) {
 
         res.json(posts);
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: 'Server error' });
     }
 }
@@ -96,7 +123,7 @@ async function renderIndex(req, res) {
             title: post.title,
             content: post.body,
             body: post.body,
-            image: post.image,
+            image: post.image ? '/uploads/' + post.image : "",
             authorUsername: post.user?.username,
             authorPhoto: post.user?.profile?.photo || '/images/default-pfp.png',
             authorId: post.user?._id?.toString(),
@@ -116,18 +143,17 @@ async function getPostById(req, res) {
     try {
         const { id } = req.params;
 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
+        if (!mongoose.Types.ObjectId.isValid(id))
             return res.status(400).json({ message: 'Invalid post ID' });
-        }
 
         const post = await Post.findById(id).populate('user', 'username profile.photo');
 
-        if (!post) {
+        if (!post)
             return res.status(404).json({ message: 'Post not found' });
-        }
 
         res.json(post);
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: 'Server error' });
     }
 }
@@ -137,26 +163,29 @@ async function editPost(req, res) {
         const { id } = req.params;
         const { title, body, image } = req.body;
 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
+        if (!mongoose.Types.ObjectId.isValid(id))
             return res.status(400).json({ message: 'Invalid post ID' });
-        }
 
         const update = {};
-        if (title !== undefined) update.title = title;
-        if (body !== undefined) update.body = body;
-        if (image !== undefined) update.image = image;
+
+        if (title !== undefined) 
+            update.title = title;
+        if (body !== undefined) 
+            update.body = body;
+        if (image !== undefined) 
+            update.image = image;
 
         const post = await Post.findByIdAndUpdate(id, update, {
             new: true,
             runValidators: true
         }).populate('user', 'username profile.photo');
 
-        if (!post) {
+        if (!post)
             return res.status(404).json({ message: 'Post not found' });
-        }
 
         res.json(post);
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: 'Server error' });
     }
 }
@@ -165,18 +194,17 @@ async function deletePost(req, res) {
     try {
         const { id } = req.params;
 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
+        if (!mongoose.Types.ObjectId.isValid(id))
             return res.status(400).json({ message: 'Invalid post ID' });
-        }
 
         const post = await Post.findByIdAndDelete(id);
 
-        if (!post) {
+        if (!post)
             return res.status(404).json({ message: 'Post not found' });
-        }
 
         res.json({ message: 'Post deleted' });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: 'Server error' });
     }
 }
@@ -185,9 +213,8 @@ async function renderPost(req, res) {
     try {
         const { id } = req.params;
 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
+        if (!mongoose.Types.ObjectId.isValid(id))
             return res.status(400).send('Invalid post ID');
-        }
 
         const post = await Post.findById(id).populate('user', 'username profile.photo');
 
@@ -232,7 +259,7 @@ async function renderPost(req, res) {
                 _id: post._id.toString(),
                 title: post.title,
                 body: body,
-                image: post.image,
+                image: post.image ? '/uploads/' + post.image : "",
                 authorUsername: post.user.username,
                 authorPhoto: post.user.profile?.photo || '/images/default-pfp.png',
                 authorId: post.user._id.toString(),
@@ -251,6 +278,7 @@ async function renderPost(req, res) {
 }
 
 module.exports = {
+    uploadImage,
     createPost,
     getPosts,
     renderIndex,
