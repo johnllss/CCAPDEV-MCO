@@ -3,6 +3,10 @@ const path = require('path');
 const fs = require('fs');
 const Post = require('../models/Post');
 
+function cleanRegex(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // replace each seen special char w/ \ so Mongo reads it as literal text
+}
+
 function relativeDate(date) {
     if (!date) 
         return '';
@@ -45,6 +49,34 @@ function compactVotes(number) {
     });
 
     return votes.format(n).replace(/\s+/g, '').toLowerCase();
+}
+
+function formatPost(post, req) {
+    const currentUserId = req.session?.userId?.toString() || null;
+
+    return {
+        _id: post._id.toString(),
+        title: post.title,
+        content: post.body || post.image,
+        body: post.body,
+        image: post.image ? '/uploads/' + post.image : '',
+        authorUsername: post.user?.username,
+        authorPhoto: post.user?.profile?.photo || '/images/default-pfp.png',
+        authorId: post.user?._id?.toString(),
+        author: {
+            username: post.user?.username,
+            profile: {
+                photo: post.user?.profile?.photo || '/images/default-pfp.png'
+            }
+        },
+        createdAtLabel: relativeDate(post.createdAt),
+        updatedAtLabel: post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null,
+        votes: compactVotes(post.votes),
+        upvotes: post.upvotes.map(u => u.toString()),
+        downvotes: post.downvotes.map(u => u.toString()),
+        isUpvoted: currentUserId ? post.upvotes.some(u => u.toString() === currentUserId) : false,
+        isDownvoted: currentUserId ? post.downvotes.some(u => u.toString() === currentUserId) : false
+    };
 }
 
 async function uploadImage(req, res) {
@@ -176,25 +208,7 @@ async function renderIndex(req, res) {
             .populate('user', 'username profile.photo')
             .sort({ createdAt: -1 });
 
-        const currentUserId = req.session?.userId?.toString() || null;
-
-        const formattedPosts = posts.map((post) => ({
-            _id: post._id.toString(),
-            title: post.title,
-            content: post.body || post.image,
-            body: post.body,
-            image: post.image ? '/uploads/' + post.image : "",
-            authorUsername: post.user?.username,
-            authorPhoto: post.user?.profile?.photo || '/images/default-pfp.png',
-            authorId: post.user?._id?.toString(),
-            createdAtLabel: relativeDate(post.createdAt),
-            updatedAtLabel: post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null,
-            votes: compactVotes(post.votes),
-            upvotes: post.upvotes.map(u => u.toString()),
-            downvotes: post.downvotes.map(u => u.toString()),
-            isUpvoted: currentUserId ? post.upvotes.some(u => u.toString() === currentUserId) : false,
-            isDownvoted: currentUserId ? post.downvotes.some(u => u.toString() === currentUserId) : false
-        }));
+        const formattedPosts = posts.map(formatPost);
 
         res.render('index', { posts: formattedPosts });
     } catch (err) {
@@ -347,6 +361,38 @@ async function renderPost(req, res) {
     }
 }
 
+// for the /search-results when user is searching
+async function showSearchResults(req, res) {
+    try {
+        const searchQuery = (req.query.q || '').trim();
+        let posts = [];
+
+        if (searchQuery) {
+            const cleanedQuery = cleanRegex(searchQuery);
+
+            posts = await Post.find({
+                $or: [ // if a match in title or body of the post (case insensitive)
+                    { title: { $regex: cleanedQuery, $options: 'i' } },
+                    { body: { $regex: cleanedQuery, $options: 'i' } }
+                ]
+            })
+                .populate('user', 'username profile.photo')
+                .sort({ createdAt: -1 });
+        }
+
+        const formattedPosts = posts.map(formatPost);
+
+        res.render('search-results', {
+            posts: formattedPosts,
+            query: searchQuery,
+            searchQuery
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+}
+
 module.exports = {
     uploadImage,
     votePost,
@@ -356,5 +402,6 @@ module.exports = {
     getPostById,
     editPost,
     deletePost,
-    renderPost
+    renderPost,
+    showSearchResults
 };

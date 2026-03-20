@@ -261,7 +261,7 @@ if (deleteBtn) {
             });
 
             if (!response.ok) {
-                const err = await resp.json().catch(()=>({}));
+                const err = await response.json().catch(()=>({}));
                 alert(err.message || 'Failed to delete post.');
                 return;
             }
@@ -275,9 +275,6 @@ if (deleteBtn) {
             console.error(err);
             alert("Could not connect to server.");
         }
-
-        alert("Post has been deleted successfully!");
-        window.location.href = "/";
     }
     });
 }

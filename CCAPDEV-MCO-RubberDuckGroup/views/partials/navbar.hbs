@@ -8,7 +8,9 @@
     </div>
 
     <div class="nav-center">
-        <input type="text" placeholder="Search..." value="{{searchQuery}}">
+        <form action="/search-results" method="get">
+            <input type="text" name="q" placeholder="Search..." value="{{searchQuery}}"> 
+        </form>
     </div>
 
     <div class="nav-right">

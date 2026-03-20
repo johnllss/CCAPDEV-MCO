@@ -47,9 +47,7 @@ router.get('/view-post', (req, res) => {
     });
 });
 
-router.get('/search-results', (req, res) => {
-    res.render('search-results');
-});
+router.get('/search-results', postController.showSearchResults);
 
 router.get('/logout', (req, res) => {
     res.render('logout');
