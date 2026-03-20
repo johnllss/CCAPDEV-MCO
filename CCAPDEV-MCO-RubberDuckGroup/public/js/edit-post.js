@@ -2,8 +2,6 @@ const titleField = document.getElementById("title-input");
 const bodyField = document.getElementById("post-body");
 const currTitle = localStorage.getItem("editPostTitle");
 const currBody = localStorage.getItem("editPostBody");
-// const fileInput = document.getElementById("file-upload");
-// const fileName = document.getElementById("file-upload-name");
 const cancelBtn = document.getElementById("cancel-button");
 const publishBtn = document.getElementById("save-button");
 const user = JSON.parse(localStorage.getItem("loggedUser"));
@@ -77,11 +75,3 @@ publishBtn.addEventListener("click", async () => {
         }
     }
 });
-
-// // Replaces blank span with the filename of uploaded image
-// fileInput.addEventListener("change", function() {
-//     if(this.files && this.files.length > 0) {
-//         const name = this.files[0].name;
-//         fileName.textContent = name;
-//     }
-// });

@@ -19,6 +19,8 @@
 <body>
     {{> header}}
 
+    {{!-- NOTE: Only post body can be edited --}}
+
     <main>
         <div class="create-post-container">
 
@@ -34,15 +36,6 @@
                     <div class="post-body-container">
                         <textarea id="post-body" class="create-post-body" placeholder="Body">{{post.content}}</textarea>
                     </div>
-                </div>
-
-                <div class="create-post-file-upload">
-                    <label>
-                        <input id="file-upload" type="file" accept="image/png, image/jpeg" hidden>
-                        <img class="image-icon" src="/images/image-outline.png" alt="Upload an image">
-                    </label>
-
-                    <span id="file-upload-name">{{post.image}}</span>
                 </div>
 
             </div>

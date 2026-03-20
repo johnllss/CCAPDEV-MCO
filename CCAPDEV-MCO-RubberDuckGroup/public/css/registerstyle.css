@@ -95,6 +95,7 @@ input {
   border: 1px solid #fccb6e;
   font-size: 14px;
   outline: none;
+  width: 100%;
 }
 
 input[type="email"],
