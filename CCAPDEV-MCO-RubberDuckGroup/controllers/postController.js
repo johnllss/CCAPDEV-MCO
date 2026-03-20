@@ -121,7 +121,7 @@ async function renderIndex(req, res) {
         const formattedPosts = posts.map((post) => ({
             _id: post._id.toString(),
             title: post.title,
-            content: post.body,
+            content: post.body || post.image,
             body: post.body,
             image: post.image ? '/uploads/' + post.image : "",
             authorUsername: post.user?.username,
