@@ -4,7 +4,9 @@
     id="comment-{{comment._id}}"
 >
     <div class="comment-header">
-        <img src="{{#if comment.authorPhoto}}{{comment.authorPhoto}}{{else}}/images/default-pfp.png{{/if}}" alt="{{#if comment.authorDisplay}}{{comment.authorDisplay}}{{else}}Anonymous{{/if}} profile picture" class="comment-avatar">
+        <img src="{{#if comment.authorPhoto}}{{comment.authorPhoto}}{{else}}/images/default-pfp.png{{/if}}" 
+             alt="{{#if comment.authorDisplay}}{{comment.authorDisplay}}{{else}}Anonymous{{/if}} profile picture" 
+             class="comment-avatar">
 
         <span class="comment-author">
             {{#if comment.authorDisplay}}
@@ -26,12 +28,12 @@
             {{/if}}
         </span>
         
-        {{#if comment.updatedAtLabel}}
-            <span class="comment-edited">(edited {{comment.updatedAtLabel}})</span>
+        {{#if comment.isEdited}}
+            <span class="comment-edited">(edited)</span>
         {{/if}}
     </div>
 
-    <div class="comment-body" id="comment-body-{{comment._id}}">
+    <div class="comment-body" data-comment-body="{{comment._id}}">
         {{#if comment.content}}
             {{comment.content}}
         {{else}}
@@ -40,10 +42,18 @@
     </div>
 
     <div class="comment-actions">
-        <button class="action-btn" type="button">Reply</button>
+        <button class="action-btn reply-btn" type="button" data-comment-id="{{comment._id}}">Reply</button>
         <span class="action-separator">&middot;</span>
-        <button class="action-btn" type="button">Edit</button>
+        <button class="action-btn edit-comment-btn" type="button" data-comment-id="{{comment._id}}">Edit</button>
         <span class="action-separator">&middot;</span>
-        <button class="action-btn delete" type="button">Delete</button>
+        <button class="action-btn delete delete-comment-btn" type="button" data-comment-id="{{comment._id}}">Delete</button>
     </div>
+
+    {{#if comment.replies}}
+        <div class="comment-replies">
+            {{#each comment.replies}}
+                {{> comment-card comment=this level=../level}}
+            {{/each}}
+        </div>
+    {{/if}}
 </article>
