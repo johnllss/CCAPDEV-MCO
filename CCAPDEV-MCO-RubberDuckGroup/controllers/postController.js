@@ -72,6 +72,64 @@ async function uploadImage(req, res) {
     }
 }
 
+async function votePost(req, res) {
+    try {
+        const { id } = req.params;
+        const { type } = req.body;
+        const userId = req.session?.userId || req.body.userId;
+
+        if (!userId) 
+            return res.status(401).json({ message: 'User not found' });
+
+        if (!['up','down'].includes(type)) 
+            return res.status(400).json({ message: 'Invalid vote type' });
+
+        if (!mongoose.Types.ObjectId.isValid(id) || !mongoose.Types.ObjectId.isValid(userId)) 
+            return res.status(400).json({ message: 'Invalid id' });
+
+        const post = await Post.findById(id);
+
+        if (!post) 
+            return res.status(404).json({ message: 'Post not found' });
+
+        const inUp = post.upvotes.some(u => u.toString() === userId);
+        const inDown = post.downvotes.some(u => u.toString() === userId);
+
+        if (type === 'up') {
+            if (inUp) 
+                post.upvotes = post.upvotes.filter(u => u.toString() !== userId);
+            else {
+                post.upvotes.push(userId);
+
+                if (inDown) 
+                    post.downvotes = post.downvotes.filter(u => u.toString() !== userId);
+            }
+        } else {
+            if (inDown) 
+                post.downvotes = post.downvotes.filter(u => u.toString() !== userId);
+            else {
+                post.downvotes.push(userId);
+
+                if (inUp) 
+                    post.upvotes = post.upvotes.filter(u => u.toString() !== userId);
+            }
+        }
+
+        const up = post.upvotes.length;
+        const down = post.downvotes.length;
+        post.votes = up - down;
+
+        await post.save({ timestamps: false });
+
+        const score = post.upvotes.length - post.downvotes.length;
+
+        res.json({ up, down, score: post.votes });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+}
+
 async function createPost(req, res) {
     try {
         const { user, title, body, image } = req.body;
@@ -118,6 +176,8 @@ async function renderIndex(req, res) {
             .populate('user', 'username profile.photo')
             .sort({ createdAt: -1 });
 
+        const currentUserId = req.session?.userId?.toString() || null;
+
         const formattedPosts = posts.map((post) => ({
             _id: post._id.toString(),
             title: post.title,
@@ -129,7 +189,11 @@ async function renderIndex(req, res) {
             authorId: post.user?._id?.toString(),
             createdAtLabel: relativeDate(post.createdAt),
             updatedAtLabel: post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null,
-            votes: compactVotes(post.votes)
+            votes: compactVotes(post.votes),
+            upvotes: post.upvotes.map(u => u.toString()),
+            downvotes: post.downvotes.map(u => u.toString()),
+            isUpvoted: currentUserId ? post.upvotes.some(u => u.toString() === currentUserId) : false,
+            isDownvoted: currentUserId ? post.downvotes.some(u => u.toString() === currentUserId) : false
         }));
 
         res.render('index', { posts: formattedPosts });
@@ -254,6 +318,8 @@ async function renderPost(req, res) {
                 replies: buildReplies(allComments, c._id)
             }));
 
+        const currentUserId = req.session?.userId?.toString() || null;
+
         res.render('view-post', {
             post: {
                 _id: post._id.toString(),
@@ -265,7 +331,11 @@ async function renderPost(req, res) {
                 authorId: post.user._id.toString(),
                 timestamp: relativeDate(post.createdAt),
                 editedAt: post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null,
-                votes: compactVotes(post.votes)
+                votes: compactVotes(post.votes),
+                upvotes: post.upvotes.map(u => u.toString()),
+                downvotes: post.downvotes.map(u => u.toString()),
+                isUpvoted: currentUserId ? post.upvotes.some(u => u.toString() === currentUserId) : false,
+                isDownvoted: currentUserId ? post.downvotes.some(u => u.toString() === currentUserId) : false
             },
             comments,
             commentsCount: allComments.length,
@@ -279,6 +349,7 @@ async function renderPost(req, res) {
 
 module.exports = {
     uploadImage,
+    votePost,
     createPost,
     getPosts,
     renderIndex,

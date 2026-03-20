@@ -1,4 +1,4 @@
-<article class="post-card">
+<article class="post-card" data-upvotes="{{#if post.upvotes}}{{post.upvotes}}{{/if}}" data-downvotes="{{#if post.downvotes}}{{post.downvotes}}{{/if}}">
 
     <div class="post-content-container">
 
@@ -36,12 +36,12 @@
 
     <div class="post-actions">
         <div class="post-vote-actions">
-            <button>
-                <img class="upvote-icon" src="/images/upvote-outline.png" alt="Upvote">
+            <button id="upvote-button" class="{{#if post.isUpvoted}}voted{{/if}}">
+                <img class="upvote-icon" src="{{#if post.isUpvoted}}/images/upvote-fill.png{{else}}/images/upvote-outline.png{{/if}}" alt="Upvote">
             </button>
             <span class="vote-count">{{post.votes}}</span>
-            <button>
-                <img class="downvote-icon" src="/images/downvote-outline.png" alt="Downvote">
+            <button id="downvote-button" class="{{#if post.isDownvoted}}voted{{/if}}">
+                <img class="downvote-icon" src="{{#if post.isDownvoted}}/images/downvote-fill.png{{else}}/images/downvote-outline.png{{/if}}" alt="Downvote">
             </button>
         </div>
 
