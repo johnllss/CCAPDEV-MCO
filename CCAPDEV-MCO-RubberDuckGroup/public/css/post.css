@@ -37,7 +37,7 @@ body {
     margin-right: 20%;
 }
 
-.create-post-title-container, .create-post-body-container,  .post-title-container {
+.create-post-title-container, .create-post-body-container,  .post-title-container, .post-body-container {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -64,6 +64,7 @@ body {
     font-style: italic;
     color: darkgray;
     cursor: not-allowed;
+    border-width: 0px;
 }
 
 .char-limit {
@@ -203,12 +204,7 @@ body {
     font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
     margin: 20px 0;
     color: #a8743e;
-}
-
-.post-body-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+    word-wrap: break-word;
 }
 
 .post-body {
