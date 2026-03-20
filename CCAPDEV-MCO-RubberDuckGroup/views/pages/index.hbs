@@ -24,7 +24,7 @@
             {{#each posts}}
                 <div class="post-container">
 
-                    <div class="post-card">
+                    <div class="post-card" data-postid="{{_id}}" data-upvotes="{{upvotes}}" data-downvotes="{{downvotes}}">
 
                         <div class="post-top">
 
@@ -67,14 +67,14 @@
 
                             <div class="post-vote-actions">
 
-                                <button type="button" aria-label="Upvote post">
-                                    <img class="upvote-icon" src="/images/upvote-outline.png" alt="Upvote">
+                                <button class="upvote-button {{#if isUpvoted}}voted{{/if}}" type="button" aria-label="Upvote post">
+                                    <img class="upvote-icon" src="{{#if isUpvoted}}/images/upvote-fill.png{{else}}/images/upvote-outline.png{{/if}}" alt="Upvote">
                                 </button>
 
                                 <span class="vote-count">{{votes}}</span>
 
-                                <button type="button" aria-label="Downvote post">
-                                    <img class="downvote-icon" src="/images/downvote-outline.png" alt="Downvote">
+                                <button class="downvote-button {{#if isDownvoted}}voted{{/if}}" type="button" aria-label="Downvote post">
+                                    <img class="downvote-icon" src="{{#if isDownvoted}}/images/downvote-fill.png{{else}}/images/downvote-outline.png{{/if}}" alt="Downvote">
                                 </button>
 
                             </div>
@@ -125,6 +125,7 @@
     {{> footer}}
 
     <script src="/js/index.js"></script>
+    <script src="/js/post.js"></script>
 </body>
 
 </html>
