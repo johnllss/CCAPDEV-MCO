@@ -25,14 +25,14 @@
             <div class="post-card">
 
                 <h2 class="post-header">
-                    Search Results{{#if query}} for "{{query}}"{{/if}}
+                    Search Results{{#if searchQuery}} for "{{searchQuery}}"{{/if}}
                 </h2>
 
                 <div class="post-body">
                     {{#if posts.length}}
                         <p>{{posts.length}} matching posts found.</p>
                     {{else}}
-                        <p>No matching posts found yet. Try another keyword.</p>
+                        <p>Uh-oh! No matching posts found yet. Try another keyword.</p>
                     {{/if}}
                 </div>
 
