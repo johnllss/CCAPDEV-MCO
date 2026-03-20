@@ -97,12 +97,13 @@ input {
 
 /* Everything below is for the edit profile*/
 
-
 .profile-container h1 {
   text-align: center;
   color: #3a2a00;
   margin-bottom: 20px;
-  padding-top: 10px
+  padding-top: 10px;
+  font-family: 'RoxboroughCF', serif;
+  font-size: 30px;
 }
 
 .profile-container {
@@ -112,12 +113,17 @@ input {
   padding: 28px;
   border-radius: 16px;
   box-shadow: 0 10px 25px rgba(0,0,0,.08);
+  transition: transform 0.2s ease;
+}
+
+.profile-container:hover {
+  transform: scale(1.002);
 }
 
 .profile-header-container {
     display: flex;
-    gap: 20px;
-    align-items: center;
+    gap: 24px;
+    align-items: stretch;
     padding: 20px 0;
     border-top: 1px solid #fccb6e;
     border-bottom: 1px solid #fccb6e;
@@ -127,10 +133,9 @@ input {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    gap: 6px;
+    justify-content: center;
+    gap: 10px;
 }
-
 
 .profile-left img {
   width: 160px;
@@ -138,17 +143,35 @@ input {
   border-radius: 50%;
   object-fit: cover;
   border: 4px solid #fccb6e;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 }
 
 #user-quote {
-    width: 200px;
+    width: 100%;
+    max-width: 240px;
+    min-height: 40px;
     padding: 10px;
     margin: 4px;
+    text-align: center;
+    font-style: italic;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    resize: none;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+#user-quote:focus {
+    outline: none;
+    border-color: #fccb6e;
+    box-shadow: 0 0 0 3px rgba(252,203,110,0.25);
 }
 
 .profile-right {
     display: flex;
     flex-direction: column;
+    gap: 10px;
+    flex: 1;
 }
 
 .profile-right, #username,#fullname {
@@ -156,67 +179,130 @@ input {
     margin: 4px;
 }
 
+#username,
+#fullname {
+    width: fit-content;
+    min-width: 180px;
+    max-width: 100%;
+    font-size: 15px;
+}
+
+#username {
+    background: #f5f5f5;
+    color: #888;
+}
+
 .uploadbtn {
-    padding: 8px;
+    padding: 8px 12px;
     margin: 2px;
     border: 1px solid #fccb6e;
-    transition: transform 0.3s ease;
+    border-radius: 10px;
+    background: #fff8eb;
+    transition: all 0.3s ease;
 }
 
 .uploadbtn:hover {
     cursor: pointer;
-    transform: scale(1.02);
+    transform: scale(1.04);
+    background: #fccb6e;
 }
 
+.profile-section {
+    margin-top: 24px;
+}
+
+.profile-section h2 {
+    font-family: 'RoxboroughCF', serif;
+    color: #3a2a00;
+    margin-bottom: 10px;
+}
+
+#aboutme {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    resize: none;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+#aboutme:focus {
+    outline: none;
+    border-color: #fccb6e;
+    box-shadow: 0 0 0 3px rgba(252,203,110,0.25);
+}
 
 .form-buttons{
     display: flex;
     justify-content: center;
     padding: 10px;
-    gap: 10px; 
+    gap: 12px; 
 }
 
 .editbtn{
   padding: 12px;
-  width: 120px;
+  width: 140px;
   background: #fccb6e;
   color: #3a2a00;
   border: none;
   border-radius: 10px;
-  transition: transform 0.3s ease;
-
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
+
 .editbtn:hover {
     cursor: pointer;
-    transform: scale(1.02);
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(252,203,110,0.4);
 }
 
 .editbtn:active {
   transform: scale(0.97);
 }
+
 .cancelbtn{
-    background: #fccb6e;
+    background: transparent;
     color: #3a2a00;
     padding: 12px;
-    width: 120px;
+    width: 140px;
     display:flex;
     justify-content: center;
     align-items: center;
-    border: none;
+    border: 2px solid #fccb6e;
     border-radius: 10px;
-    transition: transform 0.3s ease;
-    
+    transition: all 0.3s ease;
 }
 
 .cancelbtn:hover {
     cursor: pointer;
-    transform: scale(1.02);
+    transform: scale(1.05);
+    background: #fccb6e;
 }
 
 .cancelbtn:active {
   transform: scale(0.97);
 }
 
+@media (max-width: 768px) {
+    .profile-header-container {
+        flex-direction: column;
+        align-items: center;
+    }
 
+    .profile-right {
+        width: 100%;
+    }
 
+    #user-quote {
+        max-width: 100%;
+    }
 
+    #username,
+    #fullname {
+        width: 100%;
+    }
+}
