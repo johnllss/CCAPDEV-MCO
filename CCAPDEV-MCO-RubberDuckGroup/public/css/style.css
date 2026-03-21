@@ -121,20 +121,23 @@ main {
     position: fixed;
     right: 40px;
     bottom: 40px;
-    width: 60px;
+    width: 180px;
     height: 60px;
-    background-color: #b67b27;
-    color: white;
+    background-color: #fccb6e;
+    color: #b67b27;
     font-size: 1.875rem;
-    border-radius: 50%;
+    font-weight: bold;
+    white-space: pre-wrap;
+    border-radius: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    text-decoration: none;
 }
 
-.floating-add-btn a {
-    text-decoration: none;
+.floating-add-btn:hover {
+    background-color: #b67b27;
     color: #fccb6e;
 }
 
