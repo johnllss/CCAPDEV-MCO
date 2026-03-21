@@ -24,6 +24,10 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 6px 18px rgba(168, 116, 62, 0.16);
 }
 
 .navbar a {

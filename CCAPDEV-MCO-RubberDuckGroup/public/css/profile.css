@@ -25,6 +25,10 @@ body {
     background: #fccb6e;
     padding: 0 30px;
     height: 80px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 6px 18px rgba(168, 116, 62, 0.16);
 }
 
 .navbar ul {
