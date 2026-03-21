@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const path = require('path');
 const fs = require('fs');
 const Post = require('../models/Post');
+const User = require('../models/User');
+const Activity = require('../models/Activity');
 const relativeDate = require('../utils/relativeDate');
 
 function cleanRegex(value) {
@@ -170,6 +172,15 @@ async function createPost(req, res) {
         });
 
         await post.save();
+        await Promise.all([
+            User.findByIdAndUpdate(user, { $inc: { posts: 1 } }),
+            Activity.create({
+                userId: user,
+                type: 'post',
+                text: title,
+                link: `/posts/${post._id.toString()}/view`
+            })
+        ]);
 
         const populated = await Post.findById(post._id).populate('user', 'username profile.photo');
         res.status(201).json(populated);
