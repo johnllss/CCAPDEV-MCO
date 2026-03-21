@@ -13,9 +13,18 @@
     font-style: normal;
 }
 
+:root {
+    --navbar-height: 96px;
+}
+
 body {
     font-family: 'DM Sans', sans-serif;
     background-color: #FFF9E3;
+    padding-top: var(--navbar-height);
+}
+
+header {
+    min-height: var(--navbar-height);
 }
 
 .navbar {
@@ -24,8 +33,11 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px 40px;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     z-index: 1000;
     box-shadow: 0 6px 18px rgba(168, 116, 62, 0.16);
 }
