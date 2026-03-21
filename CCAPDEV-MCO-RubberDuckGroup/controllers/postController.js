@@ -224,7 +224,7 @@ async function renderIndex(req, res) {
             .populate('user', 'username profile.photo')
             .sort({ createdAt: -1 });
 
-        const formattedPosts = posts.map(formatPost);
+        const formattedPosts = posts.map(post => formatPost(post, req));
 
         res.render('index', { posts: formattedPosts });
     } catch (err) {
@@ -396,7 +396,7 @@ async function showSearchResults(req, res) {
                 .sort({ createdAt: -1 });
         }
 
-        const formattedPosts = posts.map(formatPost);
+        const formattedPosts = posts.map(post => formatPost(post, req));
 
         res.render('search-results', {
             posts: formattedPosts,
