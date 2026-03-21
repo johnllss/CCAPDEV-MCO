@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const User = require('./models/User');
 const Post = require('./models/Post');
 const Comment = require('./models/Comment');
+const Activity = require('./models/Activity');
 const bcrypt = require('bcrypt');
 
 process.on('uncaughtException', err => {
@@ -21,6 +22,7 @@ async function seed() {
     await User.deleteMany({});
     await Post.deleteMany({});
     await Comment.deleteMany({});
+    await Activity.deleteMany({});
 
     const saltRounds = 10;
 
@@ -92,6 +94,45 @@ async function seed() {
         { content: 'Absolutely! I remember when jQuery was the big thing.', author: users[6]._id, post: posts[0]._id, parentComment: comments[3]._id, isEdited: false },
         { content: 'Great point! AI-assisted coding is just the beginning.', author: users[0]._id, post: posts[0]._id, parentComment: comments[4]._id, isEdited: false },
         { content: 'Yes! No more worrying about server maintenance.', author: users[2]._id, post: posts[0]._id, parentComment: comments[5]._id, isEdited: false },
+    ]);
+
+    await Activity.insertMany([
+        {
+            userId: users[0]._id,
+            type: 'post',
+            text: posts[0].title,
+            link: `/posts/${posts[0]._id.toString()}/view`
+        },
+        {
+            userId: users[1]._id,
+            type: 'post',
+            text: posts[1].title,
+            link: `/posts/${posts[1]._id.toString()}/view`
+        },
+        {
+            userId: users[2]._id,
+            type: 'post',
+            text: posts[2].title,
+            link: `/posts/${posts[2]._id.toString()}/view`
+        },
+        {
+            userId: users[3]._id,
+            type: 'comment',
+            text: comments[1].content,
+            link: `/posts/${posts[0]._id.toString()}/view#comment-${comments[1]._id.toString()}`
+        },
+        {
+            userId: users[4]._id,
+            type: 'comment',
+            text: comments[2].content,
+            link: `/posts/${posts[0]._id.toString()}/view#comment-${comments[2]._id.toString()}`
+        },
+        {
+            userId: users[7]._id,
+            type: 'comment',
+            text: comments[4].content,
+            link: `/posts/${posts[0]._id.toString()}/view#comment-${comments[4]._id.toString()}`
+        }
     ]);
 
     console.log('✅ Database seeded successfully!');

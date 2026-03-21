@@ -2,36 +2,12 @@ const mongoose = require('mongoose');
 const path = require('path');
 const fs = require('fs');
 const Post = require('../models/Post');
+const User = require('../models/User');
+const Activity = require('../models/Activity');
+const relativeDate = require('../utils/relativeDate');
 
 function cleanRegex(value) {
     return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // replace each seen special char w/ \ so Mongo reads it as literal text
-}
-
-function relativeDate(date) {
-    if (!date) 
-        return '';
-
-    const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
-
-    if (seconds < 1) 
-        return 'just now';
-
-    const units = [
-        { label: 'y', s: 31536000 },
-        { label: 'mo', s: 2592000 },
-        { label: 'w', s: 604800 },
-        { label: 'd', s: 86400 },
-        { label: 'h', s: 3600 },
-        { label: 'm', s: 60 },
-        { label: 's', s: 1 }
-    ];
-
-    for (const u of units) {
-        const val = Math.floor(seconds / u.s);
-        if (val >= 1) return `${val}${u.label} ago`;
-    }
-
-    return 'just now';
 }
 
 function compactVotes(number) {
@@ -200,6 +176,15 @@ async function createPost(req, res) {
         });
 
         await post.save();
+        await Promise.all([
+            User.findByIdAndUpdate(user, { $inc: { posts: 1 } }),
+            Activity.create({
+                userId: user,
+                type: 'post',
+                text: title,
+                link: `/posts/${post._id.toString()}/view`
+            })
+        ]);
 
         const populated = await Post.findById(post._id).populate('user', 'username profile.photo');
         res.status(201).json(populated);

@@ -87,6 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (e.target.classList.contains('submit-reply-btn')) {
+            if (!currentUserId) {
+                alert('Please log in first.');
+                window.location.href = '/register';
+                return;
+            }
+
             const parentCommentId = e.target.dataset.commentId;
             const content = document.getElementById(`reply-text-${parentCommentId}`).value.trim();
             if (!content) return alert('Please write something.');

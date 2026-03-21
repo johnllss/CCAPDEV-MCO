@@ -1,3 +1,4 @@
+@import url('./variables.css');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
 *, *::before, *::after {
@@ -14,7 +15,7 @@
 }
 
 body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-sans);
   line-height: 1.5;
 }
 
@@ -28,7 +29,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #fff8eb;
+  background: var(--color-vanilla-cream);
   padding: 48px 32px;
 }
 
@@ -38,23 +39,23 @@ body {
 }
 
 .auth-content h1 {
-  font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
+  font-family: var(--font-display);
 }
 
 .logo {
   display: flex;
   justify-content: center;
   font-weight: 600;
-  color: #3a2a00;
+  color: var(--color-main-dark-brown);
   text-align: center;
   margin-bottom: 28px;
 }
 
 .logo a {
   text-decoration: none;
-  font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
+  font-family: var(--font-display);
   font-size: 3rem;
-  color: #a8743e;
+  color: var(--color-main-medium-brown);
 }
 
 h1 {
@@ -62,12 +63,12 @@ h1 {
   margin-bottom: 8px;
   font-size: 28px;
   font-weight: 600;
-  color: #3a2a00;
+  color: var(--color-main-dark-brown);
 }
 
 .subtext {
   font-size: 14px;
-  color: #6b4f00;
+  color: var(--color-main-earth-brown);
   padding-bottom: 28px;
 }
 
@@ -83,13 +84,13 @@ label {
   font-size: 13px;
   font-weight: 500;
   margin-bottom: 6px;
-  color: #3a2a00;
+  color: var(--color-main-dark-brown);
 }
 
 input {
   padding: 13px 14px;
-  border-radius: 8px;
-  border: 1px solid #fccb6e;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-main-bright-yellow);
   font-size: 14px;
   outline: none;
 }
@@ -107,8 +108,8 @@ input[type="password"] {
 .password-wrap input {
   width: 100%;
   padding: 13px 44px 13px 14px;
-  border-radius: 8px;
-  border: 1px solid #fccb6e;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-main-bright-yellow);
 }
 
 .password-wrap img {
@@ -126,7 +127,7 @@ input[type="password"] {
 }
 
 input:focus {
-  border-color: #d4a437;
+  border-color: var(--color-main-dark-gold);
 }
 
 .remember-forgot-container {
@@ -149,13 +150,13 @@ input:focus {
 
 .remember-forgot-container a {
   text-decoration: none;
-  color: #3a2a00;
+  color: var(--color-main-dark-brown);
   font-weight: 500;
 }
 
 .remember-forgot-container a:hover {
   text-decoration: underline;
-  color: #6b4f00;
+  color: var(--color-main-earth-brown);
 }
 
 .login-btn {
@@ -163,17 +164,17 @@ input:focus {
   width: 100%;
   padding: 14px 16px;
   border: none;
-  border-radius: 8px;
-  background: #fccb6e;
-  color: #3a2a00;
+  border-radius: var(--radius-md);
+  background: var(--color-main-bright-yellow);
+  color: var(--color-main-dark-brown);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.3s ease;
+  transition: background var(--transition-base), transform var(--transition-slow);
 }
 
 .login-btn:hover {
-  background: #e6b85d;
+  background: var(--color-main-soft-gold);
   transform: scale(1.02);
 }
 
@@ -186,15 +187,15 @@ input:focus {
   margin-top: 20px;
   text-align: center;
   font-weight: 500;
-  color: #3a2a00;
+  color: var(--color-main-dark-brown);
   text-decoration: none;
-  transition: transform 0.3s ease;
+  transition: transform var(--transition-slow);
 }
 
 .registerdirect:hover {
   text-decoration: underline;
   transform: scale(1.02);
-  color: #6b4f00;
+  color: var(--color-main-earth-brown);
 }
 
 .registerdirect:active {
@@ -202,7 +203,7 @@ input:focus {
 }
 
 .image-panel {
-  background: linear-gradient(135deg, #fccb6e, #ffe1a3);
+  background: var(--gradient-bright-yellow-to-pale-yellow);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -221,7 +222,7 @@ input:focus {
 .quote-area {
   font-size: 16px;
   font-weight: 500;
-  color: #3a2a00;
+  color: var(--color-main-dark-brown);
   max-width: 340px;
   line-height: 1.6;
 }
