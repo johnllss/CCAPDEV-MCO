@@ -19,8 +19,6 @@ body {
     padding: 20px;
     margin-top: 50px;
     margin-bottom: 20px;
-    margin-left: 20%;
-    margin-right: 20%;
     border-radius: 10px;
     border: 2px solid #fccb6e;
     font-family: 'DM Sans', sans-serif;
@@ -33,8 +31,6 @@ body {
 
 .create-post-actions-container {
     display: flex;
-    margin-left: 20%;
-    margin-right: 20%;
 }
 
 .create-post-title-container, .create-post-body-container,  .post-title-container, .post-body-container {
@@ -49,7 +45,7 @@ body {
     font-family: 'DM Sans', sans-serif;
 }
 
-.create-post-title, .edit-post-title, .post-title {
+.create-post-title, .post-title {
     border-radius: 10px;
     border: 1px solid lightgray;
     height: 50px;
@@ -61,10 +57,17 @@ body {
 }
 
 .edit-post-title {
-    font-style: italic;
-    color: darkgray;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
+    color: #a8743e;
     cursor: not-allowed;
     border-width: 0px;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    line-height: 1.2;
+    box-sizing: border-box;
 }
 
 .char-limit {
@@ -199,7 +202,7 @@ body {
     font-style: italic;
 }
 
-.post-header {
+.post-header, .edit-post-title {
     text-align: center;
     font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
     margin: 10px 0 10px 0;
@@ -210,7 +213,8 @@ body {
 .post-body {
     margin-top: 10px;
     margin-bottom: 0px;
-    height: auto;
+    min-height: 20px;
+    max-height: 500px;
     border: none;
     font-family: 'DM Sans', sans-serif;
     white-space: pre-line;
