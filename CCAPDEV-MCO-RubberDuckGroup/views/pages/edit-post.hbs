@@ -30,7 +30,7 @@
                     <h2 class="create-post-header">Edit Post</h2>
 
                     <div class="create-post-title-container">
-                        <input id="title-input" class="edit-post-title" type="text" placeholder="Title (required)" maxlength="150" title="Post title cannot be edited." disabled>
+                        <div id="title-input" class="edit-post-title" aria-hidden="true">{{post.title}}</div>
                     </div>
 
                     <div class="post-body-container">
