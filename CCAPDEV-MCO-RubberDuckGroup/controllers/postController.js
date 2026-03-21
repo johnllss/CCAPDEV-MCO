@@ -53,13 +53,16 @@ function compactVotes(number) {
 
 function formatPost(post, req) {
     const currentUserId = req.session?.userId?.toString() || null;
+    const createdAtLabel = relativeDate(post.createdAt);
+    const updatedAtLabel = post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null;
+    const imagePath = post.image ? (post.image.startsWith('/') ? post.image : '/uploads/' + post.image) : '';
 
     return {
         _id: post._id.toString(),
         title: post.title,
         content: post.body || post.image,
         body: post.body,
-        image: post.image ? '/uploads/' + post.image : '',
+        image: imagePath,
         authorUsername: post.user?.username,
         authorPhoto: post.user?.profile?.photo || '/images/default-pfp.png',
         authorId: post.user?._id?.toString(),
@@ -69,8 +72,11 @@ function formatPost(post, req) {
                 photo: post.user?.profile?.photo || '/images/default-pfp.png'
             }
         },
-        createdAtLabel: relativeDate(post.createdAt),
-        updatedAtLabel: post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null,
+        createdAtLabel,
+        updatedAtLabel,
+        timestamp: createdAtLabel,
+        editedAt: updatedAtLabel,
+        postHref: `/posts/${post._id.toString()}/view`,
         votes: compactVotes(post.votes),
         upvotes: post.upvotes.map(u => u.toString()),
         downvotes: post.downvotes.map(u => u.toString()),
@@ -339,7 +345,7 @@ async function renderPost(req, res) {
                 _id: post._id.toString(),
                 title: post.title,
                 body: body,
-                image: post.image ? '/uploads/' + post.image : "",
+                image: post.image ? (post.image.startsWith('/') ? post.image : '/uploads/' + post.image) : '',
                 authorUsername: post.user.username,
                 authorPhoto: post.user.profile?.photo || '/images/default-pfp.png',
                 authorId: post.user._id.toString(),

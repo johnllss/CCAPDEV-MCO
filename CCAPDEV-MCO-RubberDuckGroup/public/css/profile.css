@@ -16,6 +16,37 @@ body {
     color: #3a2a00;
 }
 
+/* Top navigation Bar */
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fccb6e;
+    padding: 0 30px;
+    height: 80px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 6px 18px rgba(168, 116, 62, 0.16);
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+}
+
+.navbar a:hover {
+    opacity: .85;
+}
+
 /* Profile Container */
 
 .profile-container {
