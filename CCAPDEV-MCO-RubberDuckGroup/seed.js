@@ -49,31 +49,31 @@ async function seed() {
             title: 'Found ducklings in my pool. The mom never came back even hours later. Help identifying breed?',
             body: 'We found these 7 cute ducklings swimming in our pool yesterday afternoon...',
             user: users[0]._id,
-            image: '/images/sample.jpg'
+            image: 'foundDucks.png'
         },
         {
             title: 'Out of context.',
             body: '(from a real post: https://www.reddit.com/r/duck/comments/1i2fc3f)',
             user: users[1]._id,
-            image: '/images/rubber-duck.png'
+            image: 'outOfContext.png'
         },
         {
             title: 'I dressed my ducks up as bowling pins for halloween',
             body: 'Since runners come 90% bowling pin I added the other 10%... The stripe.',
             user: users[2]._id,
-            image: '/images/sample.jpg'
+            image: 'bowlingDucks.png'
         },
         {
             title: 'my 1yo and her dad put 100 rubber duckies on my computer.',
             body: '(from a real post: https://www.reddit.com/r/duck/comments/1iedw5b)',
             user: users[3]._id,
-            image: '/images/rubber-duck.png'
+            image: 'computerDuckies.png'
         },
         {
             title: 'I found this at walmart for like $4 It is now my bathroom nightlight.',
             body: '(from a real post: https://www.reddit.com/r/rubberducks/comments/1fgxow9)',
             user: users[4]._id,
-            image: '/images/rubber-duck.png'
+            image: 'nightDucks.png'
         }
     ]);
 
