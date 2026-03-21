@@ -117,19 +117,19 @@ async function seed() {
         },
         {
             userId: users[3]._id,
-            type: 'reply',
+            type: 'comment',
             text: comments[1].content,
             link: `/posts/${posts[0]._id.toString()}/view#comment-${comments[1]._id.toString()}`
         },
         {
             userId: users[4]._id,
-            type: 'reply',
+            type: 'comment',
             text: comments[2].content,
             link: `/posts/${posts[0]._id.toString()}/view#comment-${comments[2]._id.toString()}`
         },
         {
             userId: users[7]._id,
-            type: 'reply',
+            type: 'comment',
             text: comments[4].content,
             link: `/posts/${posts[0]._id.toString()}/view#comment-${comments[4]._id.toString()}`
         }

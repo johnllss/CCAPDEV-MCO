@@ -46,6 +46,7 @@ function normalizeActivityItem(item) {
 
     const typeLabels = {
         post: "Posted",
+        comment: "Commented",
         reply: "Replied",
         like: "Liked",
         view: "Viewed"
