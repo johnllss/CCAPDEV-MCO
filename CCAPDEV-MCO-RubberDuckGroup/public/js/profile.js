@@ -9,24 +9,48 @@ if (!loggedUser) {
 
 // get the user's id from the url
 const params = new URLSearchParams(window.location.search);
-const profileId = params.get("id");
+const requestedProfileId = params.get("id");
 
 // choose who is going to be loaded
-const finalUserId = profileId ? profileId : loggedUser.userId;
+const finalUserId = requestedProfileId || loggedUser.userId;
 
 //checks 
 console.log("Viewing profile ID:", finalUserId);
 console.log("Logged-in user ID:", loggedUser.userId);
 
-// remove the edit button here
 const isOwnProfile = finalUserId === loggedUser.userId;
 const ACTIVITY_POLL_INTERVAL_MS = 5000;
 let activityPollId = null;
 let isLoadingActivity = false;
 
-if (!isOwnProfile) {
+function updateProfileEditingState() {
     const editBtn = document.getElementById("editBtn");
-    if (editBtn) editBtn.style.display = "none";
+
+    if (!editBtn) {
+        return;
+    }
+
+    if (isOwnProfile) {
+        editBtn.style.display = "";
+        editBtn.removeAttribute("aria-hidden");
+        return;
+    }
+
+    editBtn.style.display = "none";
+    editBtn.setAttribute("aria-hidden", "true");
+    editBtn.removeAttribute("href");
+}
+
+updateProfileEditingState();
+
+function redirectToSafeProfile() {
+    const targetProfileHref = `/profile?id=${loggedUser.userId}`;
+
+    if (window.location.pathname === "/profile" && window.location.search === `?id=${loggedUser.userId}`) {
+        return;
+    }
+
+    window.location.replace(targetProfileHref);
 }
 
 // we want activity item to be the same format regardless of what type it is
@@ -156,6 +180,11 @@ async function loadProfile() {
         const userResponse = await fetch(`/users/${finalUserId}`);
 
         if (!userResponse.ok) {
+            if (!isOwnProfile && (userResponse.status === 400 || userResponse.status === 404)) {
+                redirectToSafeProfile();
+                return;
+            }
+
             throw new Error(`Failed to load user profile (${userResponse.status})`);
         }
 

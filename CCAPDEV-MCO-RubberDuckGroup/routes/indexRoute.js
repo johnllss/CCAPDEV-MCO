@@ -54,7 +54,7 @@ router.get('/logout', (req, res) => {
 });
 
 router.get('/comments', (req, res) => {
-    res.render('comments');
+    res.redirect('/');
 });
 
 module.exports = router;
