@@ -1,12 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
     const postId = window.location.pathname.split('/')[2];
-    const currentUserId = '6650a1b2c3d4e5f6a7b8c9d0';
+    const loggedUser = JSON.parse(localStorage.getItem('loggedUser'));
+    const currentUserId = loggedUser?.userId || null;
 
     const postCommentBtn = document.querySelector('.add-comment-form .form-submit-btn');
     const newCommentText = document.getElementById('new-comment-text');
 
     if (postCommentBtn) {
         postCommentBtn.addEventListener('click', async () => {
+            if (!currentUserId) {
+                alert('Please log in first.');
+                window.location.href = '/register';
+                return;
+            }
+
             const content = newCommentText.value.trim();
             if (!content) return alert('Please write something first.');
 
@@ -52,6 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (e.target.classList.contains('submit-reply-btn')) {
+            if (!currentUserId) {
+                alert('Please log in first.');
+                window.location.href = '/register';
+                return;
+            }
+
             const parentCommentId = e.target.dataset.commentId;
             const content = document.getElementById(`reply-text-${parentCommentId}`).value.trim();
             if (!content) return alert('Please write something.');

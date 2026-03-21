@@ -37,6 +37,7 @@ exports.createComment = async (req, res) => {
     try {
         const { content, authorId, parentCommentId } = req.body;
         const { postId } = req.params;
+        const activityType = parentCommentId ? 'reply' : 'comment';
 
         const newComment = new Comment({
             content,
@@ -50,7 +51,7 @@ exports.createComment = async (req, res) => {
             User.findByIdAndUpdate(authorId, { $inc: { replies: 1 } }),
             Activity.create({
                 userId: authorId,
-                type: 'reply',
+                type: activityType,
                 text: content,
                 link: `/posts/${postId}/view#comment-${newComment._id.toString()}`
             })
