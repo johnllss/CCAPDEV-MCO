@@ -65,7 +65,10 @@ async function login(req, res) {
         res.json({
             message: "Login successful",
             userId: user._id,
-            username: user.username
+            username: user.username,
+            profile: {
+                photo: user.profile?.photo || "/images/default-pfp.png"
+            }
         });
 
     } catch (err) {
