@@ -1,10 +1,10 @@
 <nav class="navbar">
     <div class="nav-left">
-        <a href="{{#if homeHref}} {{homeHref}} {{else}} / {{/if}}">
+        <a href="{{#if homeHref}}{{homeHref}}{{else}}/{{/if}}">
             <img src="/images/rubber-duck.png" alt="A colorless duck inside a black circle." class="duck-logo"/>
         </a>
 
-        <h1><a href="{{#if homeHref}} {{homeHref}} {{else}} / {{/if}}">The Rubber Duck Forums</a></h1>
+        <h1><a href="{{#if homeHref}}{{homeHref}}{{else}}/{{/if}}">The Rubber Duck Forums</a></h1>
     </div>
 
     <div class="nav-center">
@@ -15,15 +15,20 @@
 
     <div class="nav-right">
         <ul>
-            <li><a href="{{#if homeHref}} {{homeHref}} {{else}} / {{/if}}">Home</a></li>
+            <li><a href="{{#if homeHref}}{{homeHref}}{{else}}/{{/if}}">Home</a></li>
 
             <li>
-                <a href="{{#if profileHref}} {{profileHref}} {{else}} /profile {{/if}}">
-                    <img src="{{#if profileImage}} {{profileImage}} {{else}} /images/unknownperson.jpg {{/if}}" alt="An unknown person icon." class="nav-profile-icon"/>
+                <a id="nav-profile-link" href="{{#if profileHref}}{{profileHref}}{{else}}/profile{{/if}}">
+                    <img
+                        id="nav-profile-image"
+                        src="{{#if profileImage}}{{profileImage}}{{else}}/images/unknownperson.jpg{{/if}}"
+                        alt="An unknown person icon."
+                        class="nav-profile-icon"/>
                 </a>
             </li>
 
-            <li><a href="{{#if logoutHref}} {{logoutHref}} {{else}} /logout {{/if}}" class="logout" id="log-btn">Logout</a></li>
+            <li><a href="{{#if logoutHref}}{{logoutHref}}{{else}}/logout{{/if}}" class="logout" id="log-btn">Logout</a></li>
         </ul>
     </div>
 </nav>
+<script src="/js/navbar.js"></script>
