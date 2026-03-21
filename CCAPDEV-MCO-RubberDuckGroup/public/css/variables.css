@@ -1,0 +1,45 @@
+:root {
+    --font-sans: 'DM Sans', sans-serif;
+    --font-display: 'RoxboroughCF', Arial, Helvetica, sans-serif;
+
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-page-bg: #fff8eb;
+    --color-surface-alt: #fff6db;
+    --color-main-bright-yellow: #fccb6e;
+    --color-main-sunflower-yellow: #febe47;
+    --color-main-pale-yellow: #ffe1a3;
+    --color-main-warm-gold: #e2a83a;
+    --color-main-dark-gold: #d4a437;
+    --color-main-golden-yellow: #dfb146;
+    --color-main-amber-brown: #b67b27;
+    --color-main-medium-brown: #a8743e;
+    --color-main-dark-brown: #3a2a00;
+    --color-main-earth-brown: #6b4f00;
+    --color-main-soft-gold: #e6b85d;
+    --color-text-muted: #666666;
+    --color-border-light: lightgray;
+    --color-border-soft: #dddddd;
+    --color-shadow-brown: rgba(168, 116, 62, 0.16);
+    --color-shadow-brown-soft: rgba(168, 116, 62, 0.12);
+    --color-shadow-black-soft: rgba(0, 0, 0, 0.08);
+    --color-shadow-black-light: rgba(0, 0, 0, 0.1);
+    --color-focus-ring: rgba(252, 203, 110, 0.25);
+    --color-danger: #ff6b6b;
+    --color-danger-text: #c0392b;
+    --color-danger-bg: #fff5f5;
+
+    --gradient-main: linear-gradient(135deg, var(--color-main-bright-yellow), var(--color-main-pale-yellow));
+
+    --radius-md: 8px;
+    --radius-lg: 10px;
+    --radius-pill: 20px;
+    --radius-full: 50%;
+
+    --shadow-card: 0 10px 25px var(--color-shadow-black-soft);
+    --shadow-focus: 0 0 0 3px var(--color-focus-ring);
+
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.2s ease;
+    --transition-slow: 0.3s ease;
+}
