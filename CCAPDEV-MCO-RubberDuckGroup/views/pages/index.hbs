@@ -54,17 +54,17 @@
 
                 <h2 class="post-header">{{#if title}} {{title}} {{else}} Untitled Post {{/if}}</h2>
 
-                {{#if content}}
                 <div class="post-body-container">
 
+                    {{#if image}}
                     <div class="post-image"><img src="{{image}}"></div>
+                    {{/if}}
 
-                    <div class="post-body">
-                        <p>{{body}}</p>
-                    </div>
+                    {{#if body}}
+                    <div class="post-body"><p>{{body}}</p></div>
+                    {{/if}}
 
                 </div>
-                {{/if}}
 
                 <div class="post-actions">
 
