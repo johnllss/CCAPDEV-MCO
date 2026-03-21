@@ -16,7 +16,7 @@
 body {
     margin: 0px;
     padding: 0px;
-    background: var(--color-page-bg);
+    background: var(--color-vanilla-cream);
 }
 
 main {
@@ -106,7 +106,7 @@ input {
     margin: 4px;
     text-align: center;
     font-style: italic;
-    border: 1px solid var(--color-border-soft);
+    border: 1px solid var(--color-border-cloud-gray);
     border-radius: var(--radius-lg);
     resize: none;
     overflow: hidden;
@@ -149,7 +149,7 @@ input {
     margin: 2px;
     border: 1px solid var(--color-main-bright-yellow);
     border-radius: var(--radius-lg);
-    background: var(--color-page-bg);
+    background: var(--color-vanilla-cream);
     transition: all var(--transition-slow);
 }
 
@@ -174,7 +174,7 @@ input {
     min-height: 120px;
     padding: 12px;
     border-radius: 12px;
-    border: 1px solid var(--color-border-soft);
+    border: 1px solid var(--color-border-cloud-gray);
     resize: none;
     font-size: 14px;
     line-height: 1.6;

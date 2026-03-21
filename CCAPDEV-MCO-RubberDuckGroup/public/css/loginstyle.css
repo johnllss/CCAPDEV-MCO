@@ -29,7 +29,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--color-page-bg);
+  background: var(--color-vanilla-cream);
   padding: 48px 32px;
 }
 
@@ -203,7 +203,7 @@ input:focus {
 }
 
 .image-panel {
-  background: var(--gradient-main);
+  background: var(--gradient-bright-yellow-to-pale-yellow);
   display: flex;
   flex-direction: column;
   justify-content: center;

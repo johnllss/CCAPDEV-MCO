@@ -40,7 +40,7 @@ header {
     right: 0;
     width: 100%;
     z-index: 1000;
-    box-shadow: 0 6px 18px var(--color-shadow-brown);
+    box-shadow: 0 6px 18px var(--color-shadow-medium-brown);
 }
 
 .navbar a {
@@ -142,7 +142,7 @@ main {
 
 .post-card.is-clickable:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 24px var(--color-shadow-brown-soft);
+    box-shadow: 0 12px 24px var(--color-shadow-medium-brown-soft);
 }
 
 .profile-icon {

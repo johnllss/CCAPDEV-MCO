@@ -29,7 +29,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--color-page-bg);
+  background: var(--color-vanilla-cream);
   padding: 48px 32px;
 }
 
@@ -214,7 +214,7 @@ input:focus {
 }
 
 .image-panel {
-  background: var(--gradient-main);
+  background: var(--gradient-bright-yellow-to-pale-yellow);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -240,17 +240,17 @@ input:focus {
 
 .input-error {
   border: 2px solid #e74c3c;
-  background-color: var(--color-danger-bg);
+  background-color: var(--color-blush-white);
   transition: border var(--transition-base), background-color var(--transition-base);
 }
 
 .input-error:focus {
-  border-color: var(--color-danger-text);
-  background-color: var(--color-danger-bg);
+  border-color: var(--color-brick-red);
+  background-color: var(--color-blush-white);
 }
 
 .error-text {
-  color: var(--color-danger-text);
+  color: var(--color-brick-red);
   font-size: 12px;
   margin-top: 6px;
   margin-left: 4px;

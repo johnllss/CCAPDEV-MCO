@@ -9,7 +9,7 @@
 }
 
 body {
-    background-color: var(--color-page-bg);
+    background-color: var(--color-vanilla-cream);
 }
 
 .create-post-box {
@@ -48,7 +48,7 @@ body {
 
 .create-post-title, .post-title {
     border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border-light);
+    border: 1px solid var(--color-border-light-gray);
     height: 50px;
     padding: 10px;
     font-size: large;
@@ -73,13 +73,13 @@ body {
 
 .char-limit {
     align-self: flex-end;
-    color: var(--color-border-light);
+    color: var(--color-border-light-gray);
     font-style: italic;
 }
 
 .create-post-body {
     border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border-light);
+    border: 1px solid var(--color-border-light-gray);
     min-height: 200px;
     field-sizing: content;
     padding: 10px;
