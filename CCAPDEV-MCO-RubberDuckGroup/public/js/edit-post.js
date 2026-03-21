@@ -6,9 +6,24 @@ const cancelBtn = document.getElementById("cancel-button");
 const publishBtn = document.getElementById("save-button");
 const user = JSON.parse(localStorage.getItem("loggedUser"));
 
+function setFieldValue(el, val) {
+    if (!el) 
+        return;
+    if ("value" in el) 
+        el.value = val;
+    else 
+        el.textContent = val;
+}
+
+function getFieldValue(el) {
+    if (!el) 
+        return '';
+    return ("value" in el) ? el.value : el.textContent;
+}
+
 // Fill text fields with current post info
-titleField.value = currTitle;
-bodyField.value = currBody;
+setFieldValue(titleField, currTitle || '');
+setFieldValue(bodyField, currBody || '');
 
 // Prompts the user to confirm cancelling an edit
 cancelBtn.addEventListener("click", () => {
@@ -49,7 +64,7 @@ publishBtn.addEventListener("click", async () => {
     if(editConfirmed) {
         try {
             const payload = {
-                body: bodyField.value.trim()
+                body: getFieldValue(bodyField).trim()
             };
 
             const response = await fetch(`/posts/${postId}`, {

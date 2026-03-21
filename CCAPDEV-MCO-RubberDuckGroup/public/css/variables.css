@@ -1,0 +1,45 @@
+:root {
+    --font-sans: 'DM Sans', sans-serif;
+    --font-display: 'RoxboroughCF', Arial, Helvetica, sans-serif;
+
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-vanilla-cream: #fff8eb;
+    --color-butter-cream: #fff6db;
+    --color-main-bright-yellow: #fccb6e;
+    --color-main-sunflower-yellow: #febe47;
+    --color-main-pale-yellow: #ffe1a3;
+    --color-main-warm-gold: #e2a83a;
+    --color-main-dark-gold: #d4a437;
+    --color-main-golden-yellow: #dfb146;
+    --color-main-amber-brown: #b67b27;
+    --color-main-medium-brown: #a8743e;
+    --color-main-dark-brown: #3a2a00;
+    --color-main-earth-brown: #6b4f00;
+    --color-main-soft-gold: #e6b85d;
+    --color-text-stone-gray: #666666;
+    --color-border-light-gray: lightgray;
+    --color-border-cloud-gray: #dddddd;
+    --color-shadow-medium-brown: rgba(168, 116, 62, 0.16);
+    --color-shadow-medium-brown-soft: rgba(168, 116, 62, 0.12);
+    --color-shadow-black-soft: rgba(0, 0, 0, 0.08);
+    --color-shadow-black-light: rgba(0, 0, 0, 0.1);
+    --color-transparent-bright-yellow: rgba(252, 203, 110, 0.25);
+    --color-coral-red: #ff6b6b;
+    --color-brick-red: #c0392b;
+    --color-blush-white: #fff5f5;
+
+    --gradient-bright-yellow-to-pale-yellow: linear-gradient(135deg, var(--color-main-bright-yellow), var(--color-main-pale-yellow));
+
+    --radius-md: 8px;
+    --radius-lg: 10px;
+    --radius-pill: 20px;
+    --radius-full: 50%;
+
+    --shadow-card: 0 10px 25px var(--color-shadow-black-soft);
+    --shadow-focus: 0 0 0 3px var(--color-transparent-bright-yellow);
+
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.2s ease;
+    --transition-slow: 0.3s ease;
+}

@@ -2,4 +2,3 @@ node_modules/
 .env
 .DS_Store
 Specs/
-CCAPDEV-MCO-RubberDuckGroup/public/uploads/*

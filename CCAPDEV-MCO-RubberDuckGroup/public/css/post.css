@@ -1,3 +1,4 @@
+@import url('./variables.css');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
 @font-face {
@@ -8,22 +9,20 @@
 }
 
 body {
-    background-color: #fff8eb;
+    background-color: var(--color-vanilla-cream);
 }
 
 .create-post-box {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    background-color: white;
+    background-color: var(--color-white);
     padding: 20px;
     margin-top: 50px;
     margin-bottom: 20px;
-    margin-left: 20%;
-    margin-right: 20%;
-    border-radius: 10px;
-    border: 2px solid #fccb6e;
-    font-family: 'DM Sans', sans-serif;
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--color-main-bright-yellow);
+    font-family: var(--font-sans);
 }
 
 .create-post-header {
@@ -33,8 +32,6 @@ body {
 
 .create-post-actions-container {
     display: flex;
-    margin-left: 20%;
-    margin-right: 20%;
 }
 
 .create-post-title-container, .create-post-body-container,  .post-title-container, .post-body-container {
@@ -45,50 +42,57 @@ body {
 }
 
 .create-post-title::placeholder, .create-post-body::placeholder , .post-title::placeholder, .post-body::placeholder {
-    color: #fccb6e;
-    font-family: 'DM Sans', sans-serif;
+    color: var(--color-main-bright-yellow);
+    font-family: var(--font-sans);
 }
 
-.create-post-title, .edit-post-title, .post-title {
-    border-radius: 10px;
-    border: 1px solid lightgray;
+.create-post-title, .post-title {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border-light-gray);
     height: 50px;
     padding: 10px;
     font-size: large;
-    font-family: 'DM Sans', sans-serif;
-    color: black;
-    background-color: white;
+    font-family: var(--font-sans);
+    color: var(--color-black);
+    background-color: var(--color-white);
 }
 
 .edit-post-title {
-    font-style: italic;
-    color: darkgray;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: var(--font-display);
+    color: var(--color-main-medium-brown);
     cursor: not-allowed;
     border-width: 0px;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    line-height: 1.2;
+    box-sizing: border-box;
 }
 
 .char-limit {
     align-self: flex-end;
-    color: lightgray;
+    color: var(--color-border-light-gray);
     font-style: italic;
 }
 
 .create-post-body {
-    border-radius: 10px;
-    border: 1px solid lightgray;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border-light-gray);
     min-height: 200px;
     field-sizing: content;
     padding: 10px;
     margin-top: 10px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-sans);
     font-size: medium;
-    color: black;
-    background-color: white;
+    color: var(--color-black);
+    background-color: var(--color-white);
     resize: none;
 }
 
 .create-post-title:focus, .post-title:focus, textarea:focus {
-    border: 2px solid #fccb6e;
+    border: 2px solid var(--color-main-bright-yellow);
     outline: none;
 }
 
@@ -105,7 +109,7 @@ body {
 .create-post-file-upload span {
     margin-left: 15px;
     font-style: italic;
-    color:#fccb6e;
+    color: var(--color-main-bright-yellow);
 }
 
 .create-post-actions-container {
@@ -118,18 +122,18 @@ body {
 .create-post-cancel-button, .create-post-publish-button {
     padding: 10px 20px;
     height: 50px;
-    border-radius: 10px;
+    border-radius: var(--radius-lg);
     font-size: large;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-sans);
     cursor: pointer;
 }
 
 .create-post-cancel-button {
     width: 100px;
-    background-color: white;
-    border-color: #fccb6e;
+    background-color: var(--color-white);
+    border-color: var(--color-main-bright-yellow);
     border-style: solid;
-    color: black;
+    color: var(--color-black);
 }
 
 .create-post-cancel-button:hover {
@@ -138,25 +142,24 @@ body {
 
 .create-post-publish-button {
     width: 200px;
-    background-color: #fccb6e;
-    border-color: #fccb6e;
+    background-color: var(--color-main-bright-yellow);
+    border-color: var(--color-main-bright-yellow);
     border-style: solid;
     font-weight: bold;
-    color: black;
+    color: var(--color-black);
 }
 
 .create-post-publish-button:hover {
-    background-color: #febe47;
-    border-color: #febe47;
+    background-color: var(--color-main-sunflower-yellow);
+    border-color: var(--color-main-sunflower-yellow);
 }
 
 .post-card {
-    background-color: white;
+    background-color: var(--color-white);
     padding: 25px;
-    border-radius: 20px;
     margin-bottom: 40px;
-    border-radius: 10px;
-    border: 2px solid #fccb6e;
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--color-main-bright-yellow);
 }
 
 .post-top {
@@ -169,21 +172,21 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #a8743e;
+    color: var(--color-main-medium-brown);
     font-weight: 500;
 }
 
 .profile-icon img {
     width: 35px;
     height: 35px;
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     object-fit: cover;
-    border: 2px solid #fccb6e; 
+    border: 2px solid var(--color-main-bright-yellow);
 }
 
 .post-owner-name {
     text-decoration: none;
-    color: #fccb6e;
+    color: var(--color-main-bright-yellow);
     font-weight: bold;
 }
 
@@ -199,20 +202,21 @@ body {
     font-style: italic;
 }
 
-.post-header {
+.post-header, .edit-post-title {
     text-align: center;
-    font-family: 'RoxboroughCF', Arial, Helvetica, sans-serif;
+    font-family: var(--font-display);
     margin: 10px 0 10px 0;
-    color: #a8743e;
+    color: var(--color-main-medium-brown);
     word-wrap: break-word;
 }
 
 .post-body {
     margin-top: 10px;
     margin-bottom: 0px;
-    height: auto;
+    min-height: 20px;
+    max-height: 500px;
     border: none;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-sans);
     white-space: pre-line;
     word-wrap: break-word;
     resize: none;
@@ -229,7 +233,7 @@ body {
 .post-image img {
     display: block;
     align-items: center;
-    border-radius: 10px;
+    border-radius: var(--radius-lg);
     margin: 10px 0 10px 0;
     object-fit: contain;
     max-height: 600px;
@@ -261,7 +265,7 @@ body {
 }
 
 .post-vote-actions span {
-    color: #a8743e;
+    color: var(--color-main-medium-brown);
     font-weight: bold;
 }
 
@@ -270,7 +274,7 @@ body {
     border: none;
     cursor: pointer;
     padding: 5px;
-    transition: transform 0.2s ease, opacity 0.2s ease;
+    transition: transform var(--transition-base), opacity var(--transition-base);
 }
 
 button:hover .upvote-icon {

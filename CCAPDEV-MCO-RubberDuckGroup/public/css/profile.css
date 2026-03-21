@@ -1,3 +1,4 @@
+@import url('./variables.css');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
 *, *::before, *::after {
@@ -11,36 +12,9 @@
 }
 
 body {
-    font-family: 'DM Sans', sans-serif;
-    background: #fff8eb;
-    color: #3a2a00;
-}
-
-/* Top navigation Bar */
-
-.navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #fccb6e;
-    padding: 0 30px;
-    height: 80px;
-}
-
-.navbar ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-}
-
-.navbar a {
-    text-decoration: none;
-    color: white;
-    font-weight: 500;
-}
-
-.navbar a:hover {
-    opacity: .85;
+    font-family: var(--font-sans);
+    background: var(--color-vanilla-cream);
+    color: var(--color-main-dark-brown);
 }
 
 /* Profile Container */
@@ -49,16 +23,17 @@ body {
     max-width: 1100px;
     margin: 60px auto;
     padding: 40px;
-    background: white;
+    background: var(--color-white);
     border-radius: 18px;
-    box-shadow: 0 20px 45px rgba(0,0,0,.08);
+    box-shadow: 0 20px 45px var(--color-shadow-black-soft);
 }
 
 .profile-container h1 {
     text-align: center;
     font-size: 34px;
     margin-bottom: 40px;
-    font-family: 'RoxboroughCF', serif;
+    
+    font-family: var(--font-display);
 }
 
 /* Profile Header */
@@ -67,7 +42,7 @@ body {
     display: flex;
     gap: 50px;
     padding-bottom: 30px;
-    border-bottom: 2px solid #fccb6e;
+    border-bottom: 2px solid var(--color-main-bright-yellow);
 }
 
 /* Left side */
@@ -82,15 +57,15 @@ body {
 .profile-left img {
     width: 170px;
     height: 170px;
-    border-radius: 50%;
-    border: 5px solid #fccb6e;
+    border-radius: var(--radius-full);
+    border: 5px solid var(--color-main-bright-yellow);
     object-fit: cover;
 }
 
 .user-quote {
     text-align: center;
     font-size: 14px;
-    color: #6b4f00;
+    color: var(--color-main-earth-brown);
     max-width: 200px;
     line-height: 1.4;
 }
@@ -111,7 +86,7 @@ body {
 
 .fullname {
     font-size: 16px;
-    color: #6b4f00;
+    color: var(--color-main-earth-brown);
 }
 
 /* Stats */
@@ -124,8 +99,8 @@ body {
 }
 
 .stat {
-    background: #fff6db;
-    border: 2px solid #fccb6e;
+    background: var(--color-butter-cream);
+    border: 2px solid var(--color-main-bright-yellow);
     border-radius: 999px;
     padding: 8px 16px;
     text-align: center;
@@ -136,7 +111,7 @@ body {
 }
 
 .stat-label {
-    color: #6b4f00;
+    color: var(--color-main-earth-brown);
 }
 
 .stat-value {
@@ -158,7 +133,7 @@ body {
     background: #fffdf6;
     border-radius: 14px;
     padding: 25px;
-    border: 2px solid #fccb6e;
+    border: 2px solid var(--color-main-bright-yellow);
 }
 
 .profile-section h2 {
@@ -168,10 +143,10 @@ body {
 /* About Section */
 
 .aboutme-container {
-    background: white;
-    border-radius: 10px;
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
     padding: 18px;
-    border: 1px solid #fccb6e;
+    border: 1px solid var(--color-main-bright-yellow);
 }
 
 .aboutme {
@@ -182,16 +157,16 @@ body {
 
 .activity-list {
     list-style: none;
-    border-radius: 10px;
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    border: 1px solid #fccb6e;
+    border: 1px solid var(--color-main-bright-yellow);
 }
 
 .activity-list li {
     padding: 14px;
-    border-bottom: 1px solid #fccb6e;
-    background: white;
-    transition: background .15s ease;
+    border-bottom: 1px solid var(--color-main-bright-yellow);
+    background: var(--color-white);
+    transition: background var(--transition-fast);
 }
 
 .activity-list li:last-child {
@@ -199,13 +174,13 @@ body {
 }
 
 .activity-list li:hover {
-    background: #fff6db;
+    background: var(--color-butter-cream);
 }
 
 .activity-date {
     float: right;
     font-size: 12px;
-    color: #6b4f00;
+    color: var(--color-main-earth-brown);
 }
 
 .activity-list span[title] {
@@ -219,16 +194,16 @@ body {
     width: 160px;
     text-align: center;
     padding: 12px 0;
-    background: #fccb6e;
-    border-radius: 10px;
+    background: var(--color-main-bright-yellow);
+    border-radius: var(--radius-lg);
     text-decoration: none;
-    color: #3a2a00;
+    color: var(--color-main-dark-brown);
     font-weight: 600;
-    transition: .15s ease;
+    transition: var(--transition-fast);
 }
 
 .editbtn:hover {
-    background: #e6b85d;
+    background: var(--color-main-soft-gold);
 }
 
 /* Responsive */

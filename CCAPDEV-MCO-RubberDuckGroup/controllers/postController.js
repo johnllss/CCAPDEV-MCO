@@ -51,15 +51,28 @@ function compactVotes(number) {
     return votes.format(n).replace(/\s+/g, '').toLowerCase();
 }
 
+function toUploadImagePath(image) {
+    if (!image || typeof image !== 'string')
+        return '';
+
+    const cleanedImage = path.basename(image.trim());
+    if (!cleanedImage || ['undefined', 'null', 'false', 'nan'].includes(cleanedImage.toLowerCase()))
+        return '';
+
+    return `/uploads/${cleanedImage}`;
+}
+
 function formatPost(post, req) {
     const currentUserId = req.session?.userId?.toString() || null;
+    const createdAtLabel = relativeDate(post.createdAt);
+    const updatedAtLabel = post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null;
 
     return {
         _id: post._id.toString(),
         title: post.title,
         content: post.body || post.image,
         body: post.body,
-        image: post.image ? '/uploads/' + post.image : '',
+        image: toUploadImagePath(post.image),
         authorUsername: post.user?.username,
         authorPhoto: post.user?.profile?.photo || '/images/default-pfp.png',
         authorId: post.user?._id?.toString(),
@@ -69,8 +82,11 @@ function formatPost(post, req) {
                 photo: post.user?.profile?.photo || '/images/default-pfp.png'
             }
         },
-        createdAtLabel: relativeDate(post.createdAt),
-        updatedAtLabel: post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null,
+        createdAtLabel,
+        updatedAtLabel,
+        timestamp: createdAtLabel,
+        editedAt: updatedAtLabel,
+        postHref: `/posts/${post._id.toString()}/view`,
         votes: compactVotes(post.votes),
         upvotes: post.upvotes.map(u => u.toString()),
         downvotes: post.downvotes.map(u => u.toString()),
@@ -176,7 +192,7 @@ async function createPost(req, res) {
             user,
             title,
             body,
-            image
+            image: image ? path.basename(String(image).trim()) : ''
         });
 
         await post.save();
@@ -208,7 +224,7 @@ async function renderIndex(req, res) {
             .populate('user', 'username profile.photo')
             .sort({ createdAt: -1 });
 
-        const formattedPosts = posts.map(formatPost);
+        const formattedPosts = posts.map(post => formatPost(post, req));
 
         res.render('index', { posts: formattedPosts });
     } catch (err) {
@@ -251,7 +267,7 @@ async function editPost(req, res) {
         if (body !== undefined) 
             update.body = body;
         if (image !== undefined) 
-            update.image = image;
+            update.image = image ? path.basename(String(image).trim()) : '';
 
         const post = await Post.findByIdAndUpdate(id, update, {
             new: true,
@@ -339,7 +355,7 @@ async function renderPost(req, res) {
                 _id: post._id.toString(),
                 title: post.title,
                 body: body,
-                image: post.image ? '/uploads/' + post.image : "",
+                image: toUploadImagePath(post.image),
                 authorUsername: post.user.username,
                 authorPhoto: post.user.profile?.photo || '/images/default-pfp.png',
                 authorId: post.user._id.toString(),
@@ -380,7 +396,7 @@ async function showSearchResults(req, res) {
                 .sort({ createdAt: -1 });
         }
 
-        const formattedPosts = posts.map(formatPost);
+        const formattedPosts = posts.map(post => formatPost(post, req));
 
         res.render('search-results', {
             posts: formattedPosts,
