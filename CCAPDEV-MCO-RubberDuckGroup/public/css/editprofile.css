@@ -27,55 +27,6 @@ main {
     text-align: center;
 }
 
-.navbar {
-    display: flex;
-    height: 100px;
-    background-color: #fccb6e;
-    justify-content: center;
-    align-items: center;
-}
-
-.navbar ul {
-    list-style-type: none;
-    padding: 0px;
-    margin: 0px;
-    overflow: hidden;
-}
-
-.navbar a {
-    color: white;
-    text-decoration: none;
-    padding: 15px;
-    display: block;
-    text-align: center;
-}
-
-.navbar a:hover {
-    background-color: hsl(0, 0%, 10%);
-}
-
-.navbar a.active {
-    background-color: #2196F3;
-    color: white;
-}
-
-.navbar input {
-    margin-right: 50px;
-}
-
-.navbar input[type=text] {
-    float: right;
-    padding: 6px;
-    border: none;
-    margin-top: 8px;
-    margin-right: 16px;
-    font-size: 17px;
-}
-
-.navbar li {
-    float: left;
-}
-
 .website-name {
     margin-right: 150px;
 }

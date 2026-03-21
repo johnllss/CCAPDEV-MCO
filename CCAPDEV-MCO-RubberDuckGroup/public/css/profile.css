@@ -16,33 +16,6 @@ body {
     color: #3a2a00;
 }
 
-/* Top navigation Bar */
-
-.navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #fccb6e;
-    padding: 0 30px;
-    height: 80px;
-}
-
-.navbar ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-}
-
-.navbar a {
-    text-decoration: none;
-    color: white;
-    font-weight: 500;
-}
-
-.navbar a:hover {
-    opacity: .85;
-}
-
 /* Profile Container */
 
 .profile-container {
