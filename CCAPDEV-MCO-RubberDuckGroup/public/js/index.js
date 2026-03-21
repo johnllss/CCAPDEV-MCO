@@ -38,7 +38,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentUser = user?.userId;
 
     cards.forEach(card => {
+        const postHref = card.dataset.postHref;
         const postId = card.dataset.postid;
+
+        if (postHref) {
+            const shouldIgnoreClick = (event) => event.target.closest('a, button, input, textarea, select, label, form');
+
+            card.addEventListener('click', (event) => {
+                if (shouldIgnoreClick(event)) return;
+
+                window.location.href = postHref;
+            });
+        }
+
         if (!postId) return;
 
         const upBtn = card.querySelector('.upvote-button');

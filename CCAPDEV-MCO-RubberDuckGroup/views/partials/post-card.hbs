@@ -1,74 +1,102 @@
-<article class="post-card" data-upvotes="{{#if post.upvotes}}{{post.upvotes}}{{/if}}" data-downvotes="{{#if post.downvotes}}{{post.downvotes}}{{/if}}">
+<article class="post-card{{#if post._id}}{{#unless disableCardClick}} is-clickable{{/unless}}{{/if}}"
+    {{#if post._id}}data-postid="{{post._id}}"{{/if}}
+    data-upvotes="{{#if post.upvotes}}{{post.upvotes}}{{/if}}"
+    data-downvotes="{{#if post.downvotes}}{{post.downvotes}}{{/if}}"
+    {{#if post._id}}{{#unless disableCardClick}}data-post-href="/posts/{{post._id}}"{{/unless}}{{/if}}>
 
     <div class="post-content-container">
 
         <div class="post-top">
+            
             <div class="post-metadata">
+
                 <div class="profile-icon">
-                    <a href="/profile">
+                    {{#if hideMetaLinks}}
                         <img src="{{post.authorPhoto}}" alt="Profile picture of {{post.authorUsername}}.">
-                    </a>
+                    {{else}}
+                        <a href="/profile{{#if post.authorId}}?id={{post.authorId}}{{else if post.author._id}}?id={{post.author._id}}{{/if}}">
+                            <img src="{{post.authorPhoto}}" alt="Profile picture of {{post.authorUsername}}.">
+                        </a>
+                    {{/if}}
                 </div>
-                <a class="post-owner-name" href="/profile/{{#if post.authorId}}?id={{post.authorId}}{{else if post.author._id}}?id={{post.author._id}}{{/if}}">@{{post.authorUsername}}</a>
+
+                {{#if hideMetaLinks}}
+                    <span class="post-owner-name">@{{post.authorUsername}}</span>
+                {{else}}
+                    <a class="post-owner-name" href="/profile{{#if post.authorId}}?id={{post.authorId}}{{else if post.author._id}}?id={{post.author._id}}{{/if}}">@{{post.authorUsername}}</a>
+                {{/if}}
+
                 <div class="post-timestamp">
                     {{post.timestamp}}
                     {{#if post.editedAt}}
-                    <span class="post-edit-timestamp"> (edited {{post.editedAt}})</span>
+                        <span class="post-edit-timestamp"> (edited {{post.editedAt}})</span>
                     {{/if}}
                 </div>
+
             </div>
+
         </div>
 
         <h2 class="post-header">{{post.title}}</h2>
 
         <div class="post-body-container">
-            {{!-- Image is optional; no placeholder required --}}
             {{#if post.image}}
-            <div class="post-image"><img src="{{post.image}}"></div>
+                <div class="post-image">
+                    <img src="{{post.image}}" alt="Post image">
+                </div>
             {{/if}}
 
-            {{!-- Body is optional; no placeholder required --}}
             {{#if post.body}}
-            <div class="post-body"><p>{{post.body}}</p></div>
+                <div class="post-body"><p>{{post.body}}</p></div>
             {{/if}}
         </div>
     </div>
 
-    <div class="post-actions">
-        <div class="post-vote-actions">
-            <button id="upvote-button" class="{{#if post.isUpvoted}}voted{{/if}}">
-                <img class="upvote-icon" src="{{#if post.isUpvoted}}/images/upvote-fill.png{{else}}/images/upvote-outline.png{{/if}}" alt="Upvote">
-            </button>
-            <span class="vote-count">{{post.votes}}</span>
-            <button id="downvote-button" class="{{#if post.isDownvoted}}voted{{/if}}">
-                <img class="downvote-icon" src="{{#if post.isDownvoted}}/images/downvote-fill.png{{else}}/images/downvote-outline.png{{/if}}" alt="Downvote">
-            </button>
+    {{#unless hideActions}}
+        <div class="post-actions">
+            {{#unless hideVoteActions}}
+                <div class="post-vote-actions">
+                    <button class="upvote-button {{#if post.isUpvoted}}voted{{/if}}" type="button">
+                        <img class="upvote-icon" src="{{#if post.isUpvoted}}/images/upvote-fill.png{{else}}/images/upvote-outline.png{{/if}}" alt="Upvote">
+                    </button>
+
+                    <span class="vote-count">{{post.votes}}</span>
+
+                    <button class="downvote-button {{#if post.isDownvoted}}voted{{/if}}" type="button">
+                        <img class="downvote-icon" src="{{#if post.isDownvoted}}/images/downvote-fill.png{{else}}/images/downvote-outline.png{{/if}}" alt="Downvote">
+                    </button>
+                </div>
+            {{/unless}}
+
+            {{#unless hideOwnerActions}}
+                <div class="post-owner-actions" id="owner-actions" style="display:none">
+                    <button id="edit-button">
+                        <img class="edit-post-icon" src="/images/edit-outline.png" alt="Edit post">
+                    </button>
+
+                    <button id="delete-button">
+                        <img class="delete-post-icon" src="/images/delete-outline.png" alt="Delete post">
+                    </button>
+                </div>
+            {{/unless}}
         </div>
+    {{/unless}}
 
-        <div class="post-owner-actions" id="owner-actions" style="display:none">
-            <button id="edit-button">
-                <img class="edit-post-icon" src="/images/edit-outline.png" alt="Edit post">
-            </button>
-            <button id="delete-button">
-                <img class="delete-post-icon" src="/images/delete-outline.png" alt="Delete post">
-            </button>
-        </div>
-
-    </div>
-
-    {{!-- Edit and delete button visibility --}}
-    <script>
-        (function () {
-            try {
-                const logged = JSON.parse(window.localStorage.getItem('loggedUser'));
-                const currentUserId = logged?.userId;
-                const authorId = '{{post.authorId}}';
-                if (currentUserId && authorId && currentUserId === authorId) {
-                    const el = document.getElementById('owner-actions');
-                    if (el) el.style.display = '';
-                }
-            } catch (e) {}
-        })();
-    </script>
+    {{#unless hideOwnerActions}}
+        <script>
+            (function () {
+                try {
+                    const logged = JSON.parse(window.localStorage.getItem('loggedUser'));
+                    const currentUserId = logged?.userId;
+                    const authorId = '{{post.authorId}}';
+                    
+                    if (currentUserId && authorId && currentUserId === authorId) {
+                        const el = document.getElementById('owner-actions');
+                        if (el) el.style.display = '';
+                    }
+                } catch (e) {}
+            })();
+        </script>
+    {{/unless}}
 
 </article>

@@ -21,83 +21,16 @@
 
     <main>
         {{#if posts.length}}
-        {{#each posts}}
-        <div class="post-container">
-
-            <div class="post-card" data-postid="{{_id}}" data-upvotes="{{upvotes}}" data-downvotes="{{downvotes}}">
-
-                <div class="post-top">
-
-                    <div class="post-metadata">
-
-                        <div class="profile-icon">
-                            <a href="/profile{{#if authorId}}?id={{authorId}}{{/if}}">
-                                <img src="{{authorPhoto}}" alt="@{{authorUsername}}'s profile">
-                            </a>
-                        </div>
-
-                        <a class="post-owner-name" href="/profile{{#if authorId}}?id={{authorId}}{{/if}}">
-                            {{#if authorUsername}}@{{authorUsername}}{{else}}@anonymous{{/if}}
-                        </a>
-
-                        <div class="post-timestamp">
-                            {{#if createdAtLabel}} {{createdAtLabel}} {{else}} just now {{/if}}
-                            {{#if updatedAtLabel}} <span class="post-edit-timestamp"> (edited {{updatedAtLabel}})</span>
-                            {{/if}}
-                        </div>
-
-                    </div>
-
-                    <a href="/posts/{{_id}}/view"><button class="view-btn">VIEW</button></a>
-
+            {{#each posts}}
+                <div class="post-container">
+                    {{> post-card 
+                        post = this 
+                        hideOwnerActions = true
+                    }}
                 </div>
-
-                <h2 class="post-header">{{#if title}} {{title}} {{else}} Untitled Post {{/if}}</h2>
-
-                {{#if content}}
-                <div class="post-body-container">
-
-                    <div class="post-image"><img src="{{image}}"></div>
-
-                    <div class="post-body">
-                        <p>{{body}}</p>
-                    </div>
-
-                </div>
-                {{/if}}
-
-                <div class="post-actions">
-
-                    <div class="post-vote-actions">
-
-                        <button class="upvote-button {{#if isUpvoted}}voted{{/if}}" type="button"
-                            aria-label="Upvote post">
-                            <img class="upvote-icon"
-                                src="{{#if isUpvoted}}/images/upvote-fill.png{{else}}/images/upvote-outline.png{{/if}}"
-                                alt="Upvote">
-                        </button>
-
-                        <span class="vote-count">{{votes}}</span>
-
-                        <button class="downvote-button {{#if isDownvoted}}voted{{/if}}" type="button"
-                            aria-label="Downvote post">
-                            <img class="downvote-icon"
-                                src="{{#if isDownvoted}}/images/downvote-fill.png{{else}}/images/downvote-outline.png{{/if}}"
-                                alt="Downvote">
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        {{/each}}
+            {{/each}}
 
         {{else}}
-
         <div class="post-container">
 
             <div class="post-card">

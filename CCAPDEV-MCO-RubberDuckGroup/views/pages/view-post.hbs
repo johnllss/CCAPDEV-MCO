@@ -25,7 +25,11 @@
 
     <main>
         <div class="post-container">
-            {{> post-card post=post isOwner=isOwner}}
+            {{> post-card 
+                post = post 
+                isOwner = isOwner 
+                disableCardClick = true
+            }}
         </div>
 
         <section id="comments-section">

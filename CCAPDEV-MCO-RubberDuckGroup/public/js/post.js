@@ -1,7 +1,7 @@
 const deleteBtn = document.getElementById("delete-button");
 const editBtn = document.getElementById("edit-button");
-const upvoteBtn = document.getElementById("upvote-button");
-const downvoteBtn = document.getElementById("downvote-button");
+const upvoteBtn = document.querySelector(".upvote-button");
+const downvoteBtn = document.querySelector(".downvote-button");
 let upIcon = upvoteBtn?.querySelector('.upvote-icon');
 let downIcon = downvoteBtn?.querySelector('.downvote-icon');
 const user = JSON.parse(localStorage.getItem("loggedUser"));
@@ -37,8 +37,8 @@ try {
             const upvotes = dataUp ? dataUp.split(',').filter(Boolean) : [];
             const downvotes = dataDown ? dataDown.split(',').filter(Boolean) : [];
 
-            const upBtn = card.querySelector('.upvote-button, #upvote-button');
-            const downBtn = card.querySelector('.downvote-button, #downvote-button');
+            const upBtn = card.querySelector('.upvote-button');
+            const downBtn = card.querySelector('.downvote-button');
             const up = upBtn?.querySelector('.upvote-icon');
             const down = downBtn?.querySelector('.downvote-icon');
 
