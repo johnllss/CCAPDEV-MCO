@@ -68,10 +68,15 @@ header {
 }
 
 .nav-center input {
+    font-family: var(--font-sans);
     padding: 10px 20px;
     border-radius: 25px;
     border: none;
     width: 250px;
+}
+
+.nav-center input:focus {
+    outline: 2px solid var(--color-main-medium-brown);
 }
 
 .nav-right {
