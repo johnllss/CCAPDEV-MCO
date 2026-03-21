@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const {
     uploadImage,
+    votePost,
     createPost,
     getPosts,
     getPostById,
@@ -10,6 +11,7 @@ const {
 } = require('../controllers/postController');
 
 router.post('/upload-image', uploadImage);
+router.post('/:id/vote', votePost);
 router.post('/', createPost);
 router.get('/', getPosts);
 router.get('/:id', getPostById);

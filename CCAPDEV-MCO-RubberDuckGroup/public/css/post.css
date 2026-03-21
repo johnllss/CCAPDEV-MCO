@@ -247,6 +247,11 @@ body {
 .vote-count {
     margin-left: 5px;
     margin-right: 5px;
+    display: inline-block;
+    min-width: 48px;
+    max-width: 48px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
 }
 
 .post-vote-actions {

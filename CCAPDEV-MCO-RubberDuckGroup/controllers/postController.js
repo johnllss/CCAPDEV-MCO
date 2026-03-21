@@ -3,6 +3,10 @@ const path = require('path');
 const fs = require('fs');
 const Post = require('../models/Post');
 
+function cleanRegex(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // replace each seen special char w/ \ so Mongo reads it as literal text
+}
+
 function relativeDate(date) {
     if (!date) 
         return '';
@@ -47,6 +51,34 @@ function compactVotes(number) {
     return votes.format(n).replace(/\s+/g, '').toLowerCase();
 }
 
+function formatPost(post, req) {
+    const currentUserId = req.session?.userId?.toString() || null;
+
+    return {
+        _id: post._id.toString(),
+        title: post.title,
+        content: post.body || post.image,
+        body: post.body,
+        image: post.image ? '/uploads/' + post.image : '',
+        authorUsername: post.user?.username,
+        authorPhoto: post.user?.profile?.photo || '/images/default-pfp.png',
+        authorId: post.user?._id?.toString(),
+        author: {
+            username: post.user?.username,
+            profile: {
+                photo: post.user?.profile?.photo || '/images/default-pfp.png'
+            }
+        },
+        createdAtLabel: relativeDate(post.createdAt),
+        updatedAtLabel: post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null,
+        votes: compactVotes(post.votes),
+        upvotes: post.upvotes.map(u => u.toString()),
+        downvotes: post.downvotes.map(u => u.toString()),
+        isUpvoted: currentUserId ? post.upvotes.some(u => u.toString() === currentUserId) : false,
+        isDownvoted: currentUserId ? post.downvotes.some(u => u.toString() === currentUserId) : false
+    };
+}
+
 async function uploadImage(req, res) {
     try {
         if (!req.files || !req.files.image)
@@ -69,6 +101,64 @@ async function uploadImage(req, res) {
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Upload error' });
+    }
+}
+
+async function votePost(req, res) {
+    try {
+        const { id } = req.params;
+        const { type } = req.body;
+        const userId = req.session?.userId || req.body.userId;
+
+        if (!userId) 
+            return res.status(401).json({ message: 'User not found' });
+
+        if (!['up','down'].includes(type)) 
+            return res.status(400).json({ message: 'Invalid vote type' });
+
+        if (!mongoose.Types.ObjectId.isValid(id) || !mongoose.Types.ObjectId.isValid(userId)) 
+            return res.status(400).json({ message: 'Invalid id' });
+
+        const post = await Post.findById(id);
+
+        if (!post) 
+            return res.status(404).json({ message: 'Post not found' });
+
+        const inUp = post.upvotes.some(u => u.toString() === userId);
+        const inDown = post.downvotes.some(u => u.toString() === userId);
+
+        if (type === 'up') {
+            if (inUp) 
+                post.upvotes = post.upvotes.filter(u => u.toString() !== userId);
+            else {
+                post.upvotes.push(userId);
+
+                if (inDown) 
+                    post.downvotes = post.downvotes.filter(u => u.toString() !== userId);
+            }
+        } else {
+            if (inDown) 
+                post.downvotes = post.downvotes.filter(u => u.toString() !== userId);
+            else {
+                post.downvotes.push(userId);
+
+                if (inUp) 
+                    post.upvotes = post.upvotes.filter(u => u.toString() !== userId);
+            }
+        }
+
+        const up = post.upvotes.length;
+        const down = post.downvotes.length;
+        post.votes = up - down;
+
+        await post.save({ timestamps: false });
+
+        const score = post.upvotes.length - post.downvotes.length;
+
+        res.json({ up, down, score: post.votes });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
     }
 }
 
@@ -118,19 +208,7 @@ async function renderIndex(req, res) {
             .populate('user', 'username profile.photo')
             .sort({ createdAt: -1 });
 
-        const formattedPosts = posts.map((post) => ({
-            _id: post._id.toString(),
-            title: post.title,
-            content: post.body || post.image,
-            body: post.body,
-            image: post.image ? '/uploads/' + post.image : "",
-            authorUsername: post.user?.username,
-            authorPhoto: post.user?.profile?.photo || '/images/default-pfp.png',
-            authorId: post.user?._id?.toString(),
-            createdAtLabel: relativeDate(post.createdAt),
-            updatedAtLabel: post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null,
-            votes: compactVotes(post.votes)
-        }));
+        const formattedPosts = posts.map(formatPost);
 
         res.render('index', { posts: formattedPosts });
     } catch (err) {
@@ -254,6 +332,8 @@ async function renderPost(req, res) {
                 replies: buildReplies(allComments, c._id)
             }));
 
+        const currentUserId = req.session?.userId?.toString() || null;
+
         res.render('view-post', {
             post: {
                 _id: post._id.toString(),
@@ -265,7 +345,11 @@ async function renderPost(req, res) {
                 authorId: post.user._id.toString(),
                 timestamp: relativeDate(post.createdAt),
                 editedAt: post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null,
-                votes: compactVotes(post.votes)
+                votes: compactVotes(post.votes),
+                upvotes: post.upvotes.map(u => u.toString()),
+                downvotes: post.downvotes.map(u => u.toString()),
+                isUpvoted: currentUserId ? post.upvotes.some(u => u.toString() === currentUserId) : false,
+                isDownvoted: currentUserId ? post.downvotes.some(u => u.toString() === currentUserId) : false
             },
             comments,
             commentsCount: allComments.length,
@@ -277,13 +361,47 @@ async function renderPost(req, res) {
     }
 }
 
+// for the /search-results when user is searching
+async function showSearchResults(req, res) {
+    try {
+        const searchQuery = (req.query.q || '').trim();
+        let posts = [];
+
+        if (searchQuery) {
+            const cleanedQuery = cleanRegex(searchQuery);
+
+            posts = await Post.find({
+                $or: [ // if a match in title or body of the post (case insensitive)
+                    { title: { $regex: cleanedQuery, $options: 'i' } },
+                    { body: { $regex: cleanedQuery, $options: 'i' } }
+                ]
+            })
+                .populate('user', 'username profile.photo')
+                .sort({ createdAt: -1 });
+        }
+
+        const formattedPosts = posts.map(formatPost);
+
+        res.render('search-results', {
+            posts: formattedPosts,
+            query: searchQuery,
+            searchQuery
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+}
+
 module.exports = {
     uploadImage,
+    votePost,
     createPost,
     getPosts,
     renderIndex,
     getPostById,
     editPost,
     deletePost,
-    renderPost
+    renderPost,
+    showSearchResults
 };
