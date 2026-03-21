@@ -322,16 +322,20 @@ async function renderPost(req, res) {
             .populate('author', 'username profile photo')
             .sort({ createdAt: 1 });
 
+        const currentUserId = req.session?.userId?.toString() || null;
+
         const buildReplies = (comments, parentId) => {
             return comments
                 .filter(c => c.parentComment && c.parentComment.toString() === parentId.toString())
                 .map(c => ({
                     _id: c._id.toString(),
                     content: c.content,
+                    authorId: c.author?._id?.toString(),
                     authorDisplay: c.author?.username || 'Anonymous',
                     authorPhoto: c.author?.profile?.photo || '/images/default-pfp.png',
                     createdAtLabel: relativeDate(c.createdAt),
                     isEdited: c.isEdited,
+                    isOwner: currentUserId ? (c.author?._id?.toString() === currentUserId) : false,
                     replies: buildReplies(comments, c._id)
                 }));
         };
@@ -341,14 +345,14 @@ async function renderPost(req, res) {
             .map(c => ({
                 _id: c._id.toString(),
                 content: c.content,
+                authorId: c.author?._id?.toString(),
                 authorDisplay: c.author?.username || 'Anonymous',
                 authorPhoto: c.author?.profile?.photo || '/images/default-pfp.png',
                 createdAtLabel: relativeDate(c.createdAt),
                 isEdited: c.isEdited,
+                isOwner: currentUserId ? (c.author?._id?.toString() === currentUserId) : false,
                 replies: buildReplies(allComments, c._id)
             }));
-
-        const currentUserId = req.session?.userId?.toString() || null;
 
         res.render('view-post', {
             post: {
@@ -369,6 +373,7 @@ async function renderPost(req, res) {
             },
             comments,
             commentsCount: allComments.length,
+            currentUserId,
             isOwner: req.session?.userId === post.user._id.toString()
         });
     } catch (err) {

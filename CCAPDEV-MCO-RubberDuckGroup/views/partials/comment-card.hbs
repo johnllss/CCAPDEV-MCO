@@ -2,6 +2,7 @@
     class="comment{{#if level}} level-{{level}}{{/if}}"
     {{#if level}}style="--comment-level: {{level}};"{{/if}}
     id="comment-{{comment._id}}"
+    data-author-id="{{comment.authorId}}"
 >
     <div class="comment-header">
         <img src="{{#if comment.authorPhoto}}{{comment.authorPhoto}}{{else}}/images/default-pfp.png{{/if}}" 
@@ -41,12 +42,18 @@
         {{/if}}
     </div>
 
-    <div class="comment-actions">
-        <button class="action-btn reply-btn" type="button" data-comment-id="{{comment._id}}">Reply</button>
-        <span class="action-separator">&middot;</span>
-        <button class="action-btn edit-comment-btn" type="button" data-comment-id="{{comment._id}}">Edit</button>
-        <span class="action-separator">&middot;</span>
-        <button class="action-btn delete delete-comment-btn" type="button" data-comment-id="{{comment._id}}">Delete</button>
+    <div class="comment-actions" data-comment-id="{{comment._id}}">
+        <div class="owner-actions owner-only">
+            <button class="action-btn reply-btn" type="button" data-comment-id="{{comment._id}}">Reply</button>
+            <span class="action-separator">&middot;</span>
+            <button class="action-btn edit-comment-btn" type="button" data-comment-id="{{comment._id}}">Edit</button>
+            <span class="action-separator">&middot;</span>
+            <button class="action-btn delete delete-comment-btn" type="button" data-comment-id="{{comment._id}}">Delete</button>
+        </div>
+
+        <div class="nonowner-actions not-owner">
+            <button class="action-btn reply-btn" type="button" data-comment-id="{{comment._id}}">Reply</button>
+        </div>
     </div>
 
     {{#if comment.replies}}

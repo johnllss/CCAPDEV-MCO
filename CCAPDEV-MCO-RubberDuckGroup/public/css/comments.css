@@ -116,7 +116,7 @@
 }
 
 .comment-edited {
-    color: #999;
+    color: #666;
     font-size: 0.8125rem;
     font-style: italic;
 }
@@ -137,7 +137,7 @@
 }
 
 .comment-body {
-    margin: 10px 0 10px 52px;
+    margin: 0px 0 10px 52px;
     color: black;
     font-size: 0.9375rem;
     line-height: 1.5;
@@ -150,6 +150,7 @@
     gap: 15px;
     margin-left: 52px;
     margin-top: 8px;
+    margin-bottom: 15px;
 }
 
 .action-btn {
@@ -171,6 +172,20 @@
 
 .action-separator {
     color: lightgray;
+    display: inline-block;
+    margin: 0 6px;
+}
+
+.owner-actions,
+.nonowner-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.reply-box {
+    margin-top: 15px;
+    margin-left: 52px;
 }
 
 .action-btn.delete {
@@ -267,6 +282,10 @@
     display: none;
 }
 
+.owner-only {
+    display: none;
+}
+
 @media (max-width: 768px) {
     body {
         padding: 10px;
@@ -284,6 +303,10 @@
     }
 
     .comment-body, .comment-actions, .reply-form, .edit-form {
+        margin-left: 0;
+    }
+
+    .reply-box {
         margin-left: 0;
     }
     
