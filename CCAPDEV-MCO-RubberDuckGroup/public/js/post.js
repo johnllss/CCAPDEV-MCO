@@ -39,8 +39,8 @@ try {
 
             const upBtn = card.querySelector('.upvote-button');
             const downBtn = card.querySelector('.downvote-button');
-            const up = upBtn?.querySelector('.upvote-icon');
-            const down = downBtn?.querySelector('.downvote-icon');
+            let up = upBtn?.querySelector('.upvote-icon');
+            let down = downBtn?.querySelector('.downvote-icon');
 
             if (currentUserId && upvotes.includes(currentUserId)) {
                 upBtn?.classList.add('voted');
@@ -57,130 +57,6 @@ try {
     });
 } catch (err) {}
 
-// Upvotes post
-if (upvoteBtn) {
-    upvoteBtn.addEventListener("click", async () => {
-        if (!user || !user.userId) {
-            alert("Please login to vote.");
-            window.location.href = "/login";
-            return;
-        }
-    
-        if (!postId) {
-            alert('Post ID not found.');
-            return;
-        }
-    
-        const btn = upvoteBtn;
-        const wasVoted = btn.classList.contains('voted');
-        btn.disabled = true;
-        
-        try {
-            const res = await fetch(`/posts/${postId}/vote`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'up', userId: user.userId })
-            });
-    
-            const result = await res.json().catch(() => ({}));
-    
-            if (!res.ok) {
-                if (res.status === 401) {
-                    alert('Please login to vote.');
-                    window.location.href = '/login';
-                    return;
-                }
-                alert(result.message || 'Failed to vote.');
-                return;
-            }
-    
-            const vote = document.querySelector('.vote-count');
-    
-            if (vote) 
-                vote.textContent = result.score ?? (result.up - result.down);
-            
-                if (wasVoted) {
-                    btn.classList.remove('voted');
-                    upIcon = setIconImg(btn.querySelector('.upvote-icon'), '/images/upvote-outline.png') || upIcon;
-                } else {
-                    btn.classList.add('voted');
-                    upIcon = setIconImg(btn.querySelector('.upvote-icon'), '/images/upvote-fill.png') || upIcon;
-                    if (downvoteBtn) {
-                        downvoteBtn.classList.remove('voted');
-                        downIcon = setIconImg(downvoteBtn.querySelector('.downvote-icon'), '/images/downvote-outline.png') || downIcon;
-                    }
-                }
-        } catch (err) {
-            console.error(err);
-            alert("Could not connect to server.");
-        } finally {
-            btn.disabled = false;
-        }
-    })
-}
-
-// Downvotes post
-if (downvoteBtn) {
-    downvoteBtn.addEventListener("click", async () => {
-        if (!user || !user.userId) {
-            alert("Please login to vote.");
-            window.location.href = "/login";
-            return;
-        }
-    
-        if (!postId) {
-            alert('Post ID not found.');
-            return;
-        }
-        
-        const btn = downvoteBtn;
-        const wasVoted = btn.classList.contains('voted');
-        btn.disabled = true;
-    
-        try {
-            const res = await fetch(`/posts/${postId}/vote`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'down', userId: user.userId })
-            });
-    
-            const result = await res.json().catch(() => ({}));
-    
-            if (!res.ok) {
-                if (res.status === 401) {
-                    alert('Please login to vote.');
-                    window.location.href = '/login';
-                    return;
-                }
-                alert(result.message || 'Failed to vote.');
-                return;
-            }
-    
-            const vote = document.querySelector('.vote-count');
-    
-            if (vote) 
-                vote.textContent = result.score ?? (result.up - result.down);
-    
-            if (wasVoted) {
-                btn.classList.remove('voted');
-                downIcon = setIconImg(btn.querySelector('.downvote-icon'), '/images/downvote-outline.png') || downIcon;
-            } else {
-                btn.classList.add('voted');
-                downIcon = setIconImg(btn.querySelector('.downvote-icon'), '/images/downvote-fill.png') || downIcon;
-                if (upvoteBtn) {
-                    upvoteBtn.classList.remove('voted');
-                    upIcon = setIconImg(upvoteBtn.querySelector('.upvote-icon'), '/images/upvote-outline.png') || upIcon;
-                }
-            }
-        } catch (err) {
-            console.error(err);
-            alert("Could not connect to server.");
-        } finally {
-            btn.disabled = false;
-        }
-    })
-}
-
 try {
     const cards = document.querySelectorAll('.post-card');
     const currentUser = user?.userId;
@@ -195,7 +71,7 @@ try {
         let downI = downBtn?.querySelector('.downvote-icon');
         const vote = card.querySelector('.vote-count');
 
-        const doVote = async (type, btn, icon, oppositeBtn, oppositeIcon) => {
+        const doVote = async (type, btn, oppositeBtn) => {
             if (!currentUser) { alert('Please login to vote.'); window.location.href = '/login'; return; }
             btn.disabled = true;
             try {
@@ -214,15 +90,18 @@ try {
 
                 if (vote) vote.textContent = result.score ?? (result.up - result.down);
 
+                const icon = btn.querySelector('.upvote-icon') || btn.querySelector('.downvote-icon');
+                const oppositeIcon = oppositeBtn?.querySelector('.downvote-icon') || oppositeBtn?.querySelector('.upvote-icon');
+
                 const was = btn.classList.contains('voted');
                 if (was) {
                     btn.classList.remove('voted');
-                    if (icon) icon = setIconImg(icon, type === 'up' ? '/images/upvote-outline.png' : '/images/downvote-outline.png');
+                    if (icon) setIconImg(icon, type === 'up' ? '/images/upvote-outline.png' : '/images/downvote-outline.png');
                 } else {
                     btn.classList.add('voted');
-                    if (icon) icon = setIconImg(icon, type === 'up' ? '/images/upvote-fill.png' : '/images/downvote-fill.png');
+                    if (icon) setIconImg(icon, type === 'up' ? '/images/upvote-fill.png' : '/images/downvote-fill.png');
                     if (oppositeBtn) oppositeBtn.classList.remove('voted');
-                    if (oppositeIcon) oppositeIcon = setIconImg(oppositeIcon, type === 'up' ? '/images/downvote-outline.png' : '/images/upvote-outline.png');
+                    if (oppositeIcon) setIconImg(oppositeIcon, type === 'up' ? '/images/downvote-outline.png' : '/images/upvote-outline.png');
                 }
             } catch (err) {
                 console.error(err);
@@ -232,8 +111,8 @@ try {
             }
         };
 
-        if (upBtn) upBtn.addEventListener('click', () => doVote('up', upBtn, upI, downBtn, downI));
-        if (downBtn) downBtn.addEventListener('click', () => doVote('down', downBtn, downI, upBtn, upI));
+        if (upBtn) upBtn.addEventListener('click', () => doVote('up', upBtn, downBtn));
+        if (downBtn) downBtn.addEventListener('click', () => doVote('down', downBtn, upBtn));
     });
 } catch (e) {}
 

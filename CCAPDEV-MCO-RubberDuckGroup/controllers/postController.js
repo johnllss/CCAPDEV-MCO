@@ -135,43 +135,47 @@ async function votePost(req, res) {
         if (!mongoose.Types.ObjectId.isValid(id) || !mongoose.Types.ObjectId.isValid(userId)) 
             return res.status(400).json({ message: 'Invalid id' });
 
-        const post = await Post.findById(id);
+        const existsPost = await Post.findById(id).select('_id').lean();
+        if (!existsPost) return res.status(404).json({ message: 'Post not found' });
 
-        if (!post) 
-            return res.status(404).json({ message: 'Post not found' });
+        const inUp = await Post.exists({ _id: id, upvotes: userId });
+        const inDown = await Post.exists({ _id: id, downvotes: userId });
 
-        const inUp = post.upvotes.some(u => u.toString() === userId);
-        const inDown = post.downvotes.some(u => u.toString() === userId);
-
+        let updated;
         if (type === 'up') {
-            if (inUp) 
-                post.upvotes = post.upvotes.filter(u => u.toString() !== userId);
-            else {
-                post.upvotes.push(userId);
-
-                if (inDown) 
-                    post.downvotes = post.downvotes.filter(u => u.toString() !== userId);
+            if (inUp) {
+                updated = await Post.findOneAndUpdate({ _id: id }, { $pull: { upvotes: userId } }, { returnDocument: 'after', timestamps: false });
+            } else {
+                const update = { $addToSet: { upvotes: userId } };
+                if (inDown) update.$pull = { downvotes: userId };
+                updated = await Post.findOneAndUpdate({ _id: id }, update, { returnDocument: 'after', timestamps: false });
             }
         } else {
-            if (inDown) 
-                post.downvotes = post.downvotes.filter(u => u.toString() !== userId);
-            else {
-                post.downvotes.push(userId);
-
-                if (inUp) 
-                    post.upvotes = post.upvotes.filter(u => u.toString() !== userId);
+            if (inDown) {
+                updated = await Post.findOneAndUpdate({ _id: id }, { $pull: { downvotes: userId } }, { returnDocument: 'after', timestamps: false });
+            } else {
+                const update = { $addToSet: { downvotes: userId } };
+                if (inUp) update.$pull = { upvotes: userId };
+                updated = await Post.findOneAndUpdate({ _id: id }, update, { returnDocument: 'after', timestamps: false });
             }
         }
 
-        const up = post.upvotes.length;
-        const down = post.downvotes.length;
-        post.votes = up - down;
+        if (!updated) {
+            console.error('votePost: update returned null', { id, userId, type, inUp, inDown });
+            return res.status(500).json({ message: 'Failed to update votes' });
+        }
 
-        await post.save({ timestamps: false });
+        const up = (updated.upvotes || []).length;
+        const down = (updated.downvotes || []).length;
+        const votes = up - down;
 
-        const score = post.upvotes.length - post.downvotes.length;
+        try {
+            await Post.findByIdAndUpdate(id, { $set: { votes } }, { timestamps: false });
+        } catch (e) {
+            console.error('votePost: failed to persist votes', { id, votes, err: e });
+        }
 
-        res.json({ up, down, score: post.votes });
+        res.json({ up, down, score: votes });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
