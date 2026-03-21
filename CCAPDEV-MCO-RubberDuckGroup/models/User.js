@@ -29,12 +29,12 @@ const UserSchema = new Schema({
             default: "Ducky Duckerton the Fourth" 
         },
         quote: { 
-            type: String, 
-            default: "Did you know rubber ducks arent real ducks?!" 
+            type: String,
+            default: ""
         },
         about: { 
-            type: String, 
-            default: "I really love ducks they are so cute!" 
+            type: String,
+            default: ""
         },
         photo: { 
             type: String, 
