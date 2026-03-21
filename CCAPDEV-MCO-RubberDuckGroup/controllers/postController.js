@@ -76,7 +76,7 @@ function formatPost(post, req) {
         updatedAtLabel,
         timestamp: createdAtLabel,
         editedAt: updatedAtLabel,
-        postHref: `/posts/${post._id.toString()}`,
+        postHref: `/posts/${post._id.toString()}/view`,
         votes: compactVotes(post.votes),
         upvotes: post.upvotes.map(u => u.toString()),
         downvotes: post.downvotes.map(u => u.toString()),

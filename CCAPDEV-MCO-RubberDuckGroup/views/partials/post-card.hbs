@@ -2,7 +2,7 @@
     {{#if post._id}}data-postid="{{post._id}}"{{/if}}
     data-upvotes="{{#if post.upvotes}}{{post.upvotes}}{{/if}}"
     data-downvotes="{{#if post.downvotes}}{{post.downvotes}}{{/if}}"
-    {{#if post._id}}{{#unless disableCardClick}}data-post-href="/posts/{{post._id}}"{{/unless}}{{/if}}>
+    {{#if post._id}}{{#unless disableCardClick}}data-post-href="/posts/{{post._id}}/view"{{/unless}}{{/if}}>
 
     <div class="post-content-container">
 
