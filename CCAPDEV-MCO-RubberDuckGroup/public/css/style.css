@@ -120,7 +120,23 @@ header {
 }
 
 main {
-    padding: 40px 500px;
+    width: 100%;
+    max-width: 1400px;
+    padding: 40px 250px;
+    margin: 0 auto;
+}
+
+@media (max-width: 1400px) {
+    main {
+        padding: 40px calc((100vw - 900px) / 2);
+    }
+}
+
+@media (max-width: 990px) {
+    main {
+        max-width: none;
+        padding: 40px 5%;
+    }
 }
 
 .search-results-summary {
