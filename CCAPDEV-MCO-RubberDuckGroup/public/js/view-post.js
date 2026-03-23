@@ -73,17 +73,21 @@ document.addEventListener('DOMContentLoaded', () => {
             box.id = `reply-box-${commentId}`;
             box.className = 'add-comment-form reply-box';
             box.innerHTML = `
-                <textarea id="reply-text-${commentId}" placeholder="Write a reply..."></textarea>
-                <button class="form-submit-btn cancel-reply-btn" data-comment-id="${commentId}" type="button">Cancel</button>
+                <textarea id="reply-text-${commentId}" placeholder="Write a reply..." autofocus></textarea>
+                <button class="btn-cancel cancel-edit-btn" data-comment-id="${commentId}" type="button">Cancel</button>
                 <button class="form-submit-btn submit-reply-btn" data-comment-id="${commentId}" type="button">Reply</button>
             `;
             const actionsContainer = e.target.closest('.comment-actions') || e.target.parentElement;
+            actionsContainer.style.display = 'none';
             actionsContainer.after(box);
         }
 
         if (e.target.classList.contains('cancel-reply-btn')) {
             const commentId = e.target.dataset.commentId;
-            document.getElementById(`reply-box-${commentId}`)?.remove();
+            const replyBox = document.getElementById(`reply-box-${commentId}`);
+            const commentActions = replyBox?.closest('.comment')?.querySelector('.comment-actions');
+            if (commentActions) commentActions.style.display = 'flex';
+            replyBox?.remove();
         }
 
         if (e.target.classList.contains('submit-reply-btn')) {
@@ -117,16 +121,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.classList.contains('edit-comment-btn')) {
             const commentId = e.target.dataset.commentId;
             const commentBody = document.querySelector(`[data-comment-body="${commentId}"]`);
-            const currentText = commentBody.textContent;
+            const commentActions = commentBody.closest('.comment')?.querySelector('.comment-actions');
+            const currentText = commentBody.textContent.trim();
 
-            commentBody.innerHTML = `
-                <textarea id="edit-text-${commentId}">${currentText}</textarea>
-                <button class="cancel-edit-btn" data-comment-id="${commentId}">Cancel</button>
-                <button class="save-edit-btn" data-comment-id="${commentId}">Save</button>
-            `;
+            if (commentActions) commentActions.style.display = 'none';
+
+            // one-liner for now cos fsr it adds unnecessary spacing around the edit text area
+            commentBody.innerHTML = `<div class="add-comment-form edit-form"><textarea id="edit-text-${commentId}" autofocus>${currentText}</textarea><div class="edit-form-actions"><button class="btn-cancel cancel-edit-btn" data-comment-id="${commentId}" type="button">Cancel</button><button class="btn-save save-edit-btn" data-comment-id="${commentId}" type="button">Save</button></div></div>`;
         }
 
         if (e.target.classList.contains('cancel-edit-btn')) {
+            const commentId = e.target.dataset.commentId;
+            const commentActions = e.target.closest('.comment')?.querySelector('.comment-actions');
+            if (commentActions) commentActions.style.display = 'flex';
             location.reload();
         }
 

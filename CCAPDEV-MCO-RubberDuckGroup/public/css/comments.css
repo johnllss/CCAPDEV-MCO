@@ -46,12 +46,12 @@
 
 .form-submit-btn {
     margin-top: 12px;
-    padding: 10px 24px;
+    padding: 8px 20px;
     background: var(--color-main-bright-yellow);
     color: var(--color-black);
     border: 2px solid var(--color-main-bright-yellow);
     border-radius: var(--radius-lg);
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     font-weight: 700;
     cursor: pointer;
     transition: background var(--transition-base);
@@ -75,6 +75,7 @@
     margin-left: calc(var(--comment-level) * 32px);
     border-left: 2px solid var(--color-main-bright-yellow);
     padding-left: 15px;
+    padding-bottom: 15px;
 }
 
 .comment.level-1 {
@@ -229,8 +230,8 @@
 .reply-form-actions, .edit-form-actions {
     margin-top: 10px;
     display: flex;
-    gap: 10px;
-    justify-content: flex-end;
+    gap: 5px;
+    justify-content: flex-start;
 }
 
 .btn-cancel, .btn-reply, .btn-save {
