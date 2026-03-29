@@ -2,36 +2,12 @@ const mongoose = require('mongoose');
 const path = require('path');
 const fs = require('fs');
 const Post = require('../models/Post');
+const User = require('../models/User');
+const Activity = require('../models/Activity');
+const relativeDate = require('../utils/relativeDate');
 
 function cleanRegex(value) {
     return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // replace each seen special char w/ \ so Mongo reads it as literal text
-}
-
-function relativeDate(date) {
-    if (!date) 
-        return '';
-
-    const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
-
-    if (seconds < 1) 
-        return 'just now';
-
-    const units = [
-        { label: 'y', s: 31536000 },
-        { label: 'mo', s: 2592000 },
-        { label: 'w', s: 604800 },
-        { label: 'd', s: 86400 },
-        { label: 'h', s: 3600 },
-        { label: 'm', s: 60 },
-        { label: 's', s: 1 }
-    ];
-
-    for (const u of units) {
-        const val = Math.floor(seconds / u.s);
-        if (val >= 1) return `${val}${u.label} ago`;
-    }
-
-    return 'just now';
 }
 
 function compactVotes(number) {
@@ -135,43 +111,47 @@ async function votePost(req, res) {
         if (!mongoose.Types.ObjectId.isValid(id) || !mongoose.Types.ObjectId.isValid(userId)) 
             return res.status(400).json({ message: 'Invalid id' });
 
-        const post = await Post.findById(id);
+        const existsPost = await Post.findById(id).select('_id').lean();
+        if (!existsPost) return res.status(404).json({ message: 'Post not found' });
 
-        if (!post) 
-            return res.status(404).json({ message: 'Post not found' });
+        const inUp = await Post.exists({ _id: id, upvotes: userId });
+        const inDown = await Post.exists({ _id: id, downvotes: userId });
 
-        const inUp = post.upvotes.some(u => u.toString() === userId);
-        const inDown = post.downvotes.some(u => u.toString() === userId);
-
+        let updated;
         if (type === 'up') {
-            if (inUp) 
-                post.upvotes = post.upvotes.filter(u => u.toString() !== userId);
-            else {
-                post.upvotes.push(userId);
-
-                if (inDown) 
-                    post.downvotes = post.downvotes.filter(u => u.toString() !== userId);
+            if (inUp) {
+                updated = await Post.findOneAndUpdate({ _id: id }, { $pull: { upvotes: userId } }, { returnDocument: 'after', timestamps: false });
+            } else {
+                const update = { $addToSet: { upvotes: userId } };
+                if (inDown) update.$pull = { downvotes: userId };
+                updated = await Post.findOneAndUpdate({ _id: id }, update, { returnDocument: 'after', timestamps: false });
             }
         } else {
-            if (inDown) 
-                post.downvotes = post.downvotes.filter(u => u.toString() !== userId);
-            else {
-                post.downvotes.push(userId);
-
-                if (inUp) 
-                    post.upvotes = post.upvotes.filter(u => u.toString() !== userId);
+            if (inDown) {
+                updated = await Post.findOneAndUpdate({ _id: id }, { $pull: { downvotes: userId } }, { returnDocument: 'after', timestamps: false });
+            } else {
+                const update = { $addToSet: { downvotes: userId } };
+                if (inUp) update.$pull = { upvotes: userId };
+                updated = await Post.findOneAndUpdate({ _id: id }, update, { returnDocument: 'after', timestamps: false });
             }
         }
 
-        const up = post.upvotes.length;
-        const down = post.downvotes.length;
-        post.votes = up - down;
+        if (!updated) {
+            console.error('votePost: update returned null', { id, userId, type, inUp, inDown });
+            return res.status(500).json({ message: 'Failed to update votes' });
+        }
 
-        await post.save({ timestamps: false });
+        const up = (updated.upvotes || []).length;
+        const down = (updated.downvotes || []).length;
+        const votes = up - down;
 
-        const score = post.upvotes.length - post.downvotes.length;
+        try {
+            await Post.findByIdAndUpdate(id, { $set: { votes } }, { timestamps: false });
+        } catch (e) {
+            console.error('votePost: failed to persist votes', { id, votes, err: e });
+        }
 
-        res.json({ up, down, score: post.votes });
+        res.json({ up, down, score: votes });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
@@ -196,6 +176,15 @@ async function createPost(req, res) {
         });
 
         await post.save();
+        await Promise.all([
+            User.findByIdAndUpdate(user, { $inc: { posts: 1 } }),
+            Activity.create({
+                userId: user,
+                type: 'post',
+                text: title,
+                link: `/posts/${post._id.toString()}/view`
+            })
+        ]);
 
         const populated = await Post.findById(post._id).populate('user', 'username profile.photo');
         res.status(201).json(populated);
@@ -322,16 +311,20 @@ async function renderPost(req, res) {
             .populate('author', 'username profile photo')
             .sort({ createdAt: 1 });
 
+        const currentUserId = req.session?.userId?.toString() || null;
+
         const buildReplies = (comments, parentId) => {
             return comments
                 .filter(c => c.parentComment && c.parentComment.toString() === parentId.toString())
                 .map(c => ({
                     _id: c._id.toString(),
                     content: c.content,
+                    authorId: c.author?._id?.toString(),
                     authorDisplay: c.author?.username || 'Anonymous',
                     authorPhoto: c.author?.profile?.photo || '/images/default-pfp.png',
                     createdAtLabel: relativeDate(c.createdAt),
                     isEdited: c.isEdited,
+                    isOwner: currentUserId ? (c.author?._id?.toString() === currentUserId) : false,
                     replies: buildReplies(comments, c._id)
                 }));
         };
@@ -341,14 +334,14 @@ async function renderPost(req, res) {
             .map(c => ({
                 _id: c._id.toString(),
                 content: c.content,
+                authorId: c.author?._id?.toString(),
                 authorDisplay: c.author?.username || 'Anonymous',
                 authorPhoto: c.author?.profile?.photo || '/images/default-pfp.png',
                 createdAtLabel: relativeDate(c.createdAt),
                 isEdited: c.isEdited,
+                isOwner: currentUserId ? (c.author?._id?.toString() === currentUserId) : false,
                 replies: buildReplies(allComments, c._id)
             }));
-
-        const currentUserId = req.session?.userId?.toString() || null;
 
         res.render('view-post', {
             post: {
@@ -369,6 +362,7 @@ async function renderPost(req, res) {
             },
             comments,
             commentsCount: allComments.length,
+            currentUserId,
             isOwner: req.session?.userId === post.user._id.toString()
         });
     } catch (err) {

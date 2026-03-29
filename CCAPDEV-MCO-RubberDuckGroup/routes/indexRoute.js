@@ -53,8 +53,4 @@ router.get('/logout', (req, res) => {
     res.render('logout');
 });
 
-router.get('/comments', (req, res) => {
-    res.render('comments');
-});
-
 module.exports = router;

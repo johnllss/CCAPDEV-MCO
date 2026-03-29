@@ -46,12 +46,12 @@
 
 .form-submit-btn {
     margin-top: 12px;
-    padding: 10px 24px;
+    padding: 8px 20px;
     background: var(--color-main-bright-yellow);
     color: var(--color-black);
     border: 2px solid var(--color-main-bright-yellow);
     border-radius: var(--radius-lg);
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     font-weight: 700;
     cursor: pointer;
     transition: background var(--transition-base);
@@ -75,6 +75,7 @@
     margin-left: calc(var(--comment-level) * 32px);
     border-left: 2px solid var(--color-main-bright-yellow);
     padding-left: 15px;
+    padding-bottom: 0px;
 }
 
 .comment.level-1 {
@@ -117,7 +118,7 @@
 }
 
 .comment-edited {
-    color: #999999;
+    color: var(--color-text-stone-gray);
     font-size: 0.8125rem;
     font-style: italic;
 }
@@ -138,7 +139,7 @@
 }
 
 .comment-body {
-    margin: 10px 0 10px 52px;
+    margin: 0px 0 10px 52px;
     color: var(--color-black);
     font-size: 0.9375rem;
     line-height: 1.5;
@@ -151,6 +152,7 @@
     gap: 15px;
     margin-left: 52px;
     margin-top: 8px;
+    margin-bottom: 0px;
 }
 
 .action-btn {
@@ -172,6 +174,20 @@
 
 .action-separator {
     color: var(--color-border-light-gray);
+    display: inline-block;
+    margin: 0 6px;
+}
+
+.owner-actions,
+.nonowner-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.reply-box {
+    margin-top: 15px;
+    margin-left: 52px;
 }
 
 .action-btn.delete {
@@ -214,8 +230,8 @@
 .reply-form-actions, .edit-form-actions {
     margin-top: 10px;
     display: flex;
-    gap: 10px;
-    justify-content: flex-end;
+    gap: 5px;
+    justify-content: flex-start;
 }
 
 .btn-cancel, .btn-reply, .btn-save {
@@ -268,6 +284,10 @@
     display: none;
 }
 
+.owner-only {
+    display: none;
+}
+
 @media (max-width: 768px) {
     body {
         padding: 10px;
@@ -285,6 +305,10 @@
     }
 
     .comment-body, .comment-actions, .reply-form, .edit-form {
+        margin-left: 0;
+    }
+
+    .reply-box {
         margin-left: 0;
     }
     

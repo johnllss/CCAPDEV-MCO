@@ -10,7 +10,7 @@ const ActivitySchema = new Schema({
 
     type: {
         type: String,
-        enum: ["post", "reply", "view", "like"],
+        enum: ["post", "comment", "reply", "view", "like"],
         required: true
     },
 

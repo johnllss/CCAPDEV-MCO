@@ -1,12 +1,37 @@
 document.addEventListener('DOMContentLoaded', () => {
     const postId = window.location.pathname.split('/')[2];
-    const currentUserId = '6650a1b2c3d4e5f6a7b8c9d0';
+    const logged = JSON.parse(localStorage.getItem('loggedUser')) || null;
+    const currentUserId = logged?.userId || null;
+
+    function toggleCommentActions() {
+        document.querySelectorAll('.comment').forEach(article => {
+            const authorId = article.dataset.authorId;
+            const ownerActions = article.querySelector('.owner-actions');
+            const nonOwnerActions = article.querySelector('.nonowner-actions');
+
+            if (currentUserId && authorId && currentUserId === authorId) {
+                if (ownerActions) ownerActions.style.display = 'flex';
+                if (nonOwnerActions) nonOwnerActions.style.display = 'none';
+            } else {
+                if (ownerActions) ownerActions.style.display = 'none';
+                if (nonOwnerActions) nonOwnerActions.style.display = 'flex';
+            }
+        });
+    }
+
+    toggleCommentActions();
 
     const postCommentBtn = document.querySelector('.add-comment-form .form-submit-btn');
     const newCommentText = document.getElementById('new-comment-text');
 
     if (postCommentBtn) {
         postCommentBtn.addEventListener('click', async () => {
+            if (!currentUserId) {
+                alert('You must be logged in to reply. Redirecting to login...');
+                window.location.href = '/login';
+                return;
+            }
+            
             const content = newCommentText.value.trim();
             if (!content) return alert('Please write something first.');
 
@@ -21,7 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     newCommentText.value = '';
                     location.reload();
                 } else {
-                    alert('Failed to post comment.');
+                    alert('You must be logged in to comment. Redirecting to login...');
+                    window.location.href = '/login';
+                    return;
                 }
             } catch (err) {
                 console.error(err);
@@ -32,26 +59,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('click', async (e) => {
         if (e.target.classList.contains('reply-btn')) {
+            if (!currentUserId) {
+                alert('You must be logged in to reply. Redirecting to login...');
+                window.location.href = '/login';
+                return;
+            }
+
             const commentId = e.target.dataset.commentId;
             const existing = document.getElementById(`reply-box-${commentId}`);
             if (existing) { existing.remove(); return; }
 
             const box = document.createElement('div');
             box.id = `reply-box-${commentId}`;
+            box.className = 'add-comment-form reply-box';
             box.innerHTML = `
-                <textarea id="reply-text-${commentId}" placeholder="Write a reply..."></textarea>
-                <button class="cancel-reply-btn" data-comment-id="${commentId}">Cancel</button>
-                <button class="submit-reply-btn" data-comment-id="${commentId}">Reply</button>
+                <textarea id="reply-text-${commentId}" placeholder="Write a reply..." autofocus></textarea>
+                <button class="btn-cancel cancel-edit-btn" data-comment-id="${commentId}" type="button">Cancel</button>
+                <button class="form-submit-btn submit-reply-btn" data-comment-id="${commentId}" type="button">Reply</button>
             `;
-            e.target.parentElement.after(box);
+            const actionsContainer = e.target.closest('.comment-actions') || e.target.parentElement;
+            actionsContainer.style.display = 'none';
+            actionsContainer.after(box);
         }
 
         if (e.target.classList.contains('cancel-reply-btn')) {
             const commentId = e.target.dataset.commentId;
-            document.getElementById(`reply-box-${commentId}`)?.remove();
+            const replyBox = document.getElementById(`reply-box-${commentId}`);
+            const commentActions = replyBox?.closest('.comment')?.querySelector('.comment-actions');
+            if (commentActions) commentActions.style.display = 'flex';
+            replyBox?.remove();
         }
 
         if (e.target.classList.contains('submit-reply-btn')) {
+            if (!currentUserId) {
+                alert('Please log in first.');
+                window.location.href = '/register';
+                return;
+            }
+
             const parentCommentId = e.target.dataset.commentId;
             const content = document.getElementById(`reply-text-${parentCommentId}`).value.trim();
             if (!content) return alert('Please write something.');
@@ -76,16 +121,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.classList.contains('edit-comment-btn')) {
             const commentId = e.target.dataset.commentId;
             const commentBody = document.querySelector(`[data-comment-body="${commentId}"]`);
-            const currentText = commentBody.textContent;
+            const commentActions = commentBody.closest('.comment')?.querySelector('.comment-actions');
+            const currentText = commentBody.textContent.trim();
 
-            commentBody.innerHTML = `
-                <textarea id="edit-text-${commentId}">${currentText}</textarea>
-                <button class="cancel-edit-btn" data-comment-id="${commentId}">Cancel</button>
-                <button class="save-edit-btn" data-comment-id="${commentId}">Save</button>
-            `;
+            if (commentActions) commentActions.style.display = 'none';
+
+            // one-liner for now cos fsr it adds unnecessary spacing around the edit text area
+            commentBody.innerHTML = `<div class="add-comment-form edit-form"><textarea id="edit-text-${commentId}" autofocus>${currentText}</textarea><div class="edit-form-actions"><button class="btn-cancel cancel-edit-btn" data-comment-id="${commentId}" type="button">Cancel</button><button class="btn-save save-edit-btn" data-comment-id="${commentId}" type="button">Save</button></div></div>`;
         }
 
         if (e.target.classList.contains('cancel-edit-btn')) {
+            const commentId = e.target.dataset.commentId;
+            const commentActions = e.target.closest('.comment')?.querySelector('.comment-actions');
+            if (commentActions) commentActions.style.display = 'flex';
             location.reload();
         }
 
