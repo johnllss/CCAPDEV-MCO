@@ -212,13 +212,19 @@ async function getPosts(req, res) {
 
 async function renderIndex(req, res) {
     try {
+        const sortOrder = req.query.sort || 'newest';
+        
+        let sort = { createdAt: -1 };
+        if (sortOrder === 'popular') sort = { votes: -1 };
+        if (sortOrder === 'oldest') sort = { createdAt: 1 };
+        
         const posts = await Post.find()
             .populate('user', 'username profile.photo')
-            .sort({ createdAt: -1 });
+            .sort(sort);
 
         const formattedPosts = await Promise.all(posts.map(post => formatPost(post, req)));
 
-        res.render('index', { posts: formattedPosts });
+        res.render('index', { posts: formattedPosts, sortOrder });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');

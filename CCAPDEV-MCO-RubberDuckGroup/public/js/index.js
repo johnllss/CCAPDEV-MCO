@@ -143,3 +143,13 @@ document.addEventListener("DOMContentLoaded", () => {
         addBtn.style.display = "none";
     }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sortType = urlParams.get('sort') || 'newest';
+    document.getElementById('sort-dropdown').value = sortType;
+
+    document.getElementById('sort-dropdown')?.addEventListener('change', (e) => {
+        window.location.href = `/?sort=${e.target.value}`;
+    });
+});
