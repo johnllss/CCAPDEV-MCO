@@ -96,7 +96,7 @@ body {
     outline: none;
 }
 
-.create-post-file-upload label img, .post-vote-actions button img, .post-owner-actions button img{
+.create-post-file-upload label img, .post-vote-actions button img, .post-owner-actions button img, .post-comment-count img {
     width: 32px;
     cursor: pointer;
 }
@@ -248,13 +248,15 @@ body {
     align-items: center;
 }
 
-.vote-count {
+.vote-count, .comment-count {
     margin-left: 5px;
     margin-right: 5px;
     display: inline-block;
     min-width: 48px;
     max-width: 48px;
     text-align: center;
+    color: var(--color-main-medium-brown);
+    font-weight: bold;
     font-variant-numeric: tabular-nums;
 }
 
@@ -264,17 +266,18 @@ body {
     align-items: center;
 }
 
-.post-vote-actions span {
-    color: var(--color-main-medium-brown);
-    font-weight: bold;
-}
-
 .post-actions button, .create-post-file-upload button {
     background: none;
     border: none;
     cursor: pointer;
     padding: 5px;
     transition: transform var(--transition-base), opacity var(--transition-base);
+}
+
+.post-comment-count {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 button:hover .upvote-icon {
