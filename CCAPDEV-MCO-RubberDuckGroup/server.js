@@ -1,7 +1,8 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { engine } = require('express-handlebars');
 const path = require('path');
 const hbs = require('hbs');
 const fs = require('fs');
@@ -28,11 +29,21 @@ app.use(express.static(path.join(__dirname, 'views', 'pages')));
 app.use(cors());
 app.use(fileUpload({ createParentPath: true, limits: { fileSize: 10 * 1024 * 1024 } })); // 10MB upload limit
 
+const mongoUri = process.env.MONGODB_URI;
+
+if (!mongoUri) {
+    console.error('Missing MONGODB_URI. Add it to .env file before starting the server.');
+    process.exit(1);
+}
+
 // database connection
 mongoose
-    .connect("mongodb://127.0.0.1:27017/userDB")
+    .connect(mongoUri)
     .then(() => console.log('MongoDB connected'))
-    .catch(console.error);
+    .catch(err => {
+        console.error('MongoDB connection error:', err);
+        process.exit(1);
+    });
 
 app.use('/assets', express.static(path.join(__dirname, 'public')));
 

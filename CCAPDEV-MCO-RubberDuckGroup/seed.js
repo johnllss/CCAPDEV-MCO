@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const mongoose = require('mongoose');
 const User = require('./models/User');
 const Post = require('./models/Post');
@@ -16,7 +18,13 @@ process.on('unhandledRejection', err => {
 });
 
 async function seed() {
-    await mongoose.connect("mongodb://127.0.0.1:27017/userDB");
+    const mongoUri = process.env.MONGODB_URI;
+
+    if (!mongoUri) {
+        throw new Error('Missing MONGODB_URI. Add it to .env file before running seed.js.');
+    }
+
+    await mongoose.connect(mongoUri);
     console.log('MongoDB connected');
 
     await User.deleteMany({});
