@@ -25,7 +25,7 @@ async function loadProfile() {
     // load the information
     try {
         const userId = user.userId;
-        const response = await fetch(`http://localhost:3000/users/${userId}`);
+        const response = await fetch(`/users/${userId}`);
         const userData = await response.json();
 
         console.log(userData);
@@ -71,7 +71,7 @@ form.addEventListener("submit", async function (e) {
     console.log(data);
     console.log(userId);
 
-    const response = await fetch(`http://localhost:3000/users/${userId}`, {
+    const response = await fetch(`/users/${userId}`, {
 
         method: "PUT",
         headers: { "Content-Type": "application/json" },

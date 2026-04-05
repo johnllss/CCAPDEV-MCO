@@ -35,7 +35,7 @@ form.addEventListener("submit", async function (e) {
         alert("Please fill empty fields");
         return;
     }
-    const response = await fetch('http://localhost:3000/auth/login', {
+    const response = await fetch('/auth/login', {
 
         method: "POST",
         headers: { "Content-Type": "application/json" },
