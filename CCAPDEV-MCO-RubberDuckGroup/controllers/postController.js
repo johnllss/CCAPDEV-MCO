@@ -14,7 +14,7 @@ function cleanRegex(value) {
 function compactVotes(number) {
     const n = Number(number) || 0;
 
-    if (n < 1000) 
+    if (n < 1000)
         return String(n);
 
     const votes = new Intl.NumberFormat('en', {
@@ -103,15 +103,15 @@ async function votePost(req, res) {
     try {
         const { id } = req.params;
         const { type } = req.body;
-        const userId = req.session?.userId || req.body.userId;
+        const userId = req.session?.userId; // removed the req.body.userId so that it stays serverside
 
-        if (!userId) 
+        if (!userId)
             return res.status(401).json({ message: 'User not found' });
 
-        if (!['up','down'].includes(type)) 
+        if (!['up', 'down'].includes(type))
             return res.status(400).json({ message: 'Invalid vote type' });
 
-        if (!mongoose.Types.ObjectId.isValid(id) || !mongoose.Types.ObjectId.isValid(userId)) 
+        if (!mongoose.Types.ObjectId.isValid(id) || !mongoose.Types.ObjectId.isValid(userId))
             return res.status(400).json({ message: 'Invalid id' });
 
         const existsPost = await Post.findById(id).select('_id').lean();
@@ -163,7 +163,8 @@ async function votePost(req, res) {
 
 async function createPost(req, res) {
     try {
-        const { user, title, body, image } = req.body;
+        const { title, body, image } = req.body;
+        const user = req.session?.userId;
 
         if (!user || !title)
             return res.status(400).json({ message: 'User and Title are required' });
@@ -213,11 +214,11 @@ async function getPosts(req, res) {
 async function renderIndex(req, res) {
     try {
         const sortOrder = req.query.sort || 'newest';
-        
+
         let sort = { createdAt: -1 };
         if (sortOrder === 'popular') sort = { votes: -1 };
         if (sortOrder === 'oldest') sort = { createdAt: 1 };
-        
+
         const posts = await Post.find()
             .populate('user', 'username profile.photo')
             .sort(sort);
@@ -254,28 +255,34 @@ async function editPost(req, res) {
     try {
         const { id } = req.params;
         const { title, body, image } = req.body;
+        const userId = req.session?.userId;
 
         if (!mongoose.Types.ObjectId.isValid(id))
             return res.status(400).json({ message: 'Invalid post ID' });
 
-        const update = {};
-
-        if (title !== undefined) 
-            update.title = title;
-        if (body !== undefined) 
-            update.body = body;
-        if (image !== undefined) 
-            update.image = image ? path.basename(String(image).trim()) : '';
-
-        const post = await Post.findByIdAndUpdate(id, update, {
-            new: true,
-            runValidators: true
-        }).populate('user', 'username profile.photo');
+        const post = await Post.findById(id);
 
         if (!post)
             return res.status(404).json({ message: 'Post not found' });
 
-        res.json(post);
+        if (!userId || post.user.toString() !== userId.toString())
+            return res.status(403).json({ message: 'Forbidden' });
+
+        const update = {};
+
+        if (title !== undefined)
+            update.title = title;
+        if (body !== undefined)
+            update.body = body;
+        if (image !== undefined)
+            update.image = image ? path.basename(String(image).trim()) : '';
+
+        const updatedPost = await Post.findByIdAndUpdate(id, update, {
+            new: true,
+            runValidators: true
+        }).populate('user', 'username profile.photo');
+
+        res.json(updatedPost);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
@@ -285,14 +292,20 @@ async function editPost(req, res) {
 async function deletePost(req, res) {
     try {
         const { id } = req.params;
+        const userId = req.session?.userId;
 
         if (!mongoose.Types.ObjectId.isValid(id))
             return res.status(400).json({ message: 'Invalid post ID' });
 
-        const post = await Post.findByIdAndDelete(id);
+        const post = await Post.findById(id);
 
         if (!post)
             return res.status(404).json({ message: 'Post not found' });
+
+        if (!userId || post.user.toString() !== userId.toString())
+            return res.status(403).json({ message: 'Forbidden' });
+
+        await Post.findByIdAndDelete(id);
 
         res.json({ message: 'Post deleted' });
     } catch (err) {

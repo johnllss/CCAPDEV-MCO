@@ -35,9 +35,14 @@ exports.getCommentsByPostId = async (req, res) => {
 // POST a new comment
 exports.createComment = async (req, res) => {
     try {
-        const { content, authorId, parentCommentId } = req.body;
+        const { content, parentCommentId } = req.body; // removed AuthorID
         const { postId } = req.params;
+        const authorId = req.session.userId; // gets the authId from session instead
         const activityType = parentCommentId ? 'reply' : 'comment';
+
+        if (!authorId) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
 
         const newComment = new Comment({
             content,
@@ -69,16 +74,30 @@ exports.createComment = async (req, res) => {
 exports.updateComment = async (req, res) => {
     try {
         const { content } = req.body;
+        const userId = req.session.userId;
 
-        const updated = await Comment.findByIdAndUpdate(
-            req.params.commentId,
-            { content, isEdited: true },
+        if (!userId) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        const updated = await Comment.findOneAndUpdate(
+            {
+                _id: req.params.commentId,
+                author: userId
+            },
+            {
+                content,
+                isEdited: true
+            },
             { new: true }
         ).populate('author', 'username profilePicture');
 
-        if (!updated) return res.status(404).json({ message: 'Comment not found' });
+        if (!updated) {
+            return res.status(404).json({ message: 'Comment not found or unauthorized' });
+        }
 
         return res.json(updated);
+
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Server error' });
@@ -87,9 +106,21 @@ exports.updateComment = async (req, res) => {
 // DELETE a comment
 exports.deleteComment = async (req, res) => {
     try {
-        const comment = await Comment.findByIdAndDelete(req.params.commentId);
+        const userId = req.session.userId;
+
+        if (!userId) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        const comment = await Comment.findById(req.params.commentId);
 
         if (!comment) return res.status(404).json({ message: 'Comment not found' });
+
+        if (comment.author.toString() !== userId.toString()) {
+            return res.status(403).json({ message: 'Forbidden' });
+        }
+
+        await Comment.findByIdAndDelete(req.params.commentId);
 
         // Also delete all replies to this comment
         await Comment.deleteMany({ parentComment: req.params.commentId });

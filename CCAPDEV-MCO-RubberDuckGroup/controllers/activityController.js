@@ -6,9 +6,9 @@ const relativeDate = require("../utils/relativeDate");
 async function getUserActivity(req, res) {
 
     try {
-        const { id } = req.params;
+        const id = req.params.id;
 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid user ID" });
         }
 
