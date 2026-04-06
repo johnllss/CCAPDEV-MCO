@@ -18,10 +18,13 @@ process.on('unhandledRejection', err => {
 });
 
 async function seed() {
-    const mongoUri = process.env.MONGODB_URI;
+    const mongoUri =
+        process.env.NODE_ENV === 'production'
+            ? process.env.MONGODB_URI_ATLAS
+            : process.env.MONGODB_URI_LOCAL;
 
     if (!mongoUri) {
-        throw new Error('Missing MONGODB_URI. Add it to .env file before running seed.js.');
+        throw new Error('Missing MongoDB URI. Check your .env variables.');
     }
 
     await mongoose.connect(mongoUri);
