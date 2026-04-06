@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const profileLink = document.getElementById("nav-profile-link");
     const profileImage = document.getElementById("nav-profile-image");
 
@@ -9,7 +9,10 @@ document.addEventListener("DOMContentLoaded", () => {
     let loggedUser = null;
 
     try {
-        loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+        const res = await fetch('/auth/me', { credentials: 'include' });
+        if (res.ok) {
+            loggedUser = await res.json();
+        }
     } catch (error) {
         loggedUser = null;
     }
