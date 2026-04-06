@@ -177,8 +177,8 @@ body {
 }
 
 .profile-icon img {
-    width: 35px;
-    height: 35px;
+    width: 36px;
+    height: 36px;
     border-radius: var(--radius-full);
     object-fit: cover;
     border: 2px solid var(--color-main-bright-yellow);
@@ -186,12 +186,13 @@ body {
 
 .post-owner-name {
     text-decoration: none;
-    color: var(--color-main-bright-yellow);
+    color: var(--color-black);
     font-weight: bold;
 }
 
 .post-owner-name:hover {
-    text-decoration: underline;
+    text-decoration: none;
+    color: var(--color-main-medium-brown);
 }
 
 .post-timestamp {
