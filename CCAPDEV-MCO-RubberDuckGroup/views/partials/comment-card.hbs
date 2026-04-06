@@ -5,17 +5,19 @@
     data-author-id="{{comment.authorId}}"
 >
     <div class="comment-header">
-        <img src="{{#if comment.authorPhoto}}{{comment.authorPhoto}}{{else}}/images/default-pfp.png{{/if}}" 
-             alt="{{#if comment.authorDisplay}}{{comment.authorDisplay}}{{else}}Anonymous{{/if}} profile picture" 
-             class="comment-avatar">
+        <a href="/profile?id={{comment.authorId}}">
+            <img src="{{#if comment.authorPhoto}}{{comment.authorPhoto}}{{else}}/images/default-pfp.png{{/if}}" 
+                alt="{{#if comment.authorDisplay}}{{comment.authorDisplay}}{{else}}Anonymous{{/if}} profile picture" 
+                class="comment-avatar">
+        </a>
 
-        <span class="comment-author">
+        <a href="/profile?id={{comment.authorId}}" class="comment-author">
             {{#if comment.authorDisplay}}
                 {{comment.authorDisplay}}
             {{else}}
                 Anonymous
             {{/if}}
-        </span>
+        </a>
 
         <span class="comment-time">
             {{#if comment.createdAtLabel}}
