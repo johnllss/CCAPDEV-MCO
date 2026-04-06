@@ -55,8 +55,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (postCommentBtn) {
         postCommentBtn.addEventListener('click', async () => {
-            if (!currentUserId) {
-                alert('You must be logged in to reply. Redirecting to login...');
+            // check the details if they are logged in
+            const credCheck = await fetch('/auth/me', { credentials: 'include' });
+
+            if (!credCheck.ok) {
+                alert('Please log in first.');
                 window.location.href = '/login';
                 return;
             }
@@ -89,7 +92,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.addEventListener('click', async (e) => {
         if (e.target.classList.contains('reply-btn')) {
-            if (!currentUserId) {
+            // check the details if they are logged in
+            const credCheck = await (fetch('/auth/me', { credentials: 'include' }));
+
+            if (!credCheck.ok) {
                 alert('You must be logged in to reply. Redirecting to login...');
                 window.location.href = '/login';
                 return;
