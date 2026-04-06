@@ -60,6 +60,7 @@ form.addEventListener("submit", async function (e) {
 
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify(data),
 
     })

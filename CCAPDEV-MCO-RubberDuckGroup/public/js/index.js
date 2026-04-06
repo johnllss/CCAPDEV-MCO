@@ -1,22 +1,36 @@
-const user = JSON.parse(localStorage.getItem("loggedUser"));
+let user = null;
 const logBtn = document.getElementById("log-btn");
 
 /* LOGIN BUTTON LOGIC */
-if (!user) {
-    logBtn.textContent = "Join Us";
-    logBtn.href = "/register";
-} else {
-    logBtn.textContent = "Logout";
-    logBtn.href = "/logout";
-    logBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        localStorage.removeItem("loggedUser");
-        window.location.href = "/logout";
-    });
+async function loadUser() {
+    try {
+        const res = await fetch('/auth/me', { credentials: 'include' });
+        if (res.ok) {
+            user = await res.json();
+        }
+    } catch { }
+}
+
+//turned into a function to get the user, as user is no longer an assumption
+async function initAuthUI() {
+    await loadUser();
+
+    if (!user) {
+        logBtn.textContent = "Join Us";
+        logBtn.href = "/register";
+    } else {
+        logBtn.textContent = "Logout";
+        logBtn.href = "/logout";
+        logBtn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+            window.location.href = "/logout";
+        });
+    }
 }
 
 function setIconImg(img, src) {
-    if (!img) 
+    if (!img)
         return null;
 
     try {
@@ -33,9 +47,11 @@ function setIconImg(img, src) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    await initAuthUI();
+
     const cards = document.querySelectorAll('.post-card');
-    const currentUser = user?.userId;
+    const currentUser = user?._id;
 
     cards.forEach(card => {
         const postHref = card.dataset.postHref;
@@ -64,7 +80,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const res = await fetch(`/posts/${postId}/vote`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type, userId: currentUser })
+                    credentials: 'include',
+                    body: JSON.stringify({ type })
                 });
                 const result = await res.json().catch(() => ({}));
                 if (!res.ok) {
@@ -115,10 +132,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (currentUser) {
             if (upList.includes(currentUser)) {
-                    upBtn.classList.add('voted');
-                    setIconImg(upIconInit, '/images/upvote-fill.png');
-                    downBtn.classList.remove('voted');
-                    setIconImg(downIconInit, '/images/downvote-outline.png');
+                upBtn.classList.add('voted');
+                setIconImg(upIconInit, '/images/upvote-fill.png');
+                downBtn.classList.remove('voted');
+                setIconImg(downIconInit, '/images/downvote-outline.png');
             } else if (downList.includes(currentUser)) {
                 downBtn.classList.add('voted');
                 setIconImg(downIconInit, '/images/downvote-fill.png');
@@ -133,18 +150,13 @@ document.addEventListener('DOMContentLoaded', () => {
             setIconImg(downIconInit, '/images/downvote-outline.png');
         }
     });
-});
 
-document.addEventListener("DOMContentLoaded", () => {
-    const user = JSON.parse(localStorage.getItem("loggedUser"));
     const addBtn = document.querySelector(".floating-add-btn");
 
     if (!user && addBtn) {
         addBtn.style.display = "none";
     }
-});
 
-document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const sortType = urlParams.get('sort') || 'newest';
     document.getElementById('sort-dropdown').value = sortType;

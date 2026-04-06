@@ -1,41 +1,44 @@
 const titleField = document.getElementById("title-input");
 const bodyField = document.getElementById("post-body");
-const currTitle = localStorage.getItem("editPostTitle");
-const currBody = localStorage.getItem("editPostBody");
 const cancelBtn = document.getElementById("cancel-button");
 const publishBtn = document.getElementById("save-button");
-const user = JSON.parse(localStorage.getItem("loggedUser"));
+let user = null;
 
 function setFieldValue(el, val) {
-    if (!el) 
+    if (!el)
         return;
-    if ("value" in el) 
+    if ("value" in el)
         el.value = val;
-    else 
+    else
         el.textContent = val;
 }
 
 function getFieldValue(el) {
-    if (!el) 
+    if (!el)
         return '';
     return ("value" in el) ? el.value : el.textContent;
 }
 
+async function loadUser() {
+    try {
+        const res = await fetch('/auth/me', { credentials: 'include' });
+        if (res.ok) {
+            user = await res.json();
+        }
+    } catch { }
+}
+
 // Fill text fields with current post info
-setFieldValue(titleField, currTitle || '');
-setFieldValue(bodyField, currBody || '');
+setFieldValue(titleField, titleField?.value || '');
+setFieldValue(bodyField, bodyField?.value || '');
 
 // Prompts the user to confirm cancelling an edit
 cancelBtn.addEventListener("click", () => {
     const postCancel = confirm("Are you sure you want to go back?");
 
-    if(postCancel) {
-        localStorage.removeItem("editPostTitle");
-        localStorage.removeItem("editPostBody");
+    if (postCancel) {
+        const postId = new URLSearchParams(window.location.search).get('id');
 
-        const postId = localStorage.getItem("editPostId");
-        localStorage.removeItem("editPostId");
-        
         if (postId) {
             window.location.href = `/posts/${postId}/view`;
         } else {
@@ -46,7 +49,7 @@ cancelBtn.addEventListener("click", () => {
 
 // Updates post in database and alerts when edited successfully
 publishBtn.addEventListener("click", async () => {
-    
+
     if (!user || !user.userId) {
         alert("Please login to edit a post.");
         window.location.href = "/login";
@@ -55,13 +58,13 @@ publishBtn.addEventListener("click", async () => {
 
     const editConfirmed = confirm("Are you sure you want to publish this edit?");
 
-    const postId = localStorage.getItem('editPostId') || new URLSearchParams(window.location.search).get('id');
+    const postId = new URLSearchParams(window.location.search).get('id');
     if (!postId) {
         alert('Post ID not found.');
         return;
     }
 
-    if(editConfirmed) {
+    if (editConfirmed) {
         try {
             const payload = {
                 body: getFieldValue(bodyField).trim()
@@ -70,6 +73,7 @@ publishBtn.addEventListener("click", async () => {
             const response = await fetch(`/posts/${postId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
+                credentials: 'include',
                 body: JSON.stringify(payload)
             });
 
@@ -80,9 +84,6 @@ publishBtn.addEventListener("click", async () => {
             }
 
             alert("Post has been edited successfully!");
-            localStorage.removeItem("editPostTitle");
-            localStorage.removeItem("editPostBody");
-            localStorage.removeItem("editPostId");
             window.location.href = `/posts/${postId}/view`;
         } catch (err) {
             console.error(err);
@@ -90,3 +91,5 @@ publishBtn.addEventListener("click", async () => {
         }
     }
 });
+
+loadUser();

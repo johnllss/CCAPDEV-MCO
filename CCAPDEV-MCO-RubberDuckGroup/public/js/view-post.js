@@ -1,7 +1,36 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const postId = window.location.pathname.split('/')[2];
-    const logged = JSON.parse(localStorage.getItem('loggedUser')) || null;
+    let logged = null;
+
+    try {
+        const res = await fetch('/auth/me', { credentials: 'include' });
+        if (res.ok) {
+            logged = await res.json();
+        }
+    } catch { }
+
     const currentUserId = logged?.userId || null;
+
+
+    // moved from the hbs to here
+    const postCard = document.querySelector('.post-card');
+    const editBtn = document.getElementById("edit-button");
+    const deleteBtn = document.getElementById("delete-button");
+    const ownerActions = document.querySelector('.post-owner-actions');
+
+    if (postCard && ownerActions) {
+        const authorId = postCard.dataset.authorid;
+
+        if (
+            currentUserId &&
+            authorId &&
+            currentUserId.toString() === authorId.toString()
+        ) {
+            ownerActions.style.display = 'flex';
+        } else {
+            ownerActions.style.display = 'none';
+        }
+    }
 
     function toggleCommentActions() {
         document.querySelectorAll('.comment').forEach(article => {
@@ -31,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = '/login';
                 return;
             }
-            
+
             const content = newCommentText.value.trim();
             if (!content) return alert('Please write something first.');
 
@@ -39,7 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const res = await fetch(`/api/comments/${postId}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content, authorId: currentUserId })
+                    credentials: 'include',
+                    body: JSON.stringify({ content })
                 });
 
                 if (res.ok) {
@@ -105,7 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const res = await fetch(`/api/comments/${postId}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content, authorId: currentUserId, parentCommentId })
+                    credentials: 'include',
+                    body: JSON.stringify({ content, parentCommentId })
                 });
 
                 if (res.ok) {
@@ -146,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const res = await fetch(`/api/comments/${postId}/${commentId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ content })
                 });
 
@@ -165,7 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const res = await fetch(`/api/comments/${postId}/${commentId}`, {
-                    method: 'DELETE'
+                    method: 'DELETE',
+                    credentials: 'include'
                 });
 
                 if (res.ok) {

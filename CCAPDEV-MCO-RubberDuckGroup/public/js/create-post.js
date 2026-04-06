@@ -5,16 +5,26 @@ const fileInput = document.getElementById("file-upload");
 const fileName = document.getElementById("file-upload-name");
 const cancelBtn = document.getElementById("cancel-button");
 const publishBtn = document.getElementById("publish-button");
-const user = JSON.parse(localStorage.getItem("loggedUser"));
+let user = null;
 
 const MAX_UPLOAD_SIZE = 10 * 1024 * 1024; // 10MB
+
+// removed localStorage users
+async function loadUser() {
+    try {
+        const res = await fetch('/auth/me', { credentials: 'include' });
+        if (res.ok) {
+            user = await res.json();
+        }
+    } catch { }
+}
 
 // Post title character counter
 titleInput.addEventListener("input", () => {
     const currentLength = titleInput.value.length;
     charCtr.textContent = `${currentLength}/150`;
 
-    if(currentLength >= 150) {
+    if (currentLength >= 150) {
         charCtr.style.color = "#fc6e6e";
     } else {
         charCtr.style.color = "lightgray";
@@ -31,7 +41,7 @@ cancelBtn.addEventListener("click", () => {
 })
 
 async function uploadImageFile(file) {
-    if (!file) 
+    if (!file)
         throw new Error('No file found');
 
     if (file.size > MAX_UPLOAD_SIZE)
@@ -40,9 +50,9 @@ async function uploadImageFile(file) {
     const fd = new FormData();
     fd.append('image', file);
 
-    const res = await fetch('/posts/upload-image', { method: 'POST', body: fd });
+    const res = await fetch('/posts/upload-image', { method: 'POST', body: fd, credentials: 'include' });
 
-    if (!res.ok) 
+    if (!res.ok)
         throw new Error('Upload failed');
 
     return (await res.json()).filename;
@@ -80,7 +90,6 @@ publishBtn.addEventListener("click", async () => {
     if (postConfirmed) {
         try {
             const payload = {
-                user: user.userId,
                 title: titleInput.value.trim(),
                 body: bodyInput.value.trim(),
                 image: imagePath
@@ -89,6 +98,7 @@ publishBtn.addEventListener("click", async () => {
             const response = await fetch("/posts", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                credentials: 'include',
                 body: JSON.stringify(payload)
             });
 
@@ -111,12 +121,12 @@ publishBtn.addEventListener("click", async () => {
 fileInput.addEventListener("change", function () {
     if (this.files && this.files.length > 0) {
         const file = this.files[0];
-            if (file.size > MAX_UPLOAD_SIZE) {
-                alert('File too large. Max is 10MB.');
-                this.value = '';
-                fileName.textContent = '';
-                return;
-            }
+        if (file.size > MAX_UPLOAD_SIZE) {
+            alert('File too large. Max is 10MB.');
+            this.value = '';
+            fileName.textContent = '';
+            return;
+        }
 
         fileName.textContent = file.name;
     }
@@ -127,15 +137,22 @@ fileInput.addEventListener("change", function () {
 
 const logBtn = document.getElementById("log-btn");
 
-if (!user) {
-    logBtn.textContent = "Join Us";
-    logBtn.href = "/register";
-} else {
-    logBtn.textContent = "Logout";
-    logBtn.href = "/logout";
-    logBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        localStorage.removeItem("loggedUser");
-        window.location.href = "/logout";
-    });
+// changed to a function since it no longer assumes that a user exists
+async function initializeUserUi() {
+    await loadUser();
+
+    if (!user) {
+        logBtn.textContent = "Join Us";
+        logBtn.href = "/register";
+    } else {
+        logBtn.textContent = "Logout";
+        logBtn.href = "/logout";
+        logBtn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+            window.location.href = "/login";
+        });
+    }
 }
+
+initializeUserUi();

@@ -1,24 +1,26 @@
 // parse for the user in local storage
 // to be replaced later with cookies
-const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+let loggedUser = null;
 
-if (!loggedUser) {
-    alert("Please Log In to view profile");
-    window.location.href = "/register";
+async function loadUser() {
+    try {
+        const res = await fetch('/auth/me', { credentials: 'include' });
+        if (res.ok) {
+            loggedUser = await res.json();
+        }
+    } catch {
+        loggedUser = null;
+    }
 }
 
 // get the user's id from the url
 const params = new URLSearchParams(window.location.search);
 const requestedProfileId = params.get("id");
 
-// choose who is going to be loaded
-const finalUserId = requestedProfileId || loggedUser.userId;
+// moved checking who is going to be loaded to init()
+let finalUserId = null;
+let isOwnProfile = false;
 
-//checks 
-console.log("Viewing profile ID:", finalUserId);
-console.log("Logged-in user ID:", loggedUser.userId);
-
-const isOwnProfile = finalUserId === loggedUser.userId;
 const ACTIVITY_POLL_INTERVAL_MS = 5000;
 let activityPollId = null;
 let isLoadingActivity = false;
@@ -40,8 +42,6 @@ function updateProfileEditingState() {
     editBtn.setAttribute("aria-hidden", "true");
     editBtn.removeAttribute("href");
 }
-
-updateProfileEditingState();
 
 function redirectToSafeProfile() {
     const targetProfileHref = `/profile?id=${loggedUser.userId}`;
@@ -153,7 +153,7 @@ async function loadActivity() {
     isLoadingActivity = true;
 
     try {
-        const activityResponse = await fetch(`/activity/user/${finalUserId}`);
+        const activityResponse = await fetch(`/activity/user/${finalUserId}`, { credentials: 'include' });;
         if (activityResponse.ok) {
             const activityData = await activityResponse.json();
             renderActivity(Array.isArray(activityData) ? activityData : []);
@@ -234,5 +234,24 @@ window.addEventListener("beforeunload", () => {
     }
 });
 
-// MAKE SURE THIS IS THERE if no it wont work
-loadProfile();
+// calls everything when they are supposed to
+async function init() {
+    await loadUser();
+
+    if (!loggedUser) {
+        alert("Please Log In to view profile");
+        window.location.href = "/login";
+        return;
+    }
+
+    finalUserId = requestedProfileId || loggedUser.userId;
+    isOwnProfile = finalUserId === loggedUser.userId;
+
+    console.log("Viewing profile ID:", finalUserId);
+    console.log("Logged-in user ID:", loggedUser.userId);
+
+    updateProfileEditingState();
+    await loadProfile();
+}
+
+init();
