@@ -1,220 +1,188 @@
-document.addEventListener('DOMContentLoaded', async () => {
-    const postId = window.location.pathname.split('/')[2];
-    let logged = null;
+const deleteBtn = document.getElementById("delete-button");
+const editBtn = document.getElementById("edit-button");
+const upvoteBtn = document.querySelector(".upvote-button");
+const downvoteBtn = document.querySelector(".downvote-button");
+let upIcon = upvoteBtn?.querySelector('.upvote-icon');
+let downIcon = downvoteBtn?.querySelector('.downvote-icon');
 
+let user = null;
+
+const path = window.location.pathname.match(/\/posts\/([^\/]+)(?:\/view)?/);
+const postId = path ? path[1] : new URLSearchParams(window.location.search).get('id');
+
+async function loadUser() {
     try {
         const res = await fetch('/auth/me', { credentials: 'include' });
         if (res.ok) {
-            logged = await res.json();
+            user = await res.json();
         }
-    } catch { }
+    } catch (err) { }
+}
 
-    const currentUserId = logged?.userId || null;
+loadUser();
 
+function setIconImg(img, src) {
+    if (!img)
+        return null;
 
-    // moved from the hbs to here
-    const postCard = document.querySelector('.post-card');
-    const editBtn = document.getElementById("edit-button");
-    const deleteBtn = document.getElementById("delete-button");
-    const ownerActions = document.querySelector('.post-owner-actions');
+    try {
+        const clone = img.cloneNode(true);
 
-    if (postCard && ownerActions) {
-        const authorId = postCard.dataset.authorid;
+        clone.src = src;
+        img.replaceWith(clone);
 
-        if (
-            currentUserId &&
-            authorId &&
-            currentUserId.toString() === authorId.toString()
-        ) {
-            ownerActions.style.display = 'flex';
-        } else {
-            ownerActions.style.display = 'none';
-        }
+        return clone;
+    } catch (err) {
+        img.src = src;
+
+        return img;
     }
+}
 
-    function toggleCommentActions() {
-        document.querySelectorAll('.comment').forEach(article => {
-            const authorId = article.dataset.authorId;
-            const ownerActions = article.querySelector('.owner-actions');
-            const nonOwnerActions = article.querySelector('.nonowner-actions');
+try {
+    const cards = document.querySelectorAll('.post-card');
+    const currentUserId = user?.userId;
 
-            if (currentUserId && authorId && currentUserId === authorId) {
-                if (ownerActions) ownerActions.style.display = 'flex';
-                if (nonOwnerActions) nonOwnerActions.style.display = 'none';
-            } else {
-                if (ownerActions) ownerActions.style.display = 'none';
-                if (nonOwnerActions) nonOwnerActions.style.display = 'flex';
-            }
-        });
-    }
+    cards.forEach(card => {
+        try {
+            const dataUp = card.dataset?.upvotes ?? '';
+            const dataDown = card.dataset?.downvotes ?? '';
+            const upvotes = dataUp ? dataUp.split(',').filter(Boolean) : [];
+            const downvotes = dataDown ? dataDown.split(',').filter(Boolean) : [];
 
-    toggleCommentActions();
+            const upBtn = card.querySelector('.upvote-button');
+            const downBtn = card.querySelector('.downvote-button');
+            let up = upBtn?.querySelector('.upvote-icon');
+            let down = downBtn?.querySelector('.downvote-icon');
 
-    const postCommentBtn = document.querySelector('.add-comment-form .form-submit-btn');
-    const newCommentText = document.getElementById('new-comment-text');
-
-    if (postCommentBtn) {
-        postCommentBtn.addEventListener('click', async () => {
-            // check the details if they are logged in
-            const credCheck = await fetch('/auth/me', { credentials: 'include' });
-
-            if (!credCheck.ok) {
-                alert('Please log in first.');
-                window.location.href = '/login';
-                return;
+            if (currentUserId && upvotes.includes(currentUserId)) {
+                upBtn?.classList.add('voted');
+                if (up)
+                    up = setIconImg(up, '/images/upvote-fill.png');
             }
 
-            const content = newCommentText.value.trim();
-            if (!content) return alert('Please write something first.');
+            if (currentUserId && downvotes.includes(currentUserId)) {
+                downBtn?.classList.add('voted');
+                if (down)
+                    down = setIconImg(down, '/images/downvote-fill.png');
+            }
+        } catch (err) { }
+    });
+} catch (err) { }
 
+try {
+    const cards = document.querySelectorAll('.post-card');
+    const currentUser = user?.userId;
+
+    cards.forEach(card => {
+        const cardPostId = card.dataset.postid;
+        if (!cardPostId) return;
+
+        const upBtn = card.querySelector('.upvote-button');
+        const downBtn = card.querySelector('.downvote-button');
+        let upI = upBtn?.querySelector('.upvote-icon');
+        let downI = downBtn?.querySelector('.downvote-icon');
+        const vote = card.querySelector('.vote-count');
+
+        const doVote = async (type, btn, oppositeBtn) => {
+            if (!user || !user.userId) { alert('Please login to vote.'); window.location.href = '/login'; return; }
+            btn.disabled = true;
             try {
-                const res = await fetch(`/api/comments/${postId}`, {
+                const res = await fetch(`/posts/${cardPostId}/vote`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
-                    body: JSON.stringify({ content })
+                    body: JSON.stringify({ type })
                 });
 
-                if (res.ok) {
-                    newCommentText.value = '';
-                    location.reload();
-                } else {
-                    alert('You must be logged in to comment. Redirecting to login...');
-                    window.location.href = '/login';
+                const result = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    if (res.status === 401) { alert('Please login to vote.'); window.location.href = '/login'; return; }
+                    alert(result.message || 'Failed to vote.');
                     return;
                 }
-            } catch (err) {
-                console.error(err);
-                alert('Error posting comment.');
-            }
-        });
-    }
 
-    document.addEventListener('click', async (e) => {
-        if (e.target.classList.contains('reply-btn')) {
-            // check the details if they are logged in
-            const credCheck = await (fetch('/auth/me', { credentials: 'include' }));
+                if (vote) vote.textContent = result.score ?? (result.up - result.down);
 
-            if (!credCheck.ok) {
-                alert('You must be logged in to reply. Redirecting to login...');
-                window.location.href = '/login';
-                return;
-            }
+                const icon = btn.querySelector('.upvote-icon') || btn.querySelector('.downvote-icon');
+                const oppositeIcon = oppositeBtn?.querySelector('.downvote-icon') || oppositeBtn?.querySelector('.upvote-icon');
 
-            const commentId = e.target.dataset.commentId;
-            const existing = document.getElementById(`reply-box-${commentId}`);
-            if (existing) { existing.remove(); return; }
-
-            const box = document.createElement('div');
-            box.id = `reply-box-${commentId}`;
-            box.className = 'add-comment-form reply-box';
-            box.innerHTML = `
-                <textarea id="reply-text-${commentId}" placeholder="Write a reply..." autofocus></textarea>
-                <button class="btn-cancel cancel-edit-btn" data-comment-id="${commentId}" type="button">Cancel</button>
-                <button class="form-submit-btn submit-reply-btn" data-comment-id="${commentId}" type="button">Reply</button>
-            `;
-            const actionsContainer = e.target.closest('.comment-actions') || e.target.parentElement;
-            actionsContainer.style.display = 'none';
-            actionsContainer.after(box);
-        }
-
-        if (e.target.classList.contains('cancel-reply-btn')) {
-            const commentId = e.target.dataset.commentId;
-            const replyBox = document.getElementById(`reply-box-${commentId}`);
-            const commentActions = replyBox?.closest('.comment')?.querySelector('.comment-actions');
-            if (commentActions) commentActions.style.display = 'flex';
-            replyBox?.remove();
-        }
-
-        if (e.target.classList.contains('submit-reply-btn')) {
-            if (!currentUserId) {
-                alert('Please log in first.');
-                window.location.href = '/register';
-                return;
-            }
-
-            const parentCommentId = e.target.dataset.commentId;
-            const content = document.getElementById(`reply-text-${parentCommentId}`).value.trim();
-            if (!content) return alert('Please write something.');
-
-            try {
-                const res = await fetch(`/api/comments/${postId}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({ content, parentCommentId })
-                });
-
-                if (res.ok) {
-                    location.reload();
+                const was = btn.classList.contains('voted');
+                if (was) {
+                    btn.classList.remove('voted');
+                    if (icon) setIconImg(icon, type === 'up' ? '/images/upvote-outline.png' : '/images/downvote-outline.png');
                 } else {
-                    alert('Failed to post reply.');
+                    btn.classList.add('voted');
+                    if (icon) setIconImg(icon, type === 'up' ? '/images/upvote-fill.png' : '/images/downvote-fill.png');
+                    if (oppositeBtn) oppositeBtn.classList.remove('voted');
+                    if (oppositeIcon) setIconImg(oppositeIcon, type === 'up' ? '/images/downvote-outline.png' : '/images/upvote-outline.png');
                 }
             } catch (err) {
                 console.error(err);
+                alert('Could not connect to server.');
+            } finally {
+                btn.disabled = false;
             }
+        };
+
+        if (upBtn) upBtn.addEventListener('click', () => doVote('up', upBtn, downBtn));
+        if (downBtn) downBtn.addEventListener('click', () => doVote('down', downBtn, upBtn));
+    });
+} catch (e) { }
+
+// Prompts the user to confirm deleting a post
+if (deleteBtn) {
+    deleteBtn.addEventListener("click", async () => {
+
+        if (!user || !user.userId) {
+            alert("Please login to delete a post.");
+            window.location.href = "/login";
+            return;
         }
 
-        if (e.target.classList.contains('edit-comment-btn')) {
-            const commentId = e.target.dataset.commentId;
-            const commentBody = document.querySelector(`[data-comment-body="${commentId}"]`);
-            const commentActions = commentBody.closest('.comment')?.querySelector('.comment-actions');
-            const currentText = commentBody.textContent.trim();
+        const delConfirmed = confirm("Are you sure you want to delete this post?\nThis action cannot be undone.");
 
-            if (commentActions) commentActions.style.display = 'none';
-
-            // one-liner for now cos fsr it adds unnecessary spacing around the edit text area
-            commentBody.innerHTML = `<div class="add-comment-form edit-form"><textarea id="edit-text-${commentId}" autofocus>${currentText}</textarea><div class="edit-form-actions"><button class="btn-cancel cancel-edit-btn" data-comment-id="${commentId}" type="button">Cancel</button><button class="btn-save save-edit-btn" data-comment-id="${commentId}" type="button">Save</button></div></div>`;
+        if (!postId) {
+            alert('Post ID not found.');
+            return;
         }
 
-        if (e.target.classList.contains('cancel-edit-btn')) {
-            const commentId = e.target.dataset.commentId;
-            const commentActions = e.target.closest('.comment')?.querySelector('.comment-actions');
-            if (commentActions) commentActions.style.display = 'flex';
-            location.reload();
-        }
-
-        if (e.target.classList.contains('save-edit-btn')) {
-            const commentId = e.target.dataset.commentId;
-            const content = document.getElementById(`edit-text-${commentId}`).value.trim();
-            if (!content) return;
-
+        if (delConfirmed) {
             try {
-                const res = await fetch(`/api/comments/${postId}/${commentId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({ content })
-                });
-
-                if (res.ok) {
-                    location.reload();
-                } else {
-                    alert('Failed to update comment.');
-                }
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
-        if (e.target.classList.contains('delete-comment-btn')) {
-            const commentId = e.target.dataset.commentId;
-            if (!confirm('Delete this comment?')) return;
-
-            try {
-                const res = await fetch(`/api/comments/${postId}/${commentId}`, {
-                    method: 'DELETE',
+                const response = await fetch(`/posts/${postId}`, {
+                    method: "DELETE",
                     credentials: 'include'
                 });
 
-                if (res.ok) {
-                    location.reload();
-                } else {
-                    alert('Failed to delete comment.');
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}));
+                    alert(err.message || 'Failed to delete post.');
+                    return;
                 }
+
+                alert("Post has been deleted successfully!");
+                localStorage.removeItem("editPostTitle");
+                localStorage.removeItem("editPostBody");
+                localStorage.removeItem("editPostId");
+                window.location.href = `/`;
             } catch (err) {
                 console.error(err);
+                alert("Could not connect to server.");
             }
         }
     });
-});
+}
+
+// Saves post content and redirects to edit post page
+if (editBtn) {
+    editBtn.addEventListener("click", () => {
+        const postTitle = document.querySelector(".post-header").innerText;
+        const postBody = document.querySelector(".post-body p").innerText;
+
+        localStorage.setItem("editPostId", postId);
+        localStorage.setItem("editPostTitle", postTitle);
+        localStorage.setItem("editPostBody", postBody);
+
+        window.location.href = "/edit-post";
+    });
+}
