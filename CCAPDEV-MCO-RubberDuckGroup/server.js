@@ -32,7 +32,7 @@ app.use(fileUpload({ createParentPath: true, limits: { fileSize: 10 * 1024 * 102
 const mongoUri = process.env.MONGODB_URI;
 
 if (!mongoUri) {
-    console.error('Missing MONGODB_URI. Add it to .env file before starting the server.');
+    console.error('Missing MONGODB_URI. Set MONGODB_URI in the environment on Render.');
     process.exit(1);
 }
 

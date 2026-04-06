@@ -17,20 +17,31 @@ process.on('unhandledRejection', err => {
     process.exit(1);
 });
 
+async function databaseHasContent() {
+    const [hasUsers, hasPosts, hasComments, hasActivity] = await Promise.all([
+        User.exists({}),
+        Post.exists({}),
+        Comment.exists({}),
+        Activity.exists({})
+    ]);
+
+    return Boolean(hasUsers || hasPosts || hasComments || hasActivity);
+}
+
 async function seed() {
     const mongoUri = process.env.MONGODB_URI;
 
     if (!mongoUri) {
-        throw new Error('Missing MONGODB_URI. Add it to .env file before running seed.js.');
+        throw new Error('Missing MONGODB_URI. Set MONGODB_URI in the environment on Render before running seed.js.');
     }
 
     await mongoose.connect(mongoUri);
     console.log('MongoDB connected');
 
-    await User.deleteMany({});
-    await Post.deleteMany({});
-    await Comment.deleteMany({});
-    await Activity.deleteMany({});
+    if (await databaseHasContent()) {
+        console.log('Database already has content. Skipping seed.');
+        return;
+    }
 
     const saltRounds = 10;
 
@@ -45,14 +56,14 @@ async function seed() {
         { username: 'TechLover99', email: 'techlover99@email.com', password: 'password123', profile: { photo: 'https://i.pravatar.cc/150?img=60' } }
     ];
 
-    const hashedUsers = await Promise.all( // we needed this pala oopies >.<
+    const hashedUsers = await Promise.all(
         rawUsers.map(async (user) => ({
             ...user,
             password: await bcrypt.hash(user.password, saltRounds)
         }))
     );
 
-    const users = await User.insertMany(hashedUsers); // HERE HERE!!!! THE HASHING !!!
+    const users = await User.insertMany(hashedUsers);
 
     const posts = await Post.insertMany([
         {
@@ -94,14 +105,14 @@ async function seed() {
         { content: 'The evolution of web development has been fascinating to watch over the years.', author: users[5]._id, post: posts[0]._id, parentComment: null, isEdited: true },
         { content: 'AI integration is definitely going to change everything.', author: users[7]._id, post: posts[0]._id, parentComment: null, isEdited: false },
         { content: 'Serverless architecture has made deployment so much easier!', author: users[1]._id, post: posts[0]._id, parentComment: null, isEdited: false },
-        { content: 'Looking forward to seeing where WebAssembly takes us in the future.', author: users[3]._id, post: posts[0]._id, parentComment: null, isEdited: false },
+        { content: 'Looking forward to seeing where WebAssembly takes us in the future.', author: users[3]._id, post: posts[0]._id, parentComment: null, isEdited: false }
     ]);
 
     await Comment.insertMany([
         { content: 'I agree too! Very well said.', author: users[1]._id, post: posts[0]._id, parentComment: comments[0]._id, isEdited: false },
         { content: 'Absolutely! I remember when jQuery was the big thing.', author: users[6]._id, post: posts[0]._id, parentComment: comments[3]._id, isEdited: false },
         { content: 'Great point! AI-assisted coding is just the beginning.', author: users[0]._id, post: posts[0]._id, parentComment: comments[4]._id, isEdited: false },
-        { content: 'Yes! No more worrying about server maintenance.', author: users[2]._id, post: posts[0]._id, parentComment: comments[5]._id, isEdited: false },
+        { content: 'Yes! No more worrying about server maintenance.', author: users[2]._id, post: posts[0]._id, parentComment: comments[5]._id, isEdited: false }
     ]);
 
     await Activity.insertMany([
@@ -143,12 +154,12 @@ async function seed() {
         }
     ]);
 
-    console.log('✅ Database seeded successfully!');
-    await mongoose.connection.close();
+    console.log('Database seeded successfully.');
 }
 
 seed().catch(err => {
-    console.error('❌ Seed failed:', err.message);
-    mongoose.connection.close();
+    console.error('Seed failed:', err.message);
     process.exit(1);
+}).finally(async () => {
+    await mongoose.connection.close();
 });
