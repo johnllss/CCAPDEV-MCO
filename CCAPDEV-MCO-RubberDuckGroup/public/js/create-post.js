@@ -86,7 +86,7 @@ publishBtn.addEventListener("click", async () => {
                 image: imagePath
             };
 
-            const response = await fetch("http://localhost:3000/posts", {
+            const response = await fetch("/posts", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
@@ -139,4 +139,3 @@ if (!user) {
         window.location.href = "/logout";
     });
 }
-

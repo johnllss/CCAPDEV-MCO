@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const fs = require('fs');
 const Post = require('../models/Post');
+const Comment = require('../models/Comment');
 const User = require('../models/User');
 const Activity = require('../models/Activity');
 const relativeDate = require('../utils/relativeDate');
@@ -38,10 +39,11 @@ function toUploadImagePath(image) {
     return `/uploads/${cleanedImage}`;
 }
 
-function formatPost(post, req) {
+async function formatPost(post, req) {
     const currentUserId = req.session?.userId?.toString() || null;
     const createdAtLabel = relativeDate(post.createdAt);
     const updatedAtLabel = post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null;
+    const commentCount = await Comment.countDocuments({ post: post._id });
 
     return {
         _id: post._id.toString(),
@@ -67,7 +69,8 @@ function formatPost(post, req) {
         upvotes: post.upvotes.map(u => u.toString()),
         downvotes: post.downvotes.map(u => u.toString()),
         isUpvoted: currentUserId ? post.upvotes.some(u => u.toString() === currentUserId) : false,
-        isDownvoted: currentUserId ? post.downvotes.some(u => u.toString() === currentUserId) : false
+        isDownvoted: currentUserId ? post.downvotes.some(u => u.toString() === currentUserId) : false,
+        commentCount: commentCount
     };
 }
 
@@ -209,13 +212,19 @@ async function getPosts(req, res) {
 
 async function renderIndex(req, res) {
     try {
+        const sortOrder = req.query.sort || 'newest';
+        
+        let sort = { createdAt: -1 };
+        if (sortOrder === 'popular') sort = { votes: -1 };
+        if (sortOrder === 'oldest') sort = { createdAt: 1 };
+        
         const posts = await Post.find()
             .populate('user', 'username profile.photo')
-            .sort({ createdAt: -1 });
+            .sort(sort);
 
-        const formattedPosts = posts.map(post => formatPost(post, req));
+        const formattedPosts = await Promise.all(posts.map(post => formatPost(post, req)));
 
-        res.render('index', { posts: formattedPosts });
+        res.render('index', { posts: formattedPosts, sortOrder });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -390,7 +399,7 @@ async function showSearchResults(req, res) {
                 .sort({ createdAt: -1 });
         }
 
-        const formattedPosts = posts.map(post => formatPost(post, req));
+        const formattedPosts = await Promise.all(posts.map(post => formatPost(post, req)));
 
         res.render('search-results', {
             posts: formattedPosts,

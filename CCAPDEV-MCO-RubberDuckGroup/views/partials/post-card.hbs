@@ -68,6 +68,13 @@
                 </div>
             {{/unless}}
 
+            {{#if showCommentCount}}
+                <div class="post-comment-count">
+                    <img src="/images/comment-outline.png" alt="Comments">
+                    <span class="comment-count">{{post.commentCount}}</span>
+                </div>
+            {{/if}}
+
             {{#unless hideOwnerActions}}
                 <div class="post-owner-actions" id="owner-actions" style="display:none">
                     <button id="edit-button">
