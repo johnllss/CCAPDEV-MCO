@@ -29,6 +29,7 @@ app.use(express.static(path.join(__dirname, 'views', 'pages')));
 app.use(cors());
 app.use(fileUpload({ createParentPath: true, limits: { fileSize: 10 * 1024 * 1024 } })); // 10MB upload limit
 
+//database uri
 const mongoUri = process.env.MONGODB_URI;
 
 if (!mongoUri) {
@@ -36,15 +37,7 @@ if (!mongoUri) {
     process.exit(1);
 }
 
-// database connection
-mongoose
-    .connect(mongoUri)
-    .then(() => console.log('MongoDB connected'))
-    .catch(err => {
-        console.error('MongoDB connection error:', err);
-        process.exit(1);
-    });
-
+//static public
 app.use('/assets', express.static(path.join(__dirname, 'public')));
 
 // routes
@@ -55,6 +48,19 @@ app.use('/posts', require('./routes/postRoute'));
 app.use('/activity', require('./routes/activityRoute'));
 app.use('/api/comments', require('./routes/commentRoute'));
 
-// start server
+// connect and start server only after the database is ready
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
+async function startServer() {
+    try {
+        await mongoose.connect(mongoUri);
+        console.log('MongoDB connected');
+
+        app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+    } catch (err) {
+        console.error('MongoDB connection error:', err);
+        process.exit(1);
+    }
+}
+
+startServer();
