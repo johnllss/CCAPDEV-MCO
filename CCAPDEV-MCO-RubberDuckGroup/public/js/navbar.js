@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const profileLink = document.getElementById("nav-profile-link");
     const profileImage = document.getElementById("nav-profile-image");
+    const logBtn = document.getElementById("log-btn");
 
     if (!profileLink || !profileImage) {
         return;
@@ -22,4 +23,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     profileLink.href = userId ? `/profile?id=${userId}` : "/profile";
     profileImage.src = photo;
+
+    //added toggle for hbs
+    if (userId) {
+        logBtn.textContent = "Logout";
+        logBtn.href = "/logout";
+    } else {
+        logBtn.textContent = "Join us";
+        logBtn.href = "/login";
+    }
 });
