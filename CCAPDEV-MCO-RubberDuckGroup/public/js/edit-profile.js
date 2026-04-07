@@ -21,7 +21,7 @@ async function initAuthUI() {
         logBtn.href = "/register";
     } else {
         logBtn.textContent = "Logout";
-        logBtn.href = "#";
+        logBtn.href = "/logout";
         logBtn.addEventListener("click", async (e) => {
             e.preventDefault();
             await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
