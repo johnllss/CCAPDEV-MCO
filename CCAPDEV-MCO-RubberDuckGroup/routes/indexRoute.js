@@ -28,6 +28,11 @@ const thirdPartyLibraries = [
         name: 'Flaticon social media icons',
         purpose: 'Supplies the Facebook, Instagram, and YouTube footer icons used in the layout.',
         link: 'https://www.flaticon.com/'
+    },
+    {
+        name: 'Material Symbols by Google',
+        purpose: 'Supplies the icons used in navigation and action buttons.',
+        link: 'https://icon-sets.iconify.design/material-symbols/'
     }
 ];
 
