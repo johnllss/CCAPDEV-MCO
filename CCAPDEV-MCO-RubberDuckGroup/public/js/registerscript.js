@@ -31,7 +31,7 @@ form.addEventListener("submit", async function (e) {
     let isValid = true;
 
     // frontend validation
-    if (!username) {
+    if (!username || /[^a-zA-Z0-9]/.test(username)) {
         usernameInput.classList.add("input-error");
         isValid = false;
     }
@@ -41,13 +41,15 @@ form.addEventListener("submit", async function (e) {
         isValid = false;
     }
 
-    if (!password) {
+    if (!password || /\s/.test(password)) {
         passwordInput.classList.add("input-error");
         isValid = false;
     }
 
     if (!isValid) {
+        alert("Username / Password cannot include spaces");
         return;
+
     }
 
     const data = {
