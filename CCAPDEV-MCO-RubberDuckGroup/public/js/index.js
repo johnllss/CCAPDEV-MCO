@@ -6,7 +6,8 @@ async function loadUser() {
     try {
         const res = await fetch('/auth/me', { credentials: 'include' });
         if (res.ok) {
-            user = await res.json();
+            const data = await res.json();
+            user = data.user || data;
         }
     } catch { }
 }
@@ -51,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await initAuthUI();
 
     const cards = document.querySelectorAll('.post-card');
-    const currentUser = user?._id;
+    const currentUser = user?._id || user?.userId;
 
     cards.forEach(card => {
         const postHref = card.dataset.postHref;
