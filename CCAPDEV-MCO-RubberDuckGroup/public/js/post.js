@@ -4,12 +4,14 @@ const upvoteBtn = document.querySelector(".upvote-button");
 const downvoteBtn = document.querySelector(".downvote-button");
 let upIcon = upvoteBtn?.querySelector('.upvote-icon');
 let downIcon = downvoteBtn?.querySelector('.downvote-icon');
-const user = JSON.parse(localStorage.getItem("loggedUser"));
+// const user = JSON.parse(localStorage.getItem("loggedUser"));
+let user = null;
+
 const path = window.location.pathname.match(/\/posts\/([^\/]+)(?:\/view)?/);
 const postId = path ? path[1] : new URLSearchParams(window.location.search).get('id');
 
 function setIconImg(img, src) {
-    if (!img) 
+    if (!img)
         return null;
 
     try {
@@ -25,6 +27,16 @@ function setIconImg(img, src) {
         return img;
     }
 }
+
+// get session user (cookie-based)
+(async () => {
+    try {
+        const res = await fetch('/auth/me', { credentials: 'include' });
+        if (res.ok) {
+            user = await res.json();
+        }
+    } catch (err) { }
+})();
 
 try {
     const cards = document.querySelectorAll('.post-card');
@@ -44,18 +56,18 @@ try {
 
             if (currentUserId && upvotes.includes(currentUserId)) {
                 upBtn?.classList.add('voted');
-                if (up) 
+                if (up)
                     up = setIconImg(up, '/images/upvote-fill.png');
             }
 
             if (currentUserId && downvotes.includes(currentUserId)) {
                 downBtn?.classList.add('voted');
-                if (down) 
+                if (down)
                     down = setIconImg(down, '/images/downvote-fill.png');
             }
-        } catch (err) {}
+        } catch (err) { }
     });
-} catch (err) {}
+} catch (err) { }
 
 try {
     const cards = document.querySelectorAll('.post-card');
@@ -72,13 +84,14 @@ try {
         const vote = card.querySelector('.vote-count');
 
         const doVote = async (type, btn, oppositeBtn) => {
-            if (!currentUser) { alert('Please login to vote.'); window.location.href = '/login'; return; }
+            if (!user || !user.userId) { alert('Please login to vote.'); window.location.href = '/login'; return; }
             btn.disabled = true;
             try {
                 const res = await fetch(`/posts/${cardPostId}/vote`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type, userId: currentUser })
+                    credentials: 'include',
+                    body: JSON.stringify({ type }) // removed userId
                 });
 
                 const result = await res.json().catch(() => ({}));
@@ -114,60 +127,54 @@ try {
         if (upBtn) upBtn.addEventListener('click', () => doVote('up', upBtn, downBtn));
         if (downBtn) downBtn.addEventListener('click', () => doVote('down', downBtn, upBtn));
     });
-} catch (e) {}
+} catch (e) { }
 
 // Prompts the user to confirm deleting a post
 if (deleteBtn) {
     deleteBtn.addEventListener("click", async () => {
 
-    if (!user || !user.userId) {
-        alert("Please login to delete a post.");
-        window.location.href = "/login";
-        return;
-    }
-
-    const delConfirmed = confirm("Are you sure you want to delete this post?\nThis action cannot be undone.");
-
-    if (!postId) {
-        alert('Post ID not found.');
-        return;
-    }
-
-    if (delConfirmed) {
-        try {
-            const response = await fetch(`/posts/${postId}`, {
-                method: "DELETE",
-            });
-
-            if (!response.ok) {
-                const err = await response.json().catch(()=>({}));
-                alert(err.message || 'Failed to delete post.');
-                return;
-            }
-
-            alert("Post has been deleted successfully!");
-            localStorage.removeItem("editPostTitle");
-            localStorage.removeItem("editPostBody");
-            localStorage.removeItem("editPostId");
-            window.location.href = `/`;
-        } catch (err) {
-            console.error(err);
-            alert("Could not connect to server.");
+        if (!user || !user.userId) {
+            alert("Please login to delete a post.");
+            window.location.href = "/login";
+            return;
         }
-    }
+
+        const delConfirmed = confirm("Are you sure you want to delete this post?\nThis action cannot be undone.");
+
+        if (!postId) {
+            alert('Post ID not found.');
+            return;
+        }
+
+        if (delConfirmed) {
+            try {
+                const response = await fetch(`/posts/${postId}`, {
+                    method: "DELETE",
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}));
+                    alert(err.message || 'Failed to delete post.');
+                    return;
+                }
+
+                alert("Post has been deleted successfully!");
+                localStorage.removeItem("editPostTitle");
+                localStorage.removeItem("editPostBody");
+                localStorage.removeItem("editPostId");
+                window.location.href = `/`;
+            } catch (err) {
+                console.error(err);
+                alert("Could not connect to server.");
+            }
+        }
     });
 }
 
 // Saves post content and redirects to edit post page
 if (editBtn) {
     editBtn.addEventListener("click", () => {
-    const postTitle = document.querySelector(".post-header").innerText;
-    const postBody = document.querySelector(".post-body p").innerText;
-
-    localStorage.setItem("editPostId", postId);
-    localStorage.setItem("editPostTitle", postTitle);
-    localStorage.setItem("editPostBody", postBody);
-
-    window.location.href = "/edit-post";
+        window.location.href = `/edit-post?id=${postId}`;
     });
-}
+};

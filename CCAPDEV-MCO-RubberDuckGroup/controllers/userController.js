@@ -47,14 +47,14 @@ async function getUserById(req, res) {
 
 async function updateUser(req, res) {
     try {
-        const { id } = req.params;
+        const userId = req.session?.userId;
 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "Invalid user ID" });
+        if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(401).json({ message: "Unauthorized" });
         }
 
         const user = await User.findByIdAndUpdate(
-            id,
+            userId,
             req.body,
             { new: true, runValidators: true }
         );
@@ -72,13 +72,13 @@ async function updateUser(req, res) {
 
 async function deleteUser(req, res) {
     try {
-        const { id } = req.params;
+        const userId = req.session?.userId;
 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "Invalid user ID" });
+        if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(401).json({ message: "Unauthorized" });
         }
 
-        const user = await User.findByIdAndDelete(id);
+        const user = await User.findByIdAndDelete(userId);
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });

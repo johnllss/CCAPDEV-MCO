@@ -21,24 +21,26 @@ form.addEventListener("submit", async function (e) {
 
     e.preventDefault();
 
-
     const login = document.getElementById("loginName").value;
     const password = document.getElementById("password").value;
+    const remember = document.getElementById("rememberCheck").checked;
 
     const data = {
         login: login,
-        password: password
+        password: password,
+        remember: remember
     };
-
 
     if (!login || !password) {
         alert("Please fill empty fields");
         return;
     }
+
     const response = await fetch('/auth/login', {
 
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify(data),
 
     })
@@ -48,9 +50,7 @@ form.addEventListener("submit", async function (e) {
     if (response.ok) {
         console.log("Success:", result.message);
         alert(result.message);
-        localStorage.setItem("loggedUser", JSON.stringify(result)); // Where user is saved for other pages
         window.location.href = "/";
-
     } else {
         console.log("Error:", result.message);
         alert(result.message);

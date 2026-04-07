@@ -7,6 +7,8 @@ const path = require('path');
 const hbs = require('hbs');
 const fs = require('fs');
 const fileUpload = require('express-fileupload');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -24,10 +26,27 @@ fs.readdirSync(partialsDir).forEach(file => {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cookieParser());
+
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'ducky_secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'lax',
+        // no max age will be set in login
+    }
+}));
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'views', 'pages')));
 app.use(cors());
 app.use(fileUpload({ createParentPath: true, limits: { fileSize: 10 * 1024 * 1024 } })); // 10MB upload limit
+
+
 
 //database uri
 const mongoUri = process.env.MONGODB_URI;

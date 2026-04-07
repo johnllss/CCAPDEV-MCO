@@ -1,63 +1,66 @@
 const form = document.getElementById("editProfileForm");
-const user = JSON.parse(localStorage.getItem("loggedUser"));
+let user = null;
 const logBtn = document.getElementById("log-btn");
 
-if (!user) {
-    logBtn.textContent = "Join Us";
-    logBtn.href = "/register";
-} else {
-    logBtn.textContent = "Logout";
-    logBtn.href = "/logout";
-    logBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        localStorage.removeItem("loggedUser");
-        window.location.href = "/logout";
-    });
+// needs to load user from session instead now
+async function loadUser() {
+    try {
+        const res = await fetch('/auth/me', { credentials: 'include' });
+        if (res.ok) {
+            user = await res.json();
+        }
+    } catch { }
 }
 
-if (!user) {
-    window.location.href = "/login";
-}
+// changed to a function since it no longer assumes that a user exists
+async function initAuthUI() {
+    await loadUser();
 
+    if (!user) {
+        logBtn.textContent = "Join Us";
+        logBtn.href = "/register";
+    } else {
+        logBtn.textContent = "Logout";
+        logBtn.href = "/logout";
+        logBtn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+            window.location.href = "/login";
+        });
+    }
+
+    if (!user) {
+        window.location.href = "/login";
+    }
+}
 
 async function loadProfile() {
 
-    // load the information
     try {
-        const userId = user.userId;
-        const response = await fetch(`/users/${userId}`);
+        const response = await fetch(`/auth/me`, { credentials: 'include' });
         const userData = await response.json();
 
-        console.log(userData);
-
         document.getElementById("username").value = userData.username;
-        document.getElementById("fullname").value = userData.profile.fullname;
-        document.getElementById("aboutme").value = userData.profile.about;
-        document.getElementById("user-quote").value = userData.profile.quote;
-        document.getElementById("profilepreview").src = userData.profile.photo; // this was an epic revalation
+        document.getElementById("fullname").value = userData.profile?.fullname || '';
+        document.getElementById("aboutme").value = userData.profile?.about || '';
+        document.getElementById("user-quote").value = userData.profile?.quote || '';
+        document.getElementById("profilepreview").src = userData.profile?.photo || '/images/default-pfp.png';
 
     } catch (error) {
         console.error("Error loading profile:", error);
     }
 }
 
-// call the function to load it
-loadProfile();
-
-
 form.addEventListener("submit", async function (e) {
 
     e.preventDefault();
 
-    const userId = user.userId;
     const username = document.getElementById("username").value;
     const fullname = document.getElementById("fullname").value;
     const about = document.getElementById("aboutme").value;
     const quote = document.getElementById("user-quote").value;
     const photo = document.getElementById("profilepreview").src;
 
-
-    //create the data object to send to the database
     const data = {
         username: username,
         profile: {
@@ -68,13 +71,14 @@ form.addEventListener("submit", async function (e) {
         }
     };
 
+    // dev purposes
     console.log(data);
-    console.log(userId);
-
-    const response = await fetch(`/users/${userId}`, {
+    console.log(user._id);
+    const response = await fetch(`/users`, {
 
         method: "PUT",
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify(data),
 
     });
@@ -93,4 +97,10 @@ form.addEventListener("submit", async function (e) {
 
 });
 
-// TODO implement photo saving 
+//moved all function calls to end to preserve clarity
+async function init() {
+    await initAuthUI();
+    await loadProfile();
+}
+
+init();
