@@ -106,10 +106,16 @@
 }
 
 .comment-author {
+    text-decoration: none;
     font-weight: 700;
     color: var(--color-black);
     font-size: 0.9375rem;
     font-family: var(--font-sans);
+}
+
+.comment-author:hover {
+    text-decoration: none;
+    color: var(--color-main-medium-brown);
 }
 
 .comment-time {
