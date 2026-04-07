@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | The Rubber Duck Forums</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/about.css">
+</head>
+
+<body>
+    {{> header}}
+
+    <main class="about-page">
+        <section class="about-hero">
+            <p class="about-eyebrow"About the Rubber Duck Forums App</p>
+            <h1>The Rubber Duck Forums</h1>
+            <p class="about-summary">
+                The Rubber Duck Forums is a community web application where users can share posts, exchange comments,
+                and interact through a lighthearted space centered on rubber duck culture.
+            </p>
+        </section>
+
+        <section class="about-section">
+            <div class="section-heading">
+                <h2>NPM Packages Used</h2>
+            </div>
+
+            <div class="about-card-grid">
+                {{#each npmPackages}}
+                    <article class="about-card">
+                        <div class="about-card-header">
+                            <h3>{{name}}</h3>
+                            <span>{{version}}</span>
+                        </div>
+                        <p>{{description}}</p>
+                    </article>
+                {{/each}}
+            </div>
+        </section>
+
+        <section class="about-section">
+            <div class="section-heading">
+                <h2>Third-Party Libraries and Assets</h2>
+            </div>
+
+            <div class="about-card-grid">
+                {{#each thirdPartyLibraries}}
+                    <article class="about-card">
+                        <div class="about-card-header">
+                            <h3>{{name}}</h3>
+                        </div>
+                        <p>{{purpose}}</p>
+                        <a href="{{link}}" target="_blank" rel="noopener noreferrer">View source</a>
+                    </article>
+                {{/each}}
+            </div>
+        </section>
+    </main>
+
+    {{> footer}}
+</body>
+</html>

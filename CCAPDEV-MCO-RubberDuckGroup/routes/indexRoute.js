@@ -1,7 +1,35 @@
 const express = require('express');
 const postController = require('../controllers/postController');
+const packageJson = require('../package.json');
 
 const router = express.Router();
+
+const packageDescriptions = {
+    bcrypt: 'Hashes user passwords before they are stored in the database.',
+    'cookie-parser': 'Parses cookies so the app can read session-related data from incoming requests.',
+    cors: 'Handles cross-origin requests for browser compatibility during development and deployment.',
+    dotenv: 'Loads environment variables such as database connection strings and session secrets.',
+    express: 'Provides the web server, routing, and middleware pipeline for the application.',
+    'express-fileupload': 'Handles profile photo and post image uploads.',
+    'express-handlebars': 'Supports server-side templating for dynamic page rendering.',
+    'express-session': 'Maintains authenticated user sessions while the browser window remains open.',
+    hbs: 'Registers and renders Handlebars partials used across shared interface sections.',
+    mongoose: 'Connects the app to MongoDB and defines the application data models.',
+    nodemon: 'Restarts the development server automatically when source files change.'
+};
+
+const thirdPartyLibraries = [
+    {
+        name: 'Google Fonts - DM Sans',
+        purpose: 'Provides the primary sans-serif typeface used across the interface.',
+        link: 'https://fonts.google.com/specimen/DM+Sans'
+    },
+    {
+        name: 'Flaticon social media icons',
+        purpose: 'Supplies the Facebook, Instagram, and YouTube footer icons used in the layout.',
+        link: 'https://www.flaticon.com/'
+    }
+];
 
 router.get('/', postController.renderIndex);
 
@@ -48,6 +76,16 @@ router.get('/view-post', (req, res) => {
 });
 
 router.get('/search-results', postController.showSearchResults);
+
+router.get('/about', (req, res) => {
+    const npmPackages = Object.entries(packageJson.dependencies || {}).map(([name, version]) => ({
+        name,
+        version,
+        description: packageDescriptions[name] || 'Used to support application features and development workflow.'
+    }));
+
+    res.render('about', {npmPackages, thirdPartyLibraries});
+});
 
 router.get('/logout', (req, res) => {
     res.render('logout');
