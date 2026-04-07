@@ -46,27 +46,17 @@ app.use(express.static(path.join(__dirname, 'views', 'pages')));
 app.use(cors());
 app.use(fileUpload({ createParentPath: true, limits: { fileSize: 10 * 1024 * 1024 } })); // 10MB upload limit
 
-// database connection
-// uses LOCAL DB by default, switches to ATLAS when NODE_ENV=production
-const mongoUri =
-    process.env.NODE_ENV === 'production'
-        ? process.env.MONGODB_URI_ATLAS
-        : process.env.MONGODB_URI_LOCAL;
+
+
+//database uri
+const mongoUri = process.env.MONGODB_URI;
 
 if (!mongoUri) {
-    console.error('Missing MONGODB_URI. Add it to .env file before starting the server.');
+    console.error('Missing MONGODB_URI. Set MONGODB_URI in the environment on Render.');
     process.exit(1);
 }
 
-// database connection
-mongoose
-    .connect(mongoUri)
-    .then(() => console.log(`MongoDB connected (${process.env.NODE_ENV || 'development'})`))
-    .catch(err => {
-        console.error('MongoDB connection error:', err);
-        process.exit(1);
-    });
-
+//static public
 app.use('/assets', express.static(path.join(__dirname, 'public')));
 
 // routes
@@ -77,6 +67,19 @@ app.use('/posts', require('./routes/postRoute'));
 app.use('/activity', require('./routes/activityRoute'));
 app.use('/api/comments', require('./routes/commentRoute'));
 
-// start server
+// connect and start server only after the database is ready
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
+async function startServer() {
+    try {
+        await mongoose.connect(mongoUri);
+        console.log('MongoDB connected');
+
+        app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+    } catch (err) {
+        console.error('MongoDB connection error:', err);
+        process.exit(1);
+    }
+}
+
+startServer();
