@@ -22,8 +22,7 @@
         {{/if}}
     </title>
 </head>
-<body>
-    <body class="{{bodyClass}}">
+<body class="{{bodyClass}}">
         {{#unless hideHeader}}
             {{> header
                 homeHref = homeHref
@@ -45,6 +44,5 @@
         {{#each scripts}}
             <script src="{{this}}"></script>
         {{/each}}
-    </body>
 </body>
 </html>

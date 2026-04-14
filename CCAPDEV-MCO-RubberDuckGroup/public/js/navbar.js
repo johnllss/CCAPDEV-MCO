@@ -53,20 +53,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    const buildLoginRedirect = (targetPath) => {
-        const params = new URLSearchParams({
-            notice: 'Please log in to continue.',
-            noticeType: 'info',
-            noticeTitle: 'Login required'
-        });
-
-        if (targetPath) {
-            params.set('next', targetPath);
-        }
-
-        return `/login?${params.toString()}`;
-    };
-
     let loggedUser = null;
 
     try {
@@ -99,7 +85,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 title: "Login required",
                 duration: 1600
             });
-            window.location.href = buildLoginRedirect("/profile");
+            window.location.href = window.buildAuthRedirect("/profile", {
+                notice: "Please log in to view your profile."
+            });
         });
     }
 

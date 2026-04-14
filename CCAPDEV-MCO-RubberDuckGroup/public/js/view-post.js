@@ -27,7 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
         postCommentBtn.addEventListener('click', async () => {
             if (!currentUserId) {
                 await showAppPopup('You must be logged in to comment. Redirecting to login...', { type: 'info', title: 'Login required', duration: 1800 });
-                window.location.href = '/login';
+                window.location.href = window.buildAuthRedirect(window.location.pathname + window.location.search, {
+                    notice: 'Please log in to comment.'
+                });
                 return;
             }
 
@@ -50,7 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     location.reload();
                 } else {
                     await showAppPopup('You must be logged in to comment. Redirecting to login...', { type: 'info', title: 'Login required', duration: 1800 });
-                    window.location.href = '/login';
+                    window.location.href = window.buildAuthRedirect(window.location.pathname + window.location.search, {
+                        notice: 'Please log in to comment.'
+                    });
                     return;
                 }
             } catch (err) {
@@ -64,7 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.classList.contains('reply-btn')) {
             if (!currentUserId) {
                 await showAppPopup('You must be logged in to reply. Redirecting to login...', { type: 'info', title: 'Login required', duration: 1800 });
-                window.location.href = '/login';
+                window.location.href = window.buildAuthRedirect(window.location.pathname + window.location.search, {
+                    notice: 'Please log in to reply.'
+                });
                 return;
             }
 
@@ -96,7 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.classList.contains('submit-reply-btn')) {
             if (!currentUserId) {
                 await showAppPopup('Please log in first.', { type: 'info', title: 'Login required', duration: 1800 });
-                window.location.href = '/register';
+                window.location.href = window.buildAuthRedirect(window.location.pathname + window.location.search, {
+                    notice: 'Please log in to reply.'
+                });
                 return;
             }
 

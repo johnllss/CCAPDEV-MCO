@@ -15,6 +15,20 @@
     let activeDialog = null;
     const noticeParams = ['notice', 'noticeType', 'noticeTitle'];
 
+    window.buildAuthRedirect = function buildAuthRedirect(targetPath, options = {}) {
+        const params = new URLSearchParams({
+            notice: options.notice || 'Please log in to continue.',
+            noticeType: options.noticeType || 'info',
+            noticeTitle: options.noticeTitle || 'Login required'
+        });
+
+        if (targetPath) {
+            params.set('next', targetPath);
+        }
+
+        return `/login?${params.toString()}`;
+    };
+
     function ensureRegion() {
         if (region && document.body.contains(region)) {
             return region;

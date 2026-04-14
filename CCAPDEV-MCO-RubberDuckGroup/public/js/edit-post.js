@@ -46,7 +46,9 @@ publishBtn.addEventListener("click", async () => {
 
     if (!user || !user.userId) {
         await showAppPopup("Please login to edit a post.", { type: 'info', title: 'Login required', duration: 1800 });
-        window.location.href = "/login";
+        window.location.href = window.buildAuthRedirect(window.location.pathname + window.location.search, {
+            notice: "Please log in to edit this post."
+        });
         return;
     }
 

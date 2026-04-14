@@ -49,7 +49,9 @@ function setIconImg(img, src) {
 async function voteOnPost(postId, type, voteElement, upBtn, downBtn) {
     if (!user || !user.userId) { 
         await showAppPopup('Please login to vote.', { type: 'info', title: 'Login required', duration: 1800 }); 
-        window.location.href = '/login'; 
+        window.location.href = window.buildAuthRedirect(window.location.pathname + window.location.search, {
+            notice: 'Please log in to vote.'
+        }); 
         return; 
     }
 
@@ -69,7 +71,9 @@ async function voteOnPost(postId, type, voteElement, upBtn, downBtn) {
         if (!res.ok) {
             if (res.status === 401) { 
                 await showAppPopup('Please login to vote.', { type: 'info', title: 'Login required', duration: 1800 }); 
-                window.location.href = '/login'; 
+                window.location.href = window.buildAuthRedirect(window.location.pathname + window.location.search, {
+                    notice: 'Please log in to vote.'
+                }); 
                 return; 
             }
             showAppPopup(result.message || 'Failed to vote.', { type: 'error' });

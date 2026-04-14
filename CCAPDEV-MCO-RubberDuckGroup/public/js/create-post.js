@@ -57,7 +57,9 @@ publishBtn.addEventListener("click", async () => {
 
     if (!user || !user.userId) {
         await showAppPopup("Please login to create a post.", { type: 'info', title: 'Login required', duration: 1800 });
-        window.location.href = "/login";
+        window.location.href = window.buildAuthRedirect("/create-post", {
+            notice: "Please log in to create a post."
+        });
         return;
     }
 
