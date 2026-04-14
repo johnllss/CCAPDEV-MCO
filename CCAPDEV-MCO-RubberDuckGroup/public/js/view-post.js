@@ -1,6 +1,30 @@
 document.addEventListener('DOMContentLoaded', () => {
     const postId = window.location.pathname.split('/')[2];
-    let currentUserId = null;
+    const pageCurrentUserId = document.querySelector('main')?.dataset.currentUserId || null;
+    let currentUserId = pageCurrentUserId || null;
+    const userReady = loadUser().then(currentUser => {
+        currentUserId = currentUser?.userId || pageCurrentUserId || null;
+        toggleCommentActions();
+        return currentUser;
+    });
+
+    async function ensureAuthenticated(notice) {
+        await userReady;
+
+        if (currentUserId) {
+            return true;
+        }
+
+        await window.redirectToLoginWithPopup(window.location.pathname + window.location.search, {
+            notice
+        });
+        return false;
+    }
+
+    async function readErrorMessage(response, fallbackMessage) {
+        const data = await response.json().catch(() => null);
+        return data?.message || fallbackMessage;
+    }
 
     function toggleCommentActions() {
         document.querySelectorAll('.comment').forEach(article => {
@@ -18,15 +42,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    toggleCommentActions();
+
     const postCommentBtn = document.querySelector('.add-comment-form .form-submit-btn');
     const newCommentText = document.getElementById('new-comment-text');
 
         if (postCommentBtn) {
         postCommentBtn.addEventListener('click', async () => {
-            if (!currentUserId) {
-                await window.redirectToLoginWithPopup(window.location.pathname + window.location.search, {
-                    notice: 'Please log in to comment.'
-                });
+            if (!await ensureAuthenticated('Please log in to comment.')) {
                 return;
             }
 
@@ -47,11 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (res.ok) {
                     newCommentText.value = '';
                     location.reload();
-                } else {
+                } else if (res.status === 401) {
                     await window.redirectToLoginWithPopup(window.location.pathname + window.location.search, {
                         notice: 'Please log in to comment.'
                     });
-                    return;
+                } else {
+                    const message = await readErrorMessage(res, 'Failed to post comment.');
+                    showAppPopup(message, { type: 'error', title: 'Comment failed' });
                 }
             } catch (err) {
                 console.error(err);
@@ -62,10 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('click', async (e) => {
         if (e.target.classList.contains('reply-btn')) {
-            if (!currentUserId) {
-                await window.redirectToLoginWithPopup(window.location.pathname + window.location.search, {
-                    notice: 'Please log in to reply.'
-                });
+            if (!await ensureAuthenticated('Please log in to reply.')) {
                 return;
             }
 
@@ -95,10 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (e.target.classList.contains('submit-reply-btn')) {
-            if (!currentUserId) {
-                await window.redirectToLoginWithPopup(window.location.pathname + window.location.search, {
-                    notice: 'Please log in to reply.'
-                });
+            if (!await ensureAuthenticated('Please log in to reply.')) {
                 return;
             }
 
@@ -119,8 +138,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (res.ok) {
                     location.reload();
+                } else if (res.status === 401) {
+                    await window.redirectToLoginWithPopup(window.location.pathname + window.location.search, {
+                        notice: 'Please log in to reply.'
+                    });
                 } else {
-                    showAppPopup('Failed to post reply.', { type: 'error' });
+                    const message = await readErrorMessage(res, 'Failed to post reply.');
+                    showAppPopup(message, { type: 'error', title: 'Reply failed' });
                 }
             } catch (err) {
                 console.error(err);
@@ -195,8 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    loadUser().then(currentUser => {
-        currentUserId = currentUser?.userId || null;
-        toggleCommentActions();
+    userReady.catch(err => {
+        console.error(err);
     });
 });

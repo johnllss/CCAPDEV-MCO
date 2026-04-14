@@ -24,7 +24,7 @@
 <body>
     {{> header}}
 
-    <main>
+    <main data-current-user-id="{{currentUserId}}">
         <div class="post-container">
             {{> post-card 
                 post = post 
