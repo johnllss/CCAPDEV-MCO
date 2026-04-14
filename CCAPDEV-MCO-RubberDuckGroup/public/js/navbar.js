@@ -1,9 +1,55 @@
 document.addEventListener("DOMContentLoaded", async () => {
+    const navbar = document.querySelector(".navbar");
+    const navToggle = document.querySelector(".nav-toggle");
+    const navMenu = document.getElementById("navbar-menu");
+    const searchSection = document.getElementById("navbar-menu-search");
     const profileLink = document.getElementById("nav-profile-link");
     const profileImage = document.getElementById("nav-profile-image");
     const logBtn = document.getElementById("log-btn");
 
-    if (!profileLink || !profileImage) {
+    const syncNavbarHeight = () => {
+        if (!navbar) {
+            return;
+        }
+
+        document.documentElement.style.setProperty("--navbar-height", `${navbar.offsetHeight}px`);
+    };
+
+    const setMobileMenuState = (isOpen) => {
+        if (!navbar || !navToggle || !navMenu || !searchSection) {
+            return;
+        }
+
+        navbar.classList.toggle("is-open", isOpen);
+        navToggle.setAttribute("aria-expanded", String(isOpen));
+        syncNavbarHeight();
+    };
+
+    if (navToggle && navMenu && searchSection) {
+        navToggle.addEventListener("click", () => {
+            setMobileMenuState(!navbar.classList.contains("is-open"));
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 768) {
+                setMobileMenuState(false);
+            } else {
+                syncNavbarHeight();
+            }
+        });
+
+        navMenu.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+                if (window.innerWidth <= 768) {
+                    setMobileMenuState(false);
+                }
+            });
+        });
+    }
+
+    syncNavbarHeight();
+
+    if (!profileLink || !profileImage || !logBtn) {
         return;
     }
 
@@ -32,4 +78,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         logBtn.textContent = "Join us";
         logBtn.href = "/login";
     }
+
+    syncNavbarHeight();
 });
