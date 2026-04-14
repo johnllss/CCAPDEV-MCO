@@ -5,8 +5,12 @@ async function loadUser() {
         if (res.ok) {
             const data = await res.json();
             user = data.user || data;
+            return user;
         }
     } catch { }
+
+    user = null;
+    return null;
 }
 
 //turned into a function to get the user, as user is no longer an assumption

@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     const postId = window.location.pathname.split('/')[2];
-    // const logged = JSON.parse(localStorage.getItem('loggedUser')) || null;
-    let user = null;
     let currentUserId = null;
 
     function toggleCommentActions() {
@@ -197,7 +195,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    loadUser().then(() => {
+    loadUser().then(currentUser => {
+        currentUserId = currentUser?.userId || null;
         toggleCommentActions();
     });
 });

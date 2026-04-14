@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         logBtn.textContent = "Logout";
         logBtn.href = "/logout";
     } else {
-        logBtn.textContent = "Join us";
+        logBtn.textContent = "Join Us";
         logBtn.href = "/login";
 
         profileLink.addEventListener("click", async (event) => {
