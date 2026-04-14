@@ -26,13 +26,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (postCommentBtn) {
         postCommentBtn.addEventListener('click', async () => {
             if (!currentUserId) {
-                alert('You must be logged in to reply. Redirecting to login...');
+                await showAppPopup('You must be logged in to comment. Redirecting to login...', { type: 'info', title: 'Login required', duration: 1800 });
                 window.location.href = '/login';
                 return;
             }
 
             const content = newCommentText.value.trim();
-            if (!content) return alert('Please write something first.');
+            if (!content) {
+                showAppPopup('Please write something first.', { type: 'info', title: 'Empty comment' });
+                return;
+            }
 
             try {
                 const res = await fetch(`/api/comments/${postId}`, {
@@ -46,13 +49,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     newCommentText.value = '';
                     location.reload();
                 } else {
-                    alert('You must be logged in to comment. Redirecting to login...');
+                    await showAppPopup('You must be logged in to comment. Redirecting to login...', { type: 'info', title: 'Login required', duration: 1800 });
                     window.location.href = '/login';
                     return;
                 }
             } catch (err) {
                 console.error(err);
-                alert('Error posting comment.');
+                showAppPopup('Error posting comment.', { type: 'error' });
             }
         });
     }
@@ -60,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', async (e) => {
         if (e.target.classList.contains('reply-btn')) {
             if (!currentUserId) {
-                alert('You must be logged in to reply. Redirecting to login...');
+                await showAppPopup('You must be logged in to reply. Redirecting to login...', { type: 'info', title: 'Login required', duration: 1800 });
                 window.location.href = '/login';
                 return;
             }
@@ -92,14 +95,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (e.target.classList.contains('submit-reply-btn')) {
             if (!currentUserId) {
-                alert('Please log in first.');
+                await showAppPopup('Please log in first.', { type: 'info', title: 'Login required', duration: 1800 });
                 window.location.href = '/register';
                 return;
             }
 
             const parentCommentId = e.target.dataset.commentId;
             const content = document.getElementById(`reply-text-${parentCommentId}`).value.trim();
-            if (!content) return alert('Please write something.');
+            if (!content) {
+                showAppPopup('Please write something.', { type: 'info', title: 'Empty reply' });
+                return;
+            }
 
             try {
                 const res = await fetch(`/api/comments/${postId}`, {
@@ -112,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (res.ok) {
                     location.reload();
                 } else {
-                    alert('Failed to post reply.');
+                    showAppPopup('Failed to post reply.', { type: 'error' });
                 }
             } catch (err) {
                 console.error(err);
@@ -154,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (res.ok) {
                     location.reload();
                 } else {
-                    alert('Failed to update comment.');
+                    showAppPopup('Failed to update comment.', { type: 'error' });
                 }
             } catch (err) {
                 console.error(err);
@@ -174,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (res.ok) {
                     location.reload();
                 } else {
-                    alert('Failed to delete comment.');
+                    showAppPopup('Failed to delete comment.', { type: 'error' });
                 }
             } catch (err) {
                 console.error(err);

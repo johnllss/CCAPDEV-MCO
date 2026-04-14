@@ -48,7 +48,7 @@ function setIconImg(img, src) {
 // Common voting function for posts
 async function voteOnPost(postId, type, voteElement, upBtn, downBtn) {
     if (!user || !user.userId) { 
-        alert('Please login to vote.'); 
+        await showAppPopup('Please login to vote.', { type: 'info', title: 'Login required', duration: 1800 }); 
         window.location.href = '/login'; 
         return; 
     }
@@ -68,11 +68,11 @@ async function voteOnPost(postId, type, voteElement, upBtn, downBtn) {
         const result = await res.json().catch(() => ({}));
         if (!res.ok) {
             if (res.status === 401) { 
-                alert('Please login to vote.'); 
+                await showAppPopup('Please login to vote.', { type: 'info', title: 'Login required', duration: 1800 }); 
                 window.location.href = '/login'; 
                 return; 
             }
-            alert(result.message || 'Failed to vote.');
+            showAppPopup(result.message || 'Failed to vote.', { type: 'error' });
             return;
         }
 
@@ -106,7 +106,7 @@ async function voteOnPost(postId, type, voteElement, upBtn, downBtn) {
 
     } catch (err) {
         console.error(err);
-        alert('Could not connect to server.');
+        showAppPopup('Could not connect to server.', { type: 'error', title: 'Connection issue' });
     } finally {
         // Re-enable buttons
         if (upBtn) upBtn.disabled = false;

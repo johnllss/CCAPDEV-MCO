@@ -47,7 +47,7 @@ form.addEventListener("submit", async function (e) {
     }
 
     if (!isValid) {
-        alert("Username / Password cannot include spaces");
+        showAppPopup("Check your details and remove invalid characters or spaces.", { type: 'info', title: 'Invalid input' });
         return;
 
     }
@@ -71,7 +71,7 @@ form.addEventListener("submit", async function (e) {
 
     if (response.ok) {
         console.log("Success:", result.message);
-        alert(result.message);
+        await showAppPopup(result.message, { type: 'success', title: 'Account created', duration: 1600 });
         window.location.href = "/login";
 
     } else {
@@ -84,7 +84,7 @@ form.addEventListener("submit", async function (e) {
         if (result.message.includes("email")) {
             emailInput.classList.add("input-error");
         }
-        alert(result.message);
+        showAppPopup(result.message, { type: 'error', title: 'Registration failed' });
     }
 
 });

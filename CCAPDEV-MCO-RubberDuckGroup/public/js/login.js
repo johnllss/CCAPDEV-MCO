@@ -32,7 +32,7 @@ form.addEventListener("submit", async function (e) {
     };
 
     if (!login || !password) {
-        alert("Please fill empty fields");
+        showAppPopup("Please fill in both fields.", { type: 'info', title: 'Missing details' });
         return;
     }
 
@@ -49,10 +49,10 @@ form.addEventListener("submit", async function (e) {
 
     if (response.ok) {
         console.log("Success:", result.message);
-        alert(result.message);
+        await showAppPopup(result.message, { type: 'success', title: 'Welcome back', duration: 1600 });
         window.location.href = "/";
     } else {
         console.log("Error:", result.message);
-        alert(result.message);
+        showAppPopup(result.message, { type: 'error', title: 'Login failed' });
     }
 });

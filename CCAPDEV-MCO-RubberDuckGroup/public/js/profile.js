@@ -228,7 +228,7 @@ async function init() {
     await loadUser();
 
     if (!user) {
-        alert("Please Log In to view profile");
+        await showAppPopup("Please log in to view your profile.", { type: 'info', title: 'Login required', duration: 1800 });
         window.location.href = "/login";
         return;
     }

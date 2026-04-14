@@ -42,7 +42,7 @@ cancelBtn.addEventListener("click", () => {
 publishBtn.addEventListener("click", async () => {
 
     if (!user || !user.userId) {
-        alert("Please login to edit a post.");
+        await showAppPopup("Please login to edit a post.", { type: 'info', title: 'Login required', duration: 1800 });
         window.location.href = "/login";
         return;
     }
@@ -51,7 +51,7 @@ publishBtn.addEventListener("click", async () => {
 
     const postId = new URLSearchParams(window.location.search).get('id');
     if (!postId) {
-        alert('Post ID not found.');
+        showAppPopup('Post ID not found.', { type: 'error' });
         return;
     }
 
@@ -70,15 +70,15 @@ publishBtn.addEventListener("click", async () => {
 
             if (!response.ok) {
                 const result = await response.json().catch(() => ({}));
-                alert(result.message || "Failed to edit post.");
+                showAppPopup(result.message || "Failed to edit post.", { type: 'error', title: 'Edit failed' });
                 return;
             }
 
-            alert("Post has been edited successfully!");
+            await showAppPopup("Post has been edited successfully!", { type: 'success', title: 'Post updated', duration: 1600 });
             window.location.href = `/posts/${postId}/view`;
         } catch (err) {
             console.error(err);
-            alert("Could not connect to server.");
+            showAppPopup("Could not connect to server.", { type: 'error', title: 'Connection issue' });
         }
     }
 });

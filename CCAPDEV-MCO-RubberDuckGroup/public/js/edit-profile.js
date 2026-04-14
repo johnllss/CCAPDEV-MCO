@@ -67,7 +67,7 @@ profileImageInput.addEventListener('change', async function () {
     } catch (error) {
         uploadedPhotoPath = previousPhotoPath;
         profilePreview.src = previousPhotoPath || '/images/default-pfp.png';
-        alert(error.message || 'Profile photo upload failed.');
+        showAppPopup(error.message || 'Profile photo upload failed.', { type: 'error', title: 'Upload failed' });
         this.value = '';
     } finally {
         URL.revokeObjectURL(previewUrl);
@@ -105,11 +105,11 @@ form.addEventListener("submit", async function (e) {
     const result = await response.json();
 
     if (response.ok) {
-        alert("Successfully Saved Changes");
+        await showAppPopup("Successfully saved changes.", { type: 'success', title: 'Profile updated', duration: 1600 });
         window.location.href = "/profile";
 
     } else {
-        alert(result.message || "Failed to save profile changes.");
+        showAppPopup(result.message || "Failed to save profile changes.", { type: 'error', title: 'Save failed' });
     }
 
 });

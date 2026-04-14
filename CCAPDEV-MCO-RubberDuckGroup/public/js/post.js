@@ -70,7 +70,7 @@ if (deleteBtn) {
     deleteBtn.addEventListener("click", async () => {
 
         if (!user || !user.userId) {
-            alert("Please login to delete a post.");
+            await showAppPopup("Please login to delete a post.", { type: 'info', title: 'Login required', duration: 1800 });
             window.location.href = "/login";
             return;
         }
@@ -78,7 +78,7 @@ if (deleteBtn) {
         const delConfirmed = confirm("Are you sure you want to delete this post?\nThis action cannot be undone.");
 
         if (!postId) {
-            alert('Post ID not found.');
+            showAppPopup('Post ID not found.', { type: 'error' });
             return;
         }
 
@@ -91,18 +91,18 @@ if (deleteBtn) {
 
                 if (!response.ok) {
                     const err = await response.json().catch(() => ({}));
-                    alert(err.message || 'Failed to delete post.');
+                    showAppPopup(err.message || 'Failed to delete post.', { type: 'error', title: 'Delete failed' });
                     return;
                 }
 
-                alert("Post has been deleted successfully!");
+                await showAppPopup("Post has been deleted successfully!", { type: 'success', title: 'Post deleted', duration: 1600 });
                 localStorage.removeItem("editPostTitle");
                 localStorage.removeItem("editPostBody");
                 localStorage.removeItem("editPostId");
                 window.location.href = `/`;
             } catch (err) {
                 console.error(err);
-                alert("Could not connect to server.");
+                showAppPopup("Could not connect to server.", { type: 'error', title: 'Connection issue' });
             }
         }
     });

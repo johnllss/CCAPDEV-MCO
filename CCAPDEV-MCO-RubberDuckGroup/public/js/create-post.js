@@ -53,13 +53,13 @@ async function uploadImageFile(file) {
 publishBtn.addEventListener("click", async () => {
 
     if (!user || !user.userId) {
-        alert("Please login to create a post.");
+        await showAppPopup("Please login to create a post.", { type: 'info', title: 'Login required', duration: 1800 });
         window.location.href = "/login";
         return;
     }
 
     if (titleInput.value.trim() === "") {
-        alert("Please add a title.");
+        showAppPopup("Please add a title.", { type: 'info', title: 'Missing title' });
         titleInput.focus();
         return;
     }
@@ -71,7 +71,7 @@ publishBtn.addEventListener("click", async () => {
         try {
             imagePath = await uploadImageFile(file);
         } catch (err) {
-            alert('Image upload failed');
+            showAppPopup(err.message || 'Image upload failed.', { type: 'error', title: 'Upload failed' });
             return;
         }
     }
@@ -96,14 +96,14 @@ publishBtn.addEventListener("click", async () => {
             const result = await response.json().catch(() => ({}));
 
             if (!response.ok) {
-                alert(result.message || "Failed to publish post.");
+                showAppPopup(result.message || "Failed to publish post.", { type: 'error', title: 'Publish failed' });
                 return;
             }
 
-            alert("Post has been published successfully!");
+            await showAppPopup("Post has been published successfully!", { type: 'success', title: 'Post published', duration: 1600 });
             window.location.href = `/posts/${result._id}/view`;
         } catch (err) {
-            alert("Could not connect to server.");
+            showAppPopup("Could not connect to server.", { type: 'error', title: 'Connection issue' });
         }
     }
 });
@@ -113,7 +113,7 @@ fileInput.addEventListener("change", function () {
     if (this.files && this.files.length > 0) {
         const file = this.files[0];
         if (file.size > MAX_UPLOAD_SIZE) {
-            alert('File too large. Max is 10MB.');
+            showAppPopup('File too large. Max is 10MB.', { type: 'error', title: 'Upload failed' });
             this.value = '';
             fileName.textContent = '';
             return;
