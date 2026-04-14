@@ -1,17 +1,6 @@
 // parse for the user in local storage
 // to be replaced later with cookies
-let loggedUser = null;
-
-async function loadUser() {
-    try {
-        const res = await fetch('/auth/me', { credentials: 'include' });
-        if (res.ok) {
-            loggedUser = await res.json();
-        }
-    } catch {
-        loggedUser = null;
-    }
-}
+let user = null;
 
 // get the user's id from the url
 const params = new URLSearchParams(window.location.search);
@@ -44,9 +33,9 @@ function updateProfileEditingState() {
 }
 
 function redirectToSafeProfile() {
-    const targetProfileHref = `/profile?id=${loggedUser.userId}`;
+    const targetProfileHref = `/profile?id=${user.userId}`;
 
-    if (window.location.pathname === "/profile" && window.location.search === `?id=${loggedUser.userId}`) {
+    if (window.location.pathname === "/profile" && window.location.search === `?id=${user.userId}`) {
         return;
     }
 
@@ -238,17 +227,17 @@ window.addEventListener("beforeunload", () => {
 async function init() {
     await loadUser();
 
-    if (!loggedUser) {
+    if (!user) {
         alert("Please Log In to view profile");
         window.location.href = "/login";
         return;
     }
 
-    finalUserId = requestedProfileId || loggedUser.userId;
-    isOwnProfile = finalUserId === loggedUser.userId;
+    finalUserId = requestedProfileId || user.userId;
+    isOwnProfile = finalUserId === user.userId;
 
     console.log("Viewing profile ID:", finalUserId);
-    console.log("Logged-in user ID:", loggedUser.userId);
+    console.log("Logged-in user ID:", user.userId);
 
     updateProfileEditingState();
     await loadProfile();

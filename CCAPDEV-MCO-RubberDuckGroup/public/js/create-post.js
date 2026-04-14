@@ -10,16 +10,6 @@ let user = null;
 
 const MAX_UPLOAD_SIZE = 10 * 1024 * 1024; // 10MB
 
-// removed localStorage users
-async function loadUser() {
-    try {
-        const res = await fetch('/auth/me', { credentials: 'include' });
-        if (res.ok) {
-            user = await res.json();
-        }
-    } catch { }
-}
-
 // Post title character counter
 titleInput.addEventListener("input", () => {
     const currentLength = titleInput.value.length;
@@ -138,22 +128,5 @@ fileInput.addEventListener("change", function () {
 
 const logBtn = document.getElementById("log-btn");
 
-// changed to a function since it no longer assumes that a user exists
-async function initializeUserUi() {
-    await loadUser();
-
-    if (!user) {
-        logBtn.textContent = "Join Us";
-        logBtn.href = "/register";
-    } else {
-        logBtn.textContent = "Logout";
-        logBtn.href = "/logout";
-        logBtn.addEventListener("click", async (e) => {
-            e.preventDefault();
-            await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
-            window.location.href = "/login";
-        });
-    }
-}
-
-initializeUserUi();
+// Initialize user interface
+initAuthUI("/login");

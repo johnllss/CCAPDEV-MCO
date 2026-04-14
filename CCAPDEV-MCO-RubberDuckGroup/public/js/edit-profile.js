@@ -2,38 +2,6 @@ const form = document.getElementById("editProfileForm");
 let user = null;
 const logBtn = document.getElementById("log-btn");
 
-// needs to load user from session instead now
-async function loadUser() {
-    try {
-        const res = await fetch('/auth/me', { credentials: 'include' });
-        if (res.ok) {
-            user = await res.json();
-        }
-    } catch { }
-}
-
-// changed to a function since it no longer assumes that a user exists
-async function initAuthUI() {
-    await loadUser();
-
-    if (!user) {
-        logBtn.textContent = "Join Us";
-        logBtn.href = "/register";
-    } else {
-        logBtn.textContent = "Logout";
-        logBtn.href = "/logout";
-        logBtn.addEventListener("click", async (e) => {
-            e.preventDefault();
-            await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
-            window.location.href = "/login";
-        });
-    }
-
-    if (!user) {
-        window.location.href = "/login";
-    }
-}
-
 async function loadProfile() {
 
     try {
@@ -99,7 +67,7 @@ form.addEventListener("submit", async function (e) {
 
 //moved all function calls to end to preserve clarity
 async function init() {
-    await initAuthUI();
+    await initAuthUI("/login");
     await loadProfile();
 }
 

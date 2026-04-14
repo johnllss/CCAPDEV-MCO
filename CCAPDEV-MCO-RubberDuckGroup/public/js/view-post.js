@@ -4,16 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let user = null;
     let currentUserId = null;
 
-    async function loadUser() {
-        try {
-            const res = await fetch('/auth/me', { credentials: 'include' });
-            if (res.ok) {
-                user = await res.json();
-                currentUserId = user?.userId || null;
-            }
-        } catch (e) { }
-    }
-
     function toggleCommentActions() {
         document.querySelectorAll('.comment').forEach(article => {
             const authorId = article.dataset.authorId;

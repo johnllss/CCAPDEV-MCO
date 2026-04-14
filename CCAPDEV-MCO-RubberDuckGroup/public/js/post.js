@@ -10,32 +10,9 @@ let user = null;
 const path = window.location.pathname.match(/\/posts\/([^\/]+)(?:\/view)?/);
 const postId = path ? path[1] : new URLSearchParams(window.location.search).get('id');
 
-function setIconImg(img, src) {
-    if (!img)
-        return null;
-
-    try {
-        const clone = img.cloneNode(true);
-
-        clone.src = src;
-        img.replaceWith(clone);
-
-        return clone;
-    } catch (err) {
-        img.src = src;
-
-        return img;
-    }
-}
-
 // get session user (cookie-based)
 (async () => {
-    try {
-        const res = await fetch('/auth/me', { credentials: 'include' });
-        if (res.ok) {
-            user = await res.json();
-        }
-    } catch (err) { }
+    await loadUser();
 })();
 
 try {

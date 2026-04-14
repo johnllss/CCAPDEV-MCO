@@ -19,15 +19,6 @@ function getFieldValue(el) {
     return ("value" in el) ? el.value : el.textContent;
 }
 
-async function loadUser() {
-    try {
-        const res = await fetch('/auth/me', { credentials: 'include' });
-        if (res.ok) {
-            user = await res.json();
-        }
-    } catch { }
-}
-
 // Fill text fields with current post info
 setFieldValue(titleField, titleField?.value || '');
 setFieldValue(bodyField, bodyField?.value || '');
