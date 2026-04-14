@@ -23,11 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const postCommentBtn = document.querySelector('.add-comment-form .form-submit-btn');
     const newCommentText = document.getElementById('new-comment-text');
 
-    if (postCommentBtn) {
+        if (postCommentBtn) {
         postCommentBtn.addEventListener('click', async () => {
             if (!currentUserId) {
-                await showAppPopup('You must be logged in to comment. Redirecting to login...', { type: 'info', title: 'Login required', duration: 1800 });
-                window.location.href = window.buildAuthRedirect(window.location.pathname + window.location.search, {
+                await window.redirectToLoginWithPopup(window.location.pathname + window.location.search, {
                     notice: 'Please log in to comment.'
                 });
                 return;
@@ -51,8 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     newCommentText.value = '';
                     location.reload();
                 } else {
-                    await showAppPopup('You must be logged in to comment. Redirecting to login...', { type: 'info', title: 'Login required', duration: 1800 });
-                    window.location.href = window.buildAuthRedirect(window.location.pathname + window.location.search, {
+                    await window.redirectToLoginWithPopup(window.location.pathname + window.location.search, {
                         notice: 'Please log in to comment.'
                     });
                     return;
@@ -67,8 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', async (e) => {
         if (e.target.classList.contains('reply-btn')) {
             if (!currentUserId) {
-                await showAppPopup('You must be logged in to reply. Redirecting to login...', { type: 'info', title: 'Login required', duration: 1800 });
-                window.location.href = window.buildAuthRedirect(window.location.pathname + window.location.search, {
+                await window.redirectToLoginWithPopup(window.location.pathname + window.location.search, {
                     notice: 'Please log in to reply.'
                 });
                 return;
@@ -101,8 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (e.target.classList.contains('submit-reply-btn')) {
             if (!currentUserId) {
-                await showAppPopup('Please log in first.', { type: 'info', title: 'Login required', duration: 1800 });
-                window.location.href = window.buildAuthRedirect(window.location.pathname + window.location.search, {
+                await window.redirectToLoginWithPopup(window.location.pathname + window.location.search, {
                     notice: 'Please log in to reply.'
                 });
                 return;

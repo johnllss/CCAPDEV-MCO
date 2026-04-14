@@ -228,8 +228,7 @@ async function init() {
     await loadUser();
 
     if (!user) {
-        await showAppPopup("Please log in to view your profile.", { type: 'info', title: 'Login required', duration: 1800 });
-        window.location.href = window.buildAuthRedirect("/profile", {
+        await window.redirectToLoginWithPopup("/profile", {
             notice: "Please log in to view your profile."
         });
         return;

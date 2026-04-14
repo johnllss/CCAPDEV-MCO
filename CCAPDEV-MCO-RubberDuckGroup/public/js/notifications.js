@@ -29,6 +29,20 @@
         return `/login?${params.toString()}`;
     };
 
+    window.redirectToLoginWithPopup = async function redirectToLoginWithPopup(targetPath, options = {}) {
+        const notice = options.notice || 'Please log in to continue.';
+        const title = options.noticeTitle || 'Login required';
+        const type = options.noticeType || 'info';
+        const duration = options.duration ?? 1800;
+
+        await window.showAppPopup(notice, { type, title, duration });
+        window.location.href = window.buildAuthRedirect(targetPath, {
+            notice,
+            noticeType: type,
+            noticeTitle: title
+        });
+    };
+
     function ensureRegion() {
         if (region && document.body.contains(region)) {
             return region;
