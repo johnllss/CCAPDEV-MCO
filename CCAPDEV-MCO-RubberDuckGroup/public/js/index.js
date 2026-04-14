@@ -27,56 +27,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const downBtn = card.querySelector('.downvote-button');
         const vote = card.querySelector('.vote-count');
 
-        const doVote = async (type, btn, oppBtn) => {
-            if (!currentUser) { alert('Please login to vote.'); window.location.href = '/login'; return; }
-            btn.disabled = true;
-            try {
-                const res = await fetch(`/posts/${postId}/vote`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({ type })
-                });
-                const result = await res.json().catch(() => ({}));
-                if (!res.ok) {
-                    if (res.status === 401) { alert('Please login to vote.'); window.location.href = '/login'; return; }
-                    alert(result.message || 'Failed to vote.');
-                    return;
-                }
-
-                if (vote) vote.textContent = result.score ?? (result.up - result.down);
-
-                const was = btn.classList.contains('voted');
-
-                const upIcon = upBtn.querySelector('.upvote-icon');
-                const downIcon = downBtn.querySelector('.downvote-icon');
-
-                if (was) {
-                    btn.classList.remove('voted');
-                    if (btn === upBtn) setIconImg(upIcon, '/images/upvote-outline.png');
-                    else setIconImg(downIcon, '/images/downvote-outline.png');
-                } else {
-                    btn.classList.add('voted');
-                    if (btn === upBtn) {
-                        setIconImg(upIcon, '/images/upvote-fill.png');
-                        setIconImg(downIcon, '/images/downvote-outline.png');
-                        downBtn.classList.remove('voted');
-                    } else {
-                        setIconImg(downIcon, '/images/downvote-fill.png');
-                        setIconImg(upIcon, '/images/upvote-outline.png');
-                        upBtn.classList.remove('voted');
-                    }
-                }
-            } catch (err) {
-                console.error(err);
-                alert('Could not connect to server.');
-            } finally {
-                btn.disabled = false;
-            }
-        };
-
-        if (upBtn) upBtn.addEventListener('click', () => doVote('up', upBtn, downBtn));
-        if (downBtn) downBtn.addEventListener('click', () => doVote('down', downBtn, upBtn));
+        if (upBtn) upBtn.addEventListener('click', () => voteOnPost(postId, 'up', vote, upBtn, downBtn));
+        if (downBtn) downBtn.addEventListener('click', () => voteOnPost(postId, 'down', vote, upBtn, downBtn));
 
         const upIconInit = upBtn?.querySelector('.upvote-icon');
         const downIconInit = downBtn?.querySelector('.downvote-icon');

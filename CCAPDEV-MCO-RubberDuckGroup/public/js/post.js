@@ -60,49 +60,8 @@ try {
         let downI = downBtn?.querySelector('.downvote-icon');
         const vote = card.querySelector('.vote-count');
 
-        const doVote = async (type, btn, oppositeBtn) => {
-            if (!user || !user.userId) { alert('Please login to vote.'); window.location.href = '/login'; return; }
-            btn.disabled = true;
-            try {
-                const res = await fetch(`/posts/${cardPostId}/vote`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({ type }) // removed userId
-                });
-
-                const result = await res.json().catch(() => ({}));
-                if (!res.ok) {
-                    if (res.status === 401) { alert('Please login to vote.'); window.location.href = '/login'; return; }
-                    alert(result.message || 'Failed to vote.');
-                    return;
-                }
-
-                if (vote) vote.textContent = result.score ?? (result.up - result.down);
-
-                const icon = btn.querySelector('.upvote-icon') || btn.querySelector('.downvote-icon');
-                const oppositeIcon = oppositeBtn?.querySelector('.downvote-icon') || oppositeBtn?.querySelector('.upvote-icon');
-
-                const was = btn.classList.contains('voted');
-                if (was) {
-                    btn.classList.remove('voted');
-                    if (icon) setIconImg(icon, type === 'up' ? '/images/upvote-outline.png' : '/images/downvote-outline.png');
-                } else {
-                    btn.classList.add('voted');
-                    if (icon) setIconImg(icon, type === 'up' ? '/images/upvote-fill.png' : '/images/downvote-fill.png');
-                    if (oppositeBtn) oppositeBtn.classList.remove('voted');
-                    if (oppositeIcon) setIconImg(oppositeIcon, type === 'up' ? '/images/downvote-outline.png' : '/images/upvote-outline.png');
-                }
-            } catch (err) {
-                console.error(err);
-                alert('Could not connect to server.');
-            } finally {
-                btn.disabled = false;
-            }
-        };
-
-        if (upBtn) upBtn.addEventListener('click', () => doVote('up', upBtn, downBtn));
-        if (downBtn) downBtn.addEventListener('click', () => doVote('down', downBtn, upBtn));
+        if (upBtn) upBtn.addEventListener('click', () => voteOnPost(cardPostId, 'up', vote, upBtn, downBtn));
+        if (downBtn) downBtn.addEventListener('click', () => voteOnPost(cardPostId, 'down', vote, upBtn, downBtn));
     });
 } catch (e) { }
 

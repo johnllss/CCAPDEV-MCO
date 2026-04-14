@@ -44,3 +44,72 @@ function setIconImg(img, src) {
         return img;
     }
 }
+
+// Common voting function for posts
+async function voteOnPost(postId, type, voteElement, upBtn, downBtn) {
+    if (!user || !user.userId) { 
+        alert('Please login to vote.'); 
+        window.location.href = '/login'; 
+        return; 
+    }
+
+    // Disable buttons during vote
+    if (upBtn) upBtn.disabled = true;
+    if (downBtn) downBtn.disabled = true;
+
+    try {
+        const res = await fetch(`/posts/${postId}/vote`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ type })
+        });
+
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok) {
+            if (res.status === 401) { 
+                alert('Please login to vote.'); 
+                window.location.href = '/login'; 
+                return; 
+            }
+            alert(result.message || 'Failed to vote.');
+            return;
+        }
+
+        // Update vote count
+        if (voteElement) {
+            voteElement.textContent = result.score ?? (result.up - result.down);
+        }
+
+        // Update button states and icons
+        const targetBtn = type === 'up' ? upBtn : downBtn;
+        const oppositeBtn = type === 'up' ? downBtn : upBtn;
+
+        const wasVoted = targetBtn?.classList.contains('voted');
+
+        if (wasVoted) {
+            // Remove vote
+            targetBtn.classList.remove('voted');
+            const icon = targetBtn?.querySelector('.upvote-icon') || targetBtn?.querySelector('.downvote-icon');
+            if (icon) setIconImg(icon, type === 'up' ? '/images/upvote-outline.png' : '/images/downvote-outline.png');
+        } else {
+            // Add vote
+            targetBtn?.classList.add('voted');
+            const icon = targetBtn?.querySelector('.upvote-icon') || targetBtn?.querySelector('.downvote-icon');
+            if (icon) setIconImg(icon, type === 'up' ? '/images/upvote-fill.png' : '/images/downvote-fill.png');
+            
+            // Remove opposite vote
+            oppositeBtn?.classList.remove('voted');
+            const oppositeIcon = oppositeBtn?.querySelector('.downvote-icon') || oppositeBtn?.querySelector('.upvote-icon');
+            if (oppositeIcon) setIconImg(oppositeIcon, type === 'up' ? '/images/downvote-outline.png' : '/images/upvote-outline.png');
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert('Could not connect to server.');
+    } finally {
+        // Re-enable buttons
+        if (upBtn) upBtn.disabled = false;
+        if (downBtn) downBtn.disabled = false;
+    }
+}
