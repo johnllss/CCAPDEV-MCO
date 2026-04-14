@@ -5,10 +5,12 @@ const {
     getUsers,
     getUserById,
     updateUser,
-    deleteUser
+    deleteUser,
+    uploadProfilePhoto
 } = require('../controllers/userController');
 
 router.post('/', createUser);
+router.post('/upload-profile', uploadProfilePhoto);
 router.get('/', getUsers);
 router.get('/:id', getUserById);
 router.put('/', updateUser);

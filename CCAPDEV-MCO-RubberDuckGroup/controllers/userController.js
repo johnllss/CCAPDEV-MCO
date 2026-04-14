@@ -1,5 +1,7 @@
 const User = require('../models/User');
 const mongoose = require('mongoose');
+const path = require('path');
+const { saveUploadedImage } = require('../utils/uploadImage');
 
 async function createUser(req, res) {
     try {
@@ -70,6 +72,30 @@ async function updateUser(req, res) {
     }
 }
 
+async function uploadProfilePhoto(req, res) {
+    try {
+        const userId = req.session?.userId;
+
+        if (!userId || !mongoose.Types.ObjectId.isValid(userId))
+            return res.status(401).json({ message: "Unauthorized" });
+
+        if (!req.files || !req.files.photo)
+            return res.status(400).json({ message: "No file" });
+
+        const saveDir = path.join(__dirname, '..', 'public', 'uploads');
+        const { publicPath } = await saveUploadedImage(req.files.photo, saveDir);
+
+        res.json({ photo: publicPath });
+    } catch (err) {
+        console.error(err);
+
+        if (err.message === 'Invalid file type' || err.message === 'Invalid file extension')
+            return res.status(400).json({ message: err.message });
+
+        res.status(500).json({ message: "Upload error" });
+    }
+}
+
 async function deleteUser(req, res) {
     try {
         const userId = req.session?.userId;
@@ -96,5 +122,6 @@ module.exports = {
     getUsers,
     getUserById,
     updateUser,
-    deleteUser
+    deleteUser,
+    uploadProfilePhoto
 };

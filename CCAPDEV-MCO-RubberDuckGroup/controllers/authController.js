@@ -117,6 +117,9 @@ async function me(req, res) {
             userId: user._id,
             username: user.username,
             profile: {
+                fullname: user.profile?.fullname || "",
+                about: user.profile?.about || "",
+                quote: user.profile?.quote || "",
                 photo: user.profile?.photo || "/images/default-pfp.png"
             }
         });

@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const path = require('path');
-const fs = require('fs');
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 const User = require('../models/User');
 const Activity = require('../models/Activity');
 const relativeDate = require('../utils/relativeDate');
+const { saveUploadedImage } = require('../utils/uploadImage');
 
 function cleanRegex(value) {
     return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // replace each seen special char w/ \ so Mongo reads it as literal text
@@ -79,22 +79,14 @@ async function uploadImage(req, res) {
         if (!req.files || !req.files.image)
             return res.status(400).json({ message: 'No file' });
 
-        const image = req.files.image;
-        if (!image.mimetype.startsWith('image/'))
-            return res.status(400).json({ message: 'Invalid file type' });
-
-        const ext = path.extname(image.name).toLowerCase();
-        const filename = Date.now() + ext;
         const saveDir = path.join(__dirname, '..', 'public', 'uploads');
-        if (!fs.existsSync(saveDir))
-            fs.mkdirSync(saveDir, { recursive: true });
-
-        const savePath = path.join(saveDir, filename);
-
-        await image.mv(savePath);
+        const { filename } = await saveUploadedImage(req.files.image, saveDir);
         res.json({ filename });
     } catch (err) {
         console.error(err);
+        if (err.message === 'Invalid file type' || err.message === 'Invalid file extension')
+            return res.status(400).json({ message: err.message });
+
         res.status(500).json({ message: 'Upload error' });
     }
 }

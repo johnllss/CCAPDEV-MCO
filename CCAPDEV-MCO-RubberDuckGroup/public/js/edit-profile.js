@@ -1,23 +1,78 @@
 const form = document.getElementById("editProfileForm");
-let user = null;
 const logBtn = document.getElementById("log-btn");
+const profileImageInput = document.getElementById("profile-img");
+const profilePreview = document.getElementById("profilepreview");
+const MAX_UPLOAD_SIZE = 10 * 1024 * 1024; // 10MB
+let uploadedPhotoPath = '';
 
 async function loadProfile() {
 
     try {
         const response = await fetch(`/auth/me`, { credentials: 'include' });
+
+        if (!response.ok)
+            throw new Error('Failed to load profile');
+
         const userData = await response.json();
 
         document.getElementById("username").value = userData.username;
         document.getElementById("fullname").value = userData.profile?.fullname || '';
         document.getElementById("aboutme").value = userData.profile?.about || '';
         document.getElementById("user-quote").value = userData.profile?.quote || '';
-        document.getElementById("profilepreview").src = userData.profile?.photo || '/images/default-pfp.png';
+
+        uploadedPhotoPath = userData.profile?.photo || '/images/default-pfp.png';
+        profilePreview.src = uploadedPhotoPath;
 
     } catch (error) {
         console.error("Error loading profile:", error);
     }
 }
+
+async function uploadProfilePhoto(file) {
+    if (!file)
+        throw new Error('No file found');
+
+    if (file.size > MAX_UPLOAD_SIZE)
+        throw new Error('File too large. Max is 10MB.');
+
+    const fd = new FormData();
+    fd.append('photo', file);
+
+    const response = await fetch('/users/upload-profile', {
+        method: 'POST',
+        body: fd,
+        credentials: 'include'
+    });
+
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok)
+        throw new Error(result.message || 'Upload failed');
+
+    return result.photo;
+}
+
+profileImageInput.addEventListener('change', async function () {
+    const file = this.files?.[0];
+    if (!file)
+        return;
+
+    const previousPhotoPath = uploadedPhotoPath;
+    const previewUrl = URL.createObjectURL(file);
+    profilePreview.src = previewUrl;
+
+    try {
+        uploadedPhotoPath = await uploadProfilePhoto(file);
+        profilePreview.src = uploadedPhotoPath;
+    } catch (error) {
+        uploadedPhotoPath = previousPhotoPath;
+        profilePreview.src = previousPhotoPath || '/images/default-pfp.png';
+        alert(error.message || 'Profile photo upload failed.');
+        this.value = '';
+    } finally {
+        URL.revokeObjectURL(previewUrl);
+    }
+});
 
 form.addEventListener("submit", async function (e) {
 
@@ -27,7 +82,6 @@ form.addEventListener("submit", async function (e) {
     const fullname = document.getElementById("fullname").value;
     const about = document.getElementById("aboutme").value;
     const quote = document.getElementById("user-quote").value;
-    const photo = document.getElementById("profilepreview").src;
 
     const data = {
         username: username,
@@ -35,13 +89,10 @@ form.addEventListener("submit", async function (e) {
             fullname: fullname,
             about: about,
             quote: quote,
-            photo: photo
+            photo: uploadedPhotoPath || '/images/default-pfp.png'
         }
     };
 
-    // dev purposes
-    console.log(data);
-    console.log(user._id);
     const response = await fetch(`/users`, {
 
         method: "PUT",
@@ -54,13 +105,11 @@ form.addEventListener("submit", async function (e) {
     const result = await response.json();
 
     if (response.ok) {
-        console.log("Success:", result.message);
         alert("Successfully Saved Changes");
         window.location.href = "/profile";
 
     } else {
-        console.log("Error:", result.message);
-        alert("Erm Emoji!!! I think you messed up");
+        alert(result.message || "Failed to save profile changes.");
     }
 
 });
