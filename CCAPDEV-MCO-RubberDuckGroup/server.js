@@ -9,6 +9,7 @@ const fs = require('fs');
 const fileUpload = require('express-fileupload');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const MongoSessionStore = require('./utils/mongoSessionStore');
 
 const app = express();
 
@@ -29,13 +30,18 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
+app.set('trust proxy', 1);
+
 app.use(session({
     secret: process.env.SESSION_SECRET || 'ducky_secret',
     resave: false,
     saveUninitialized: false,
+    store: new MongoSessionStore({
+        mongooseConnection: mongoose.connection
+    }),
     cookie: {
         httpOnly: true,
-        secure: false,
+        secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         // no max age will be set in login
     }
