@@ -11,6 +11,92 @@ function cleanRegex(value) {
     return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // replace each seen special char w/ \ so Mongo reads it as literal text
 }
 
+const VALID_SORT_ORDERS = new Set(['newest', 'oldest', 'popular']);
+
+function normalizeSortOrder(sortOrder) {
+    return VALID_SORT_ORDERS.has(sortOrder) ? sortOrder : 'newest';
+}
+
+function buildSort(sortOrder) {
+    if (sortOrder === 'popular') return { votes: -1, createdAt: -1 };
+    if (sortOrder === 'oldest') return { createdAt: 1 };
+    return { createdAt: -1 };
+}
+
+function parseDateInput(value, endOfDay = false) {
+    if (!value || typeof value !== 'string') return null;
+
+    const parsedDate = new Date(`${value}T00:00:00.000Z`);
+    if (Number.isNaN(parsedDate.getTime())) return null;
+
+    if (endOfDay)
+        parsedDate.setUTCHours(23, 59, 59, 999);
+
+    return parsedDate;
+}
+
+async function buildPostFilters(req, options = {}) {
+    const includeSearch = options.includeSearch === true;
+    const searchQuery = includeSearch ? (req.query.q || '').trim() : '';
+    const username = (req.query.username || '').trim();
+    const dateFrom = (req.query.dateFrom || '').trim();
+    const dateTo = (req.query.dateTo || '').trim();
+    const sortOrder = normalizeSortOrder(req.query.sort);
+
+    const mongoQuery = {};
+
+    if (searchQuery) {
+        const cleanedQuery = cleanRegex(searchQuery);
+        mongoQuery.$or = [
+            { title: { $regex: cleanedQuery, $options: 'i' } },
+            { body: { $regex: cleanedQuery, $options: 'i' } }
+        ];
+    }
+
+    if (username) {
+        const cleanedUsername = cleanRegex(username);
+        const matchingUsers = await User.find({
+            username: { $regex: cleanedUsername, $options: 'i' }
+        }).select('_id');
+
+        if (!matchingUsers.length) {
+            mongoQuery.user = { $in: [] };
+        } else {
+            mongoQuery.user = { $in: matchingUsers.map(user => user._id) };
+        }
+    }
+
+    const fromDate = parseDateInput(dateFrom, false);
+    const toDate = parseDateInput(dateTo, true);
+
+    if (fromDate || toDate) {
+        mongoQuery.createdAt = {};
+        if (fromDate)
+            mongoQuery.createdAt.$gte = fromDate;
+        if (toDate)
+            mongoQuery.createdAt.$lte = toDate;
+    }
+
+    const hasInvalidDateRange = fromDate && toDate && fromDate > toDate;
+
+    return {
+        mongoQuery,
+        sortOrder,
+        sort: buildSort(sortOrder),
+        searchQuery,
+        filters: {
+            username,
+            dateFrom,
+            dateTo,
+            sortOrder,
+            isNewest: sortOrder === 'newest',
+            isOldest: sortOrder === 'oldest',
+            isPopular: sortOrder === 'popular',
+            hasInvalidDateRange
+        }
+    };
+}
+
 function compactVotes(number) {
     const n = Number(number) || 0;
 
@@ -205,19 +291,20 @@ async function getPosts(req, res) {
 
 async function renderIndex(req, res) {
     try {
-        const sortOrder = req.query.sort || 'newest';
+        const { mongoQuery, sort, sortOrder, filters } = await buildPostFilters(req);
 
-        let sort = { createdAt: -1 };
-        if (sortOrder === 'popular') sort = { votes: -1 };
-        if (sortOrder === 'oldest') sort = { createdAt: 1 };
-
-        const posts = await Post.find()
+        const posts = await Post.find(mongoQuery)
             .populate('user', 'username profile.photo')
             .sort(sort);
 
         const formattedPosts = await Promise.all(posts.map(post => formatPost(post, req)));
 
-        res.render('index', { posts: formattedPosts, sortOrder });
+        res.render('index', {
+            posts: formattedPosts,
+            sortOrder,
+            filters,
+            searchQuery: ''
+        });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -388,20 +475,13 @@ async function renderPost(req, res) {
 // for the /search-results when user is searching
 async function showSearchResults(req, res) {
     try {
-        const searchQuery = (req.query.q || '').trim();
+        const { mongoQuery, sort, searchQuery, filters } = await buildPostFilters(req, { includeSearch: true });
         let posts = [];
 
         if (searchQuery) {
-            const cleanedQuery = cleanRegex(searchQuery);
-
-            posts = await Post.find({
-                $or: [ // if a match in title or body of the post (case insensitive)
-                    { title: { $regex: cleanedQuery, $options: 'i' } },
-                    { body: { $regex: cleanedQuery, $options: 'i' } }
-                ]
-            })
+            posts = await Post.find(mongoQuery)
                 .populate('user', 'username profile.photo')
-                .sort({ createdAt: -1 });
+                .sort(sort);
         }
 
         const formattedPosts = await Promise.all(posts.map(post => formatPost(post, req)));
@@ -409,7 +489,9 @@ async function showSearchResults(req, res) {
         res.render('search-results', {
             posts: formattedPosts,
             query: searchQuery,
-            searchQuery
+            searchQuery,
+            filters,
+            resetSearchHref: searchQuery ? `/search-results?q=${encodeURIComponent(searchQuery)}` : '/search-results'
         });
     } catch (err) {
         console.error(err);

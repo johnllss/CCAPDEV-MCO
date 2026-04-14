@@ -20,13 +20,42 @@
     {{> header}}
 
     <main>
-        <div class="sort-by">
-            <select id="sort-dropdown" class="sort-dropdown">
-                <option value="newest" selected>Newest</option>
-                <option value="popular">Most Popular</option>
-                <option value="oldest">Oldest</option>
-            </select>
-        </div>
+        <section class="filters-panel">
+            <form class="filters-form" method="get" action="/">
+                <div class="filter-field filter-field-sort">
+                    <label for="sort-dropdown">Sort by</label>
+                    <select id="sort-dropdown" class="sort-dropdown" name="sort">
+                        <option value="newest" {{#if filters.isNewest}}selected{{/if}}>Newest</option>
+                        <option value="popular" {{#if filters.isPopular}}selected{{/if}}>Most Popular</option>
+                        <option value="oldest" {{#if filters.isOldest}}selected{{/if}}>Oldest</option>
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label for="username-filter">Username</label>
+                    <input id="username-filter" type="text" name="username" placeholder="Any username" value="{{filters.username}}">
+                </div>
+
+                <div class="filter-field">
+                    <label for="date-from-filter">From</label>
+                    <input id="date-from-filter" type="date" name="dateFrom" value="{{filters.dateFrom}}">
+                </div>
+
+                <div class="filter-field">
+                    <label for="date-to-filter">To</label>
+                    <input id="date-to-filter" type="date" name="dateTo" value="{{filters.dateTo}}">
+                </div>
+
+                <div class="filter-actions">
+                    <button class="filter-btn" type="submit">Apply Filters</button>
+                    <a class="filter-reset-link" href="/">Reset</a>
+                </div>
+            </form>
+
+            {{#if filters.hasInvalidDateRange}}
+                <p class="filter-feedback">The start date is later than the end date, so no posts can match that range.</p>
+            {{/if}}
+        </section>
 
         {{#if posts.length}}
             {{#each posts}}
