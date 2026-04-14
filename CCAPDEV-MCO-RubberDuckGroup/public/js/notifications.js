@@ -12,6 +12,7 @@
     };
 
     let region = null;
+    let activeDialog = null;
 
     function ensureRegion() {
         if (region && document.body.contains(region)) {
@@ -76,6 +77,83 @@
             if (duration > 0) {
                 window.setTimeout(() => removeNotification(notification, resolve), duration);
             }
+        });
+    };
+
+    window.showAppConfirm = function showAppConfirm(message, options = {}) {
+        if (activeDialog) {
+            return Promise.resolve(false);
+        }
+
+        const title = options.title || 'Please confirm';
+        const confirmLabel = options.confirmLabel || 'Confirm';
+        const cancelLabel = options.cancelLabel || 'Cancel';
+        const tone = options.tone || 'info';
+
+        return new Promise(resolve => {
+            const overlay = document.createElement('div');
+            overlay.className = 'app-confirm-overlay';
+
+            const dialog = document.createElement('section');
+            dialog.className = `app-confirm-dialog app-confirm-dialog--${tone}`;
+            dialog.setAttribute('role', 'dialog');
+            dialog.setAttribute('aria-modal', 'true');
+            dialog.setAttribute('aria-labelledby', 'app-confirm-title');
+
+            dialog.innerHTML = `
+                <div class="app-confirm-dialog__badge" aria-hidden="true">${tone === 'danger' ? '!' : '?'}</div>
+                <div class="app-confirm-dialog__body">
+                    <h3 class="app-confirm-dialog__title" id="app-confirm-title">${title}</h3>
+                    <p class="app-confirm-dialog__message"></p>
+                </div>
+                <div class="app-confirm-dialog__actions">
+                    <button class="app-confirm-dialog__btn app-confirm-dialog__btn--ghost" type="button" data-action="cancel">${cancelLabel}</button>
+                    <button class="app-confirm-dialog__btn app-confirm-dialog__btn--primary" type="button" data-action="confirm">${confirmLabel}</button>
+                </div>
+            `;
+
+            dialog.querySelector('.app-confirm-dialog__message').textContent = message;
+            overlay.appendChild(dialog);
+            document.body.appendChild(overlay);
+            activeDialog = overlay;
+
+            const onKeyDown = (event) => {
+                if (event.key === 'Escape') {
+                    close(false);
+                    return;
+                }
+
+                if (event.key === 'Enter') {
+                    close(true);
+                }
+            };
+
+            const close = (confirmed) => {
+                if (!activeDialog) {
+                    return;
+                }
+
+                document.removeEventListener('keydown', onKeyDown);
+                activeDialog = null;
+                overlay.classList.add('is-closing');
+                window.setTimeout(() => {
+                    overlay.remove();
+                    resolve(confirmed);
+                }, 180);
+            };
+
+            overlay.addEventListener('click', (event) => {
+                if (event.target === overlay) {
+                    close(false);
+                }
+            });
+
+            dialog.querySelector('[data-action="cancel"]').addEventListener('click', () => close(false));
+            dialog.querySelector('[data-action="confirm"]').addEventListener('click', () => close(true));
+
+            document.addEventListener('keydown', onKeyDown);
+            requestAnimationFrame(() => overlay.classList.add('is-visible'));
+            dialog.querySelector('[data-action="confirm"]').focus();
         });
     };
 })();

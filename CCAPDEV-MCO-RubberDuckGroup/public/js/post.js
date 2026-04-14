@@ -75,7 +75,11 @@ if (deleteBtn) {
             return;
         }
 
-        const delConfirmed = confirm("Are you sure you want to delete this post?\nThis action cannot be undone.");
+        const delConfirmed = await showAppConfirm("Are you sure you want to delete this post?\nThis action cannot be undone.", {
+            title: "Delete post?",
+            confirmLabel: "Delete",
+            tone: "danger"
+        });
 
         if (!postId) {
             showAppPopup('Post ID not found.', { type: 'error' });

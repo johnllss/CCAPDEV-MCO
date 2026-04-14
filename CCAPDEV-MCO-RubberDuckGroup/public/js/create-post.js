@@ -24,11 +24,14 @@ titleInput.addEventListener("input", () => {
 
 // Prompts the user to confirm cancelling a post
 cancelBtn.addEventListener("click", () => {
-    const postCancel = confirm("Are you sure you want to go back?");
-
-    if (postCancel) {
-        window.location.href = "/";
-    }
+    showAppConfirm("Are you sure you want to go back?", {
+        title: "Leave this draft?",
+        confirmLabel: "Go back"
+    }).then(postCancel => {
+        if (postCancel) {
+            window.location.href = "/";
+        }
+    });
 })
 
 async function uploadImageFile(file) {
@@ -76,7 +79,10 @@ publishBtn.addEventListener("click", async () => {
         }
     }
 
-    const postConfirmed = confirm("Are you sure you want to publish this post?");
+    const postConfirmed = await showAppConfirm("Are you sure you want to publish this post?", {
+        title: "Publish post?",
+        confirmLabel: "Publish"
+    });
 
     if (postConfirmed) {
         try {

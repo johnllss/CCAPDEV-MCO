@@ -169,7 +169,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (e.target.classList.contains('delete-comment-btn')) {
             const commentId = e.target.dataset.commentId;
-            if (!confirm('Delete this comment?')) return;
+            const shouldDelete = await showAppConfirm('Delete this comment?', {
+                title: 'Delete comment?',
+                confirmLabel: 'Delete',
+                tone: 'danger'
+            });
+            if (!shouldDelete) return;
 
             try {
                 const res = await fetch(`/api/comments/${postId}/${commentId}`, {

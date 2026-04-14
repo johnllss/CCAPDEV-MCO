@@ -25,17 +25,20 @@ setFieldValue(bodyField, bodyField?.value || '');
 
 // Prompts the user to confirm cancelling an edit
 cancelBtn.addEventListener("click", () => {
-    const postCancel = confirm("Are you sure you want to go back?");
+    showAppConfirm("Are you sure you want to go back?", {
+        title: "Discard this edit?",
+        confirmLabel: "Go back"
+    }).then(postCancel => {
+        if (postCancel) {
+            const postId = new URLSearchParams(window.location.search).get('id');
 
-    if (postCancel) {
-        const postId = new URLSearchParams(window.location.search).get('id');
-
-        if (postId) {
-            window.location.href = `/posts/${postId}/view`;
-        } else {
-            window.location.href = "/";
+            if (postId) {
+                window.location.href = `/posts/${postId}/view`;
+            } else {
+                window.location.href = "/";
+            }
         }
-    }
+    });
 })
 
 // Updates post in database and alerts when edited successfully
@@ -47,7 +50,10 @@ publishBtn.addEventListener("click", async () => {
         return;
     }
 
-    const editConfirmed = confirm("Are you sure you want to publish this edit?");
+    const editConfirmed = await showAppConfirm("Are you sure you want to publish this edit?", {
+        title: "Save post changes?",
+        confirmLabel: "Save changes"
+    });
 
     const postId = new URLSearchParams(window.location.search).get('id');
     if (!postId) {
