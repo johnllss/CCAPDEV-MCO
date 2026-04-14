@@ -13,6 +13,7 @@
 
     let region = null;
     let activeDialog = null;
+    const noticeParams = ['notice', 'noticeType', 'noticeTitle'];
 
     function ensureRegion() {
         if (region && document.body.contains(region)) {
@@ -156,4 +157,29 @@
             dialog.querySelector('[data-action="confirm"]').focus();
         });
     };
+
+    function consumeNoticeFromUrl() {
+        const currentUrl = new URL(window.location.href);
+        const notice = currentUrl.searchParams.get('notice');
+
+        if (!notice) {
+            return;
+        }
+
+        const type = currentUrl.searchParams.get('noticeType') || 'info';
+        const title = currentUrl.searchParams.get('noticeTitle') || undefined;
+
+        noticeParams.forEach(param => currentUrl.searchParams.delete(param));
+        window.history.replaceState({}, document.title, `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`);
+
+        window.setTimeout(() => {
+            window.showAppPopup(notice, { type, title });
+        }, 80);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', consumeNoticeFromUrl);
+    } else {
+        consumeNoticeFromUrl();
+    }
 })();

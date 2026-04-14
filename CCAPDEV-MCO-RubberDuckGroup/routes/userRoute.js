@@ -1,5 +1,6 @@
 // routes/userRoute.js
 const router = require('express').Router();
+const { requireAuthApi } = require('../utils/authGuards');
 const {
     createUser,
     getUsers,
@@ -10,10 +11,10 @@ const {
 } = require('../controllers/userController');
 
 router.post('/', createUser);
-router.post('/upload-profile', uploadProfilePhoto);
+router.post('/upload-profile', requireAuthApi, uploadProfilePhoto);
 router.get('/', getUsers);
 router.get('/:id', getUserById);
-router.put('/', updateUser);
-router.delete('/', deleteUser);
+router.put('/', requireAuthApi, updateUser);
+router.delete('/', requireAuthApi, deleteUser);
 
 module.exports = router;

@@ -16,6 +16,7 @@ eyeicon.onclick = function () {
 }
 
 const form = document.getElementById("login-form");
+const nextUrl = new URLSearchParams(window.location.search).get("next");
 
 form.addEventListener("submit", async function (e) {
 
@@ -50,7 +51,7 @@ form.addEventListener("submit", async function (e) {
     if (response.ok) {
         console.log("Success:", result.message);
         await showAppPopup(result.message, { type: 'success', title: 'Welcome back', duration: 1600 });
-        window.location.href = "/";
+        window.location.href = nextUrl || "/";
     } else {
         console.log("Error:", result.message);
         showAppPopup(result.message, { type: 'error', title: 'Login failed' });

@@ -1,6 +1,7 @@
 const express = require('express');
 const postController = require('../controllers/postController');
 const packageJson = require('../package.json');
+const { requireAuthPage } = require('../utils/authGuards');
 
 const router = express.Router();
 
@@ -46,19 +47,19 @@ router.get('/register', (req, res) => {
     res.render('register');
 });
 
-router.get('/profile', (req, res) => {
+router.get('/profile', requireAuthPage, (req, res) => {
     res.render('profile');
 });
 
-router.get('/edit-profile', (req, res) => {
+router.get('/edit-profile', requireAuthPage, (req, res) => {
     res.render('edit-profile');
 });
 
-router.get('/create-post', (req, res) => {
+router.get('/create-post', requireAuthPage, (req, res) => {
     res.render('create-post');
 });
 
-router.get('/edit-post', (req, res) => {
+router.get('/edit-post', requireAuthPage, (req, res) => {
     res.render('edit-post');
 });
 
