@@ -48,8 +48,13 @@
             {{/if}}
 
             {{#if post.body}}
-            <div class="post-body">
-                <p>{{post.body}}</p>
+            <div class="post-body{{#if truncateBody}} post-body--preview{{else}} post-body--full{{/if}}">
+                <p>{{#if truncateBody}}{{post.previewBody}}{{else}}{{post.body}}{{/if}}</p>
+                {{#if truncateBody}}
+                    {{#if post.isBodyTruncated}}
+                    <a class="post-read-more" href="/posts/{{post._id}}/view">Read more</a>
+                    {{/if}}
+                {{/if}}
             </div>
             {{/if}}
         </div>

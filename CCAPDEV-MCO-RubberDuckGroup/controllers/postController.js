@@ -6,6 +6,11 @@ const User = require('../models/User');
 const Activity = require('../models/Activity');
 const relativeDate = require('../utils/relativeDate');
 const { saveUploadedImage } = require('../utils/uploadImage');
+const {
+    BODY_MAX_LENGTH,
+    buildBodyPreview,
+    normalizePostBody
+} = require('../utils/postBody');
 
 function cleanRegex(value) {
     return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // replace each seen special char w/ \ so Mongo reads it as literal text
@@ -130,12 +135,15 @@ async function formatPost(post, req) {
     const createdAtLabel = relativeDate(post.createdAt);
     const updatedAtLabel = post.updatedAt > post.createdAt ? relativeDate(post.updatedAt) : null;
     const commentCount = await Comment.countDocuments({ post: post._id });
+    const { body, preview, isTruncated } = buildBodyPreview(post.body);
 
     return {
         _id: post._id.toString(),
         title: post.title,
-        content: post.body || post.image,
-        body: post.body,
+        content: body || post.image,
+        body,
+        previewBody: preview,
+        isBodyTruncated: isTruncated,
         image: toUploadImagePath(post.image),
         authorUsername: post.user?.username,
         authorPhoto: post.user?.profile?.photo || '/images/default-pfp.png',
@@ -243,6 +251,7 @@ async function createPost(req, res) {
     try {
         const { title, body, image } = req.body;
         const user = req.session?.userId;
+        const normalizedBody = normalizePostBody(body);
 
         if (!user || !title)
             return res.status(400).json({ message: 'User and Title are required' });
@@ -250,10 +259,13 @@ async function createPost(req, res) {
         if (!mongoose.Types.ObjectId.isValid(user))
             return res.status(400).json({ message: 'Invalid user ID' });
 
+        if (normalizedBody.length > BODY_MAX_LENGTH)
+            return res.status(400).json({ message: `Post body must be ${BODY_MAX_LENGTH} characters or fewer.` });
+
         const post = new Post({
             user,
             title,
-            body,
+            body: normalizedBody,
             image: image ? path.basename(String(image).trim()) : ''
         });
 
@@ -335,6 +347,7 @@ async function editPost(req, res) {
         const { id } = req.params;
         const { title, body, image } = req.body;
         const userId = req.session?.userId;
+        const normalizedBody = body !== undefined ? normalizePostBody(body) : undefined;
 
         if (!mongoose.Types.ObjectId.isValid(id))
             return res.status(400).json({ message: 'Invalid post ID' });
@@ -351,8 +364,12 @@ async function editPost(req, res) {
 
         if (title !== undefined)
             update.title = title;
-        if (body !== undefined)
-            update.body = body;
+        if (body !== undefined) {
+            if (normalizedBody.length > BODY_MAX_LENGTH)
+                return res.status(400).json({ message: `Post body must be ${BODY_MAX_LENGTH} characters or fewer.` });
+
+            update.body = normalizedBody;
+        }
         if (image !== undefined)
             update.image = image ? path.basename(String(image).trim()) : '';
 
@@ -404,8 +421,7 @@ async function renderPost(req, res) {
 
         if (!post) return res.status(404).send('Post not found');
 
-        const rawBody = post.body || '';
-        const body = rawBody.replace(/^\s+|\s+$/g, '').replace(/\n{3,}/g, '\n\n');
+        const body = normalizePostBody(post.body);
 
         const Comment = require('../models/Comment');
         const allComments = await Comment.find({ post: id })
@@ -449,6 +465,8 @@ async function renderPost(req, res) {
                 _id: post._id.toString(),
                 title: post.title,
                 body: body,
+                previewBody: body,
+                isBodyTruncated: false,
                 image: toUploadImagePath(post.image),
                 authorUsername: post.user.username,
                 authorPhoto: post.user.profile?.photo || '/images/default-pfp.png',

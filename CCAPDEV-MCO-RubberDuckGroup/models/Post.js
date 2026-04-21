@@ -1,4 +1,6 @@
 const { Schema, model } = require('mongoose');
+const { BODY_MAX_LENGTH } = require('../utils/postBody');
+
 const PostSchema = new Schema({
 
     user: {
@@ -18,7 +20,8 @@ const PostSchema = new Schema({
     },
 
     body: {
-        type: String
+        type: String,
+        maxLength: BODY_MAX_LENGTH
     },
 
     votes: {

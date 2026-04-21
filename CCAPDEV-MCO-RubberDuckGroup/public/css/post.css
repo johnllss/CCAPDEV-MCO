@@ -215,15 +215,41 @@ body {
     margin-top: 10px;
     margin-bottom: 0px;
     min-height: 20px;
-    max-height: 500px;
     border: none;
     font-family: var(--font-sans);
     white-space: pre-line;
-    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    word-break: break-word;
     resize: none;
     outline: none;
     padding: 0;
     cursor: default;
+    line-height: 1.65;
+}
+
+.post-body p {
+    margin: 0;
+}
+
+.post-body--preview {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.post-body--full {
+    overflow: visible;
+}
+
+.post-read-more {
+    align-self: flex-start;
+    color: var(--color-main-medium-brown);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.post-read-more:hover {
+    text-decoration: underline;
 }
 
 .post-image {
@@ -247,6 +273,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 16px;
 }
 
 .vote-count, .comment-count {

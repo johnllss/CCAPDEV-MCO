@@ -35,7 +35,8 @@
                     </div>
 
                     <div class="create-post-body-container">
-                        <textarea class="create-post-body" placeholder="Body"></textarea>
+                        <textarea class="create-post-body" placeholder="Body" maxlength="{{bodyMaxLength}}"></textarea>
+                        <div id="body-char-ctr" class="char-limit">0/{{bodyMaxLength}}</div>
                     </div>
                 </div>
 

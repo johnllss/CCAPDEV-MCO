@@ -1,8 +1,10 @@
 const titleField = document.getElementById("title-input");
 const bodyField = document.getElementById("post-body");
+const bodyCharCtr = document.getElementById("body-char-ctr");
 const cancelBtn = document.getElementById("cancel-button");
 const publishBtn = document.getElementById("save-button");
 let user = null;
+const BODY_WARN_THRESHOLD = 0.9;
 
 function setFieldValue(el, val) {
     if (!el)
@@ -19,9 +21,32 @@ function getFieldValue(el) {
     return ("value" in el) ? el.value : el.textContent;
 }
 
+function updateCounterDisplay(counter, currentLength, maxLength) {
+    if (!counter || !Number.isFinite(maxLength) || maxLength <= 0)
+        return;
+
+    counter.textContent = `${currentLength}/${maxLength}`;
+
+    if (currentLength >= maxLength) {
+        counter.style.color = "#fc6e6e";
+    } else if (currentLength >= Math.floor(maxLength * BODY_WARN_THRESHOLD)) {
+        counter.style.color = "#d28a1d";
+    } else {
+        counter.style.color = "lightgray";
+    }
+}
+
 // Fill text fields with current post info
 setFieldValue(titleField, titleField?.value || '');
 setFieldValue(bodyField, bodyField?.value || '');
+
+if (bodyField && bodyCharCtr) {
+    const bodyMaxLength = Number(bodyField.getAttribute("maxlength")) || 0;
+    bodyField.addEventListener("input", () => {
+        updateCounterDisplay(bodyCharCtr, bodyField.value.length, bodyMaxLength);
+    });
+    updateCounterDisplay(bodyCharCtr, bodyField.value.length, bodyMaxLength);
+}
 
 // Prompts the user to confirm cancelling an edit
 cancelBtn.addEventListener("click", () => {
@@ -59,6 +84,13 @@ publishBtn.addEventListener("click", async () => {
     const postId = new URLSearchParams(window.location.search).get('id');
     if (!postId) {
         showAppPopup('Post ID not found.', { type: 'error' });
+        return;
+    }
+
+    const bodyMaxLength = Number(bodyField?.getAttribute("maxlength")) || 0;
+    if (bodyField && bodyMaxLength > 0 && getFieldValue(bodyField).trim().length > bodyMaxLength) {
+        showAppPopup(`Post body must be ${bodyMaxLength} characters or fewer.`, { type: 'error', title: 'Body too long' });
+        bodyField.focus();
         return;
     }
 

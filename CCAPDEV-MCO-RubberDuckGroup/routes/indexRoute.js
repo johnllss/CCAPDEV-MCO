@@ -1,7 +1,10 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const postController = require('../controllers/postController');
+const Post = require('../models/Post');
 const packageJson = require('../package.json');
 const { requireAuthPage } = require('../utils/authGuards');
+const { BODY_MAX_LENGTH, normalizePostBody } = require('../utils/postBody');
 
 const router = express.Router();
 
@@ -56,11 +59,28 @@ router.get('/edit-profile', requireAuthPage, (req, res) => {
 });
 
 router.get('/create-post', requireAuthPage, (req, res) => {
-    res.render('create-post');
+    res.render('create-post', { bodyMaxLength: BODY_MAX_LENGTH });
 });
 
-router.get('/edit-post', requireAuthPage, (req, res) => {
-    res.render('edit-post');
+router.get('/edit-post', requireAuthPage, async (req, res) => {
+    const postId = (req.query.id || '').trim();
+    const userId = req.session?.userId;
+
+    if (!mongoose.Types.ObjectId.isValid(postId))
+        return res.redirect('/');
+
+    const post = await Post.findById(postId).select('title body user').lean();
+
+    if (!post || !userId || post.user?.toString() !== userId.toString())
+        return res.redirect('/');
+
+    res.render('edit-post', {
+        bodyMaxLength: BODY_MAX_LENGTH,
+        post: {
+            title: post.title || '',
+            content: normalizePostBody(post.body)
+        }
+    });
 });
 
 router.get('/view-post', (req, res) => {

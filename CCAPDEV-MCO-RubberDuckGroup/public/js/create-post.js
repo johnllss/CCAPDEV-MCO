@@ -1,6 +1,7 @@
 const titleInput = document.getElementById("title-input");
 const bodyInput = document.querySelector(".create-post-body");
 const charCtr = document.getElementById("char-ctr");
+const bodyCharCtr = document.getElementById("body-char-ctr");
 const fileInput = document.getElementById("file-upload");
 const fileName = document.getElementById("file-upload-name");
 const cancelBtn = document.getElementById("cancel-button");
@@ -9,18 +10,36 @@ const publishBtn = document.getElementById("publish-button");
 let user = null;
 
 const MAX_UPLOAD_SIZE = 10 * 1024 * 1024; // 10MB
+const BODY_WARN_THRESHOLD = 0.9;
+
+function updateCounterDisplay(counter, currentLength, maxLength) {
+    if (!counter || !Number.isFinite(maxLength) || maxLength <= 0)
+        return;
+
+    counter.textContent = `${currentLength}/${maxLength}`;
+
+    if (currentLength >= maxLength) {
+        counter.style.color = "#fc6e6e";
+    } else if (currentLength >= Math.floor(maxLength * BODY_WARN_THRESHOLD)) {
+        counter.style.color = "#d28a1d";
+    } else {
+        counter.style.color = "lightgray";
+    }
+}
 
 // Post title character counter
 titleInput.addEventListener("input", () => {
     const currentLength = titleInput.value.length;
-    charCtr.textContent = `${currentLength}/150`;
-
-    if(currentLength >= 150) {
-        charCtr.style.color = "#fc6e6e";
-    } else {
-        charCtr.style.color = "lightgray";
-    }
+    updateCounterDisplay(charCtr, currentLength, 150);
 });
+
+if (bodyInput && bodyCharCtr) {
+    const bodyMaxLength = Number(bodyInput.getAttribute("maxlength")) || 0;
+    bodyInput.addEventListener("input", () => {
+        updateCounterDisplay(bodyCharCtr, bodyInput.value.length, bodyMaxLength);
+    });
+    updateCounterDisplay(bodyCharCtr, bodyInput.value.length, bodyMaxLength);
+}
 
 // Prompts the user to confirm cancelling a post
 cancelBtn.addEventListener("click", () => {
@@ -65,6 +84,13 @@ publishBtn.addEventListener("click", async () => {
     if (titleInput.value.trim() === "") {
         showAppPopup("Please add a title.", { type: 'info', title: 'Missing title' });
         titleInput.focus();
+        return;
+    }
+
+    const bodyMaxLength = Number(bodyInput?.getAttribute("maxlength")) || 0;
+    if (bodyInput && bodyMaxLength > 0 && bodyInput.value.trim().length > bodyMaxLength) {
+        showAppPopup(`Post body must be ${bodyMaxLength} characters or fewer.`, { type: 'error', title: 'Body too long' });
+        bodyInput.focus();
         return;
     }
 
